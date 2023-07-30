@@ -1,0 +1,405 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1034,
+      "max": [
+        0.8186460137367249,
+        -0.5829160213470459,
+        0.7243070006370544
+      ],
+      "min": [
+        0.4594630002975464,
+        -0.7151049971580505,
+        -0.7074710130691528
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 12408,
+      "componentType": 5126,
+      "count": 1034,
+      "max": [
+        0.7182490825653076,
+        0.7327434420585632,
+        0.6983602643013
+      ],
+      "min": [
+        -0.6599147319793701,
+        0.04391200467944145,
+        -0.6983602643013
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 1034,
+      "max": [
+        0.9037478566169739,
+        0.5748995542526245,
+        0.8071177005767822,
+        1.0
+      ],
+      "min": [
+        -0.9037479162216187,
+        -0.9971297979354858,
+        -0.8454744815826416,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1034,
+      "max": [
+        0.9931719899177551,
+        0.9987580180168152
+      ],
+      "min": [
+        0.005079779773950577,
+        0.03622620180249214
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 2220,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 24816,
+      "componentType": 5126,
+      "count": 197,
+      "max": [
+        1.0,
+        0.8895099759101868,
+        0.800000011920929
+      ],
+      "min": [
+        -1.0,
+        -0.889510989189148,
+        -0.800000011920929
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 27180,
+      "componentType": 5126,
+      "count": 197,
+      "max": [
+        1.0,
+        0.9866095781326294,
+        0.9874621033668518
+      ],
+      "min": [
+        -0.7501313090324402,
+        -0.9864461421966553,
+        -0.9874621033668518
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 16544,
+      "componentType": 5126,
+      "count": 197,
+      "max": [
+        0.9998128414154053,
+        0.9990401268005371,
+        0.9515706300735474,
+        1.0
+      ],
+      "min": [
+        -0.9998519420623779,
+        -0.999036967754364,
+        -1.0,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 8272,
+      "componentType": 5126,
+      "count": 197,
+      "max": [
+        0.9966560006141663,
+        0.9923319816589355
+      ],
+      "min": [
+        0.009831179864704609,
+        0.006965649779886007
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 8880,
+      "componentType": 5125,
+      "count": 558,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Joppe (https://sketchfab.com/JoSo)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/terminal-768bac39dd8f476fbe797f93a808f49c",
+      "title": "Terminal"
+    },
+    "generator": "Sketchfab-12.67.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 11112,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 9848,
+      "byteOffset": 11112,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 29544,
+      "byteOffset": 20960,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 19696,
+      "byteOffset": 50504,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 70200,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Computer_baseColor.png"
+    },
+    {
+      "uri": "textures/Computer_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Computer_normal.png"
+    },
+    {
+      "uri": "textures/Keyboard_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/Keyboard_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Keyboard_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "name": "Computer",
+      "normalTexture": {
+        "index": 2
+      },
+      "occlusionTexture": {
+        "index": 1
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Keyboard",
+      "normalTexture": {
+        "index": 5
+      },
+      "occlusionTexture": {
+        "index": 4
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicRoughnessTexture": {
+          "index": 4
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "defaultMaterial",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "defaultMaterial",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        5.129946231842041,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.139076884336019e-15,
+        -5.129946231842041,
+        0.0,
+        0.0,
+        5.129946231842041,
+        1.139076884336019e-15,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2,
+        4
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -4.371139006309477e-08,
+        0.999999999999999,
+        0.0,
+        0.0,
+        -0.999999999999999,
+        -4.371139006309477e-08,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Collada visual scene group"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "Keys"
+    },
+    {
+      "mesh": 0,
+      "name": "defaultMaterial"
+    },
+    {
+      "children": [
+        5
+      ],
+      "name": "Terminal_LP"
+    },
+    {
+      "mesh": 1,
+      "name": "defaultMaterial"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 0,
+      "source": 5
+    }
+  ]
+}
