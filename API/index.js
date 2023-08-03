@@ -254,17 +254,20 @@ if (err) throw err
      }
   
     });
-     
+  
+  } ) ;
 
-    app.get('/places ' , (req , res) =>{
 
+  app.get('/places-all' , async (req , res ) =>{
+       res.json( await Place.find())    
     } );
- 
-  } ) 
 
+   app.get('/place-details/:id' , async (req , res ) =>{
 
-
-   
+   const  {id}  = req.params 
+console.log(id)
+       res.json( await Place.findById(id))    
+    } );
  
    
  app.listen(4000, () => {

@@ -9,6 +9,7 @@ import Bookings from "../component/Bookings";
 import Wishlist from "../component/Wishlist";
 import Accommodation from "../component/Accommodation";
 import NewAccommodation from "../component/NewAccommodation";
+import Carteskelaton from "../component/Carteskelaton";
 
 function Account() {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ function Account() {
         {subpages === "bookings" && <Bookings />}
         {subpages === "accommodation" && (
           <div className=" flex flex-col item-center w-full justify-center  ">
+           
             <div className=" w-full h-20  pt-3  cursor-pointer flex justify-center   item-center ">
               <div
                 onClick={addnewplace}
@@ -83,8 +85,11 @@ function Account() {
                 {" "}
               </div>
             </div>
+           
             <div className="  mx-3  gap-5  grid   pt-5   grid-cols-1 lg:grid-cols-2  h-full ">
+           
               {places?.map((i) => (
+                
                 <Accommodation
                   key={i.id}
                   id={i._id}
@@ -93,9 +98,10 @@ function Account() {
                   title={i.title}
                   description={i.description}
                 />
+                
               ))}
 
-              <div className=" "></div>
+              <div className=" ">  </div>
             </div>
           </div>
         )}
