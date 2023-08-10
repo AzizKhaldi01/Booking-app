@@ -11,11 +11,9 @@ const PlaceSchema = new Schema ({
     perks:[String],
     rating:Number,
      extraInfo:String,
-<<<<<<< HEAD
+ 
      category:[String],
-=======
->>>>>>> origin/main
-     checkIn:Number,
+ 
       checkOut:Number,
       price:Number,
      maxGuests:Number,
