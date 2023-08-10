@@ -2,7 +2,10 @@ import React from 'react'
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import PetsIcon from '@mui/icons-material/Pets';
-
+import CountertopsIcon from '@mui/icons-material/Countertops';
+import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import PoolIcon from '@mui/icons-material/Pool';
 export default function  Perks({selected , onChange}) {
 
   function hendlchekbox(e){
@@ -57,6 +60,28 @@ export default function  Perks({selected , onChange}) {
 </svg>
  Radio</span>
 </label>
-    </ >
+<label className='   border-2 p-2 rounded-lg flex justify-start items-center flex-row gap-3 text-xs cursor-pointer'  htmlFor="Kitchen">
+  <input onChange={  hendlchekbox   } checked={ selected?.includes('Kitchen')} type="checkbox" name="Kitchen" id="Kitchen" />
+  <span className=' w-full flex   items-center gap-2'> <CountertopsIcon/>
+Kitchen</span>
+</label>
+    <label className='   border-2 p-2 rounded-lg flex justify-start items-center flex-row gap-3 text-xs cursor-pointer'  htmlFor="Washing machine">
+  <input onChange={  hendlchekbox   } checked={ selected?.includes('Washing machine')} type="checkbox" name="Washing machine" id="Washing machine" />
+  <span className=' w-full flex   items-center gap-2'> <LocalLaundryServiceIcon/>
+  Washing machine</span>
+</label>
+
+ <label className='   border-2 p-2 rounded-lg flex justify-start items-center flex-row gap-3 text-xs cursor-pointer'  htmlFor="Gym">
+  <input onChange={  hendlchekbox   } checked={ selected?.includes('Gym')} type="checkbox" name="Gym" id="Gym" />
+  <span className=' w-full flex   items-center gap-2'> <FitnessCenterIcon/>
+  Gym</span>
+</label>
+
+<label className='   border-2 p-2 rounded-lg flex justify-start items-center flex-row gap-3 text-xs cursor-pointer'  htmlFor="Pool">
+  <input onChange={  hendlchekbox   } checked={ selected?.includes('Pool')} type="checkbox" name="Pool" id="Pool" />
+  <span className=' w-full flex   items-center gap-2'> <PoolIcon/>
+  Pool</span>
+</label>
+</ >
   )
 }

@@ -22,12 +22,12 @@ export default function Places({  _id ,photos,address ,price,title    }) {
 
   
           to={`/placedetails/${_id}  `}
-          className="  gap-2 items-center  h-[300px] flex flex-col   w-full "
+          className="  gap-2 items-center  h-[400px] flex flex-col   w-full "
         >
             
              <motion.div
              variants={item}
-             className="  gap-2 items-center  h-[300px] flex flex-col   w-full "
+             className="  gap-2 items-center  h-[400px] flex flex-col   w-full "
              >
           <div 
            initial={{ opacity: 0     }}
@@ -37,12 +37,12 @@ export default function Places({  _id ,photos,address ,price,title    }) {
             <div className="  text-white  cursor-pointer hover:opacity-70 z-10 absolute top-3 right-3">
               <FavoriteBorderOutlinedIcon />
             </div>
-            <PhotoSlider nonav={true} photos={photos} />
+            <PhotoSlider nonav={true} photos={photos} hight={true} />
           </div>
 
           <div className=" h-[20%] w-full px-4 flex flex-row justify-between">
             <div className=" flex flex-col gap-1">
-              <p className=" text-xs">
+              <p className="  font-semibold text-xs">
                 {" "}
                 {title.length >= 25
                   ? title.substring(0, 25) + "..."

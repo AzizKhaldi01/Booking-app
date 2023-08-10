@@ -85,6 +85,7 @@ function NewAccommodation({setAdd , add }) {
 
 
   const options = [
+
     'Hotel',
     'Cabins',
     'Islands',
@@ -92,7 +93,13 @@ function NewAccommodation({setAdd , add }) {
     'Farms',
     'Luxe',
     'Beach',
-    'Amazing pools' , 
+    'Amazing pools' ,   
+    'villa ',
+    'cave',
+    'House',
+    'Bungalow',
+    'ApartmentIcon',
+    
   ];
 
 
@@ -169,15 +176,43 @@ setAdd(!add)
 setReload(!reload)
  console.log('update')
 
+
+
+ setTitle('');
+      setAddress('');
+      setDescription('');
+      setMaxGuests('');
+      setCheckOut('');
+      setCheckIn('');
+      setAddedPhotos([]);
+      setExtraInfo('');
+      setPerks([]);
+      setPrice( )
+      setCategory([])
+
  }
 
  else{
   await axios.post('/places', placeData  );
   setAdd(!add)
-  
+  setReload(!reload)
   navto('/account/accommodation/')
   console.log('add new one')
   setReload(!reload)
+
+
+  setTitle('');
+  setAddress('');
+  setDescription('');
+  setMaxGuests('');
+  setCheckOut('');
+  setCheckIn('');
+  setAddedPhotos([]);
+  setExtraInfo('');
+  setPerks([]);
+  setPrice( )
+  setCategory([])
+
  }
  
     // new place
@@ -286,6 +321,11 @@ function moveToFirst(filename) {
  <textarea value={extraInfo} onChange={ (e)=> setExtraInfo(e.target.value) }  className='   border-solid border-2 px-2 rounded-xl w-full h-[100px]'/>
 
 
+
+<div className=' '>
+  
+
+</div>
 <h1>Check in&out times</h1>
 <p className=' text-gray-500 text-xs'>house rouls, etc</p>
  <div className=' grid  gap-4   grid-cols-2  md:grid-cols-4'>

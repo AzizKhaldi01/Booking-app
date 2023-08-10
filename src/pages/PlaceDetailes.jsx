@@ -10,11 +10,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import PerksD from "../component/PerksD";
 import PhotoSlider from "../component/Imageslaider";
 import PlaceIcon from "@mui/icons-material/Place";
+import Gestes from "../component/Gestes";
 function PlaceDetailes() {
   const [morephotos, setMorephotos] = useState(false);
   const [extra, setExtra] = useState(false);
   const [data, setData] = useState({}); // Initialize data as an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
+  const [Aopen, setAopen] = useState(false);
+  const [Gopen, setGopen] = useState(false);
+  const [Guest, setGuest] = useState({
+    adults: 1,
+    children: 0,
+    infants: 0,
+    pets: 0
+  });
   const { _id } = useParams();
 
   useEffect(() => {
@@ -25,17 +34,53 @@ function PlaceDetailes() {
     });
   }, [_id]);
 
+
   if (isLoading) {
     return <div>Loading...</div>; // Render a loading message or spinner while waiting for data
   }
+
 
   function hendelmorephotos() {
     setMorephotos(!morephotos);
     document.body.style.overflow = !morephotos ? " hidden" : "auto";
   }
 
+  function incrimentGuests(e) {
+    const { name } = e.target; // Get the name from the clicked element
+  
+    setGuest(prevGuest => ({
+      ...prevGuest,
+      [name]: prevGuest[name] + 1 // Increment the corresponding property by 1
+    }));
+  }
+
+const Gdata = [{
+title:"Adults",
+desc:"Age 13+",
+value:Guest.adults,
+},
+{
+  title:"Children",
+  desc:"Ages 2–12",
+  value:Guest.children,
+  
+  },
+  {
+    title:"Infants",
+    desc:"Under 2",
+    value:Guest.infants,
+    },
+
+    {
+      title:"Pets",
+      value:Guest.pets,
+      
+      },
+]
+
+
   return (
-    <div className="  overflow-hidden  px-3 lg:px-10 w-full h-full  gap-12 mt-32 justify-between flex   flex-col-reverse md:flex-row">
+    <div className="  overflow-hidden   px-3 lg:px-12 w-full h-full  gap-12  mt-40 justify-between flex   flex-col-reverse md:flex-row">
       <div className="  w-full md:w-[40%] flex flex-col     ">
         <div className="  text-2xl md:text-3xl font-bold max-w-[80%] ">
           {data.title}
@@ -57,11 +102,93 @@ function PlaceDetailes() {
           <span className=" font-normal  text-gray-700 text-sm  ">/ night</span>{" "}
         </div>
 
-        <div className=" cursor-pointer    flex-row    justify-between    text-sm items-center relative  w-full lg:w-[70%] h-20 border-2 border-solid rounded-full my-10 flex ">
+        <div className=" cursor-pointer      flex-row    justify-between    text-sm items-center relative  w-full lg:w-[70%] h-20 border-[#6d9c9a] border-[1px] border-solid rounded-full my-10 flex ">
           <p className=" font-semibold px-8">Check Availability</p>
-          <span className=" bg-black  rounded-full flex items-center justify-center text-white      h-20 w-20  ">
+          <span
+            onClick={() => setAopen(!Aopen)}
+            className="bg-[#578280] rounded-full flex items-center justify-center text-white      h-20 w-20  "
+          >
             <CalendarMonthIcon />
           </span>
+
+          <div
+            className={`    absolute   max-w-[450px]     shadow-2xl  duration-150 bg-white rounded-xl   ${
+              Aopen ? "h-[300px]" : " h-0"
+            }   z-20   top-20  left-0   `}
+          >
+            <div className=" flex gap-2 pt-2 justify-between flex-row w-full px-2">
+              <div className="relative">
+                {Aopen && (
+                  <span className="absolute top-3 left-3 transform -translate-y-1/2 text-[10px]  text-gray-500">
+                    CHECK-IN
+                  </span>
+                )}
+                <input
+                  className={`h-14 cursor-pointer  px-2 border-[2px] border-solid rounded-lg   ${
+                    !Aopen ? "hidden" : "flex"
+                  }`}
+                  type="date"
+                  id="dateInput"
+                  name="dateInput"
+                />
+              </div>
+              <div className="relative">
+                {Aopen && (
+                  <span className="absolute top-3 left-3  transform -translate-y-1/2 text-[10px] text-gray-500">
+                    CHECKOUT
+                  </span>
+                )}
+                <input
+                  className={`h-14  cursor-pointer px-2  border-[2px] border-solid rounded-lg     ${
+                    !Aopen ? "hidden" : "flex"
+                  }`}
+                  type="date"
+                  id="dateInput"
+                  name="dateInput"
+                />
+              </div>
+            </div>
+
+            <div
+              className={` ${
+                !Aopen ? "hidden" : "flex"
+              }  flex  relative  max-w-full  flex-col  `}
+            >
+              <h1
+                onClick={() => setGopen(!Gopen)}
+                className="  cursor-pointer  w-full px-4 flex flex-row   gap-2   text-sm  font-medium  pt-3"
+              >
+                {" "}
+                <span className="   flex flex-row gap-3">
+                  {Guest.adults + Guest.infants } Geusts
+                </span>{" "}
+              </h1>
+
+             { Gopen && <div
+                className={` gap-4      w-full  top-12  shadow-xl   ${
+                  Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
+                } duration-150 rounded-3xl bg-white absolute gap-5   flex flex-col max-w-full px-4   `}
+              >
+
+
+{Gdata.map((item) => (
+  <Gestes
+    setGuest={setGuest}
+    onClick={incrimentGuests}
+    Geust={item.value} // Change this to item.value
+    title={item.title}
+    name={item.title}
+    desc={item.desc}
+  />
+))}
+                
+                 
+ 
+              </div>}
+
+
+            </div>
+          </div>
         </div>
 
         <p className=" w-full  leading-6    text-gray-800 text-[13px] py-3  ">

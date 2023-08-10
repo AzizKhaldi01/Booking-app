@@ -284,15 +284,18 @@ console.log(id)
 
 
     app.get('/filter', async (req, res) => {
-      const {   category, minPrice, maxPrice } = req.query;
+      const {  perks, category, minPrice, maxPrice } = req.query;
       
-      console.log(category )
+      console.log(perks )
       // Build the filter object based on the query parameters
       const filter = {};
-      
+       if (perks) {
+         
+        filter.perks = { $all: perks };
+      }
       if (category) {
-        const categories = Array.isArray(category) ? category : [category];
-        filter.category = { $in: categories };
+         
+        filter.category = { $in: category };
       }
       if (minPrice && maxPrice) {
         filter.price = { $gte: minPrice, $lte: maxPrice };
