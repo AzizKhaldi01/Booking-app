@@ -10,17 +10,34 @@ import Wishlist from "../component/Wishlist";
 import Accommodation from "../component/Accommodation";
 import NewAccommodation from "../component/NewAccommodation";
 import Carteskelaton from "../component/Carteskelaton";
+<<<<<<< HEAD
 import AddIcon from '@mui/icons-material/Add';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function Account() {
   const navigate = useNavigate();
   const { User, ready, setUser, add, setAdd, setPlacedata, setLink , reload ,setReload ,setPlaces ,places} =
+=======
+
+function Account() {
+  const navigate = useNavigate();
+  const { User, ready, setUser, add, setAdd, setPlacedata, setLink } =
+>>>>>>> origin/main
     useContext(Usercontext);
 
   const { subpages } = useParams(null);
   const [redirect, setRedirect] = useState(null);
+<<<<<<< HEAD
 
+=======
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+    axios.get("/user-places").then(({ data }) => {
+      setPlaces(data);
+    });
+  }, []);
+>>>>>>> origin/main
 
   if (ready && !User) {
     return <Navigate to={"/login"} />;
@@ -47,7 +64,10 @@ function Account() {
     setLink("");
     setPlacedata(null);
     setAdd(!add);
+<<<<<<< HEAD
     
+=======
+>>>>>>> origin/main
   }
 
   return (
@@ -77,19 +97,28 @@ function Account() {
             <div className=" w-full h-20  pt-3  cursor-pointer flex justify-center   item-center ">
               <div
                 onClick={addnewplace}
+<<<<<<< HEAD
                 className="  text-white flex items-center justify-center w-[50%] h-full  rounded-xl  bg-[#578280]  "
               >
               <AddIcon fontSize="large"/>
+=======
+                className=" w-[50%] h-full  rounded-xl bg-green-200  "
+              >
+                {" "}
+>>>>>>> origin/main
               </div>
             </div>
            
             <div className="  mx-3  gap-5  grid   pt-5   grid-cols-1 lg:grid-cols-2  h-full ">
            
+<<<<<<< HEAD
 
 
             <AnimatePresence>
     
  
+=======
+>>>>>>> origin/main
               {places?.map((i) => (
                 
                 <Accommodation
@@ -103,9 +132,12 @@ function Account() {
                 
               ))}
 
+<<<<<<< HEAD
             
         </AnimatePresence>
             
+=======
+>>>>>>> origin/main
               <div className=" ">  </div>
             </div>
           </div>

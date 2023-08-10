@@ -6,13 +6,20 @@ import { Usercontext } from '../context/pagecontext';
 import Perks from './perks';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import Category from './Category';
+=======
+>>>>>>> origin/main
 function NewAccommodation({setAdd , add }) {
  
 
   const navto = useNavigate()
 
+<<<<<<< HEAD
   const { placesdata ,  link , setLink , setReload , reload} = useContext(Usercontext)
+=======
+  const { placesdata ,  link , setLink} = useContext(Usercontext)
+>>>>>>> origin/main
 
   
   console.log('the id   ' + link)
@@ -31,7 +38,10 @@ function NewAccommodation({setAdd , add }) {
   const [redirect,setRedirect] = useState(false);
   const [file , setFile]= useState();
 
+<<<<<<< HEAD
   const [category, setCategory] = useState([ ]);
+=======
+>>>>>>> origin/main
   
 
   useEffect(() => {
@@ -46,9 +56,12 @@ function NewAccommodation({setAdd , add }) {
       setExtraInfo(placesdata.extraInfo);
       setPerks(placesdata.perks);
       setPrice(placesdata.price)
+<<<<<<< HEAD
       setCategory(placesdata.category)
 
 
+=======
+>>>>>>> origin/main
     }else{
       setTitle('');
       setAddress('');
@@ -60,11 +73,15 @@ function NewAccommodation({setAdd , add }) {
       setExtraInfo('');
       setPerks([]);
       setPrice( )
+<<<<<<< HEAD
       setCategory([])
+=======
+>>>>>>> origin/main
     }
   }, [placesdata]);
  
 
+<<<<<<< HEAD
 
   const handleChange = (option) => {
     // Check if the option already exists in the category array
@@ -103,6 +120,8 @@ function NewAccommodation({setAdd , add }) {
   ];
 
 
+=======
+>>>>>>> origin/main
   console.log(  'eeeee   ' +  [addedPhotos])
  
  
@@ -157,11 +176,18 @@ console.log(addedPhotos)
 
  
 async function savePlace(ev) {
+<<<<<<< HEAD
 
   ev.preventDefault();
   
   const placeData = {
     title, address, addedPhotos,price,category,
+=======
+  ev.preventDefault();
+  
+  const placeData = {
+    title, address, addedPhotos,price,
+>>>>>>> origin/main
     description, perks, extraInfo,
     checkIn, checkOut, maxGuests, price,
   };
@@ -173,6 +199,7 @@ await axios.put('/places',  {...placeData , link} );
 
 navto('/account/accommodation/')
 setAdd(!add)
+<<<<<<< HEAD
 setReload(!reload)
  console.log('update')
 
@@ -190,11 +217,16 @@ setReload(!reload)
       setPrice( )
       setCategory([])
 
+=======
+ console.log('update')
+
+>>>>>>> origin/main
  }
 
  else{
   await axios.post('/places', placeData  );
   setAdd(!add)
+<<<<<<< HEAD
   setReload(!reload)
   navto('/account/accommodation/')
   console.log('add new one')
@@ -213,6 +245,11 @@ setReload(!reload)
   setPrice( )
   setCategory([])
 
+=======
+  
+  navto('/account/accommodation/')
+  console.log('add new one')
+>>>>>>> origin/main
  }
  
     // new place
@@ -249,7 +286,11 @@ function moveToFirst(filename) {
 
     <div  style={{
         transform: "translate(-50%, -50%)",
+<<<<<<< HEAD
       }} className= {`  duration-300  left-[50%] flex fixed   h-[90%] w-[95%] overflow-auto pt-3   flex-col item-center md:w-[80%] bg-white rounded-xl `}> 
+=======
+      }} className= {`  duration-300  left-[50%] flex fixed   h-[90%] w-[95%] overflow-auto   flex-col item-center md:w-[80%] bg-white rounded-xl `}> 
+>>>>>>> origin/main
       
 
       <form onSubmit={savePlace} className='       gap-3  p-7    flex-grow w-full flex flex-col '  >
@@ -312,20 +353,26 @@ function moveToFirst(filename) {
 <Perks selected={perks} onChange={setPerks}  />
 </div>
 
+<<<<<<< HEAD
 
 
 <Category deletecategory={deletecategory}  handleChange={handleChange} options={options} setSelectedValue={setCategory} selectedValue={category} />
 
+=======
+>>>>>>> origin/main
 <h1>Extra Info</h1>
 <p className=' text-gray-500 text-xs'>house rouls, etc</p>
  <textarea value={extraInfo} onChange={ (e)=> setExtraInfo(e.target.value) }  className='   border-solid border-2 px-2 rounded-xl w-full h-[100px]'/>
 
 
+<<<<<<< HEAD
 
 <div className=' '>
   
 
 </div>
+=======
+>>>>>>> origin/main
 <h1>Check in&out times</h1>
 <p className=' text-gray-500 text-xs'>house rouls, etc</p>
  <div className=' grid  gap-4   grid-cols-2  md:grid-cols-4'>

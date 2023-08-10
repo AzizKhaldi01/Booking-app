@@ -7,7 +7,11 @@ function ExtraInfo({extra,setExtra , data}) {
     <div onClick={ ()=> setExtra(!extra)  } className= {` flex  fixed h-full w-full    ${extra ? ' opacity-50 top-0  ' : 'opacity-0  top-[100%]   '  }  right-0 bg-black`}></div>
  
  
+<<<<<<< HEAD
   <div    className={  `  ${ extra ?   ' opacity-100  z-50  top-0' : ' top-[100%]   -z-10 opacity-0 ' }  py-4   duration-300   flex-grow   text-[12px] h-[90vh]       w-[90%] lg:w-[45%] bg-white rounded-lg fixed   top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}>
+=======
+  <div    className={  `  ${ extra ?   ' opacity-100  z-50  top-0' : ' top-[100%]   -z-10 opacity-0 ' }  py-4   duration-300   flex-grow   text-[12px] h-[90vh] w-[45%] bg-white rounded-lg fixed   top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}>
+>>>>>>> origin/main
   <div className=' right-0  h-10  p-2  absolute top-0 w-full bg-white  rounded-t-2xl'>
 <span onClick={ ()=> setExtra(!extra)  } className=' cursor-pointer'>
     <CloseIcon  fontSize='small' />

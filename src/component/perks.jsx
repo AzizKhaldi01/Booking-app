@@ -2,10 +2,14 @@ import React from 'react'
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import PetsIcon from '@mui/icons-material/Pets';
+<<<<<<< HEAD
 import CountertopsIcon from '@mui/icons-material/Countertops';
 import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import PoolIcon from '@mui/icons-material/Pool';
+=======
+
+>>>>>>> origin/main
 export default function  Perks({selected , onChange}) {
 
   function hendlchekbox(e){
@@ -60,6 +64,7 @@ export default function  Perks({selected , onChange}) {
 </svg>
  Radio</span>
 </label>
+<<<<<<< HEAD
 <label className='   border-2 p-2 rounded-lg flex justify-start items-center flex-row gap-3 text-xs cursor-pointer'  htmlFor="Kitchen">
   <input onChange={  hendlchekbox   } checked={ selected?.includes('Kitchen')} type="checkbox" name="Kitchen" id="Kitchen" />
   <span className=' w-full flex   items-center gap-2'> <CountertopsIcon/>
@@ -83,5 +88,8 @@ Kitchen</span>
   Pool</span>
 </label>
 </ >
+=======
+    </ >
+>>>>>>> origin/main
   )
 }

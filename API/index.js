@@ -69,6 +69,7 @@ const path = require('path');
 });
 
 // Route to handle incoming requests
+<<<<<<< HEAD
 app.get('/profile', async (req, res) => {
   try {
     const cookies = req.cookies;
@@ -89,15 +90,39 @@ app.get('/profile', async (req, res) => {
     }
   } catch (error) {
     res.status(500).send('Server error');
+=======
+app.get('/profile', (req, res) => {
+  // Access all the cookies from the request object
+ 
+
+  const cookies = req.cookies;
+ 
+
+  if (cookies && cookies.jwtToken  ) {
+    const token = cookies.jwtToken;
+   
+
+     jwt.verify(token, 'your-secret-key', {}, async (err, userdata) => {
+ if (err)  throw err 
+const {name , email , _id} = await User.findById(userdata.id)
+        res.json({name , email , _id});
+      
+    });
+  } else {
+    res.send('No JWT token found in the cookies');
+>>>>>>> origin/main
   }
 });
 
 
 
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> origin/main
  //
  app.post('/Registre', async (req, res) => {
   const { name, email, password } = req.body;
@@ -195,13 +220,21 @@ app.post('/places', (req,res) => {
   const cookies = req.cookies;
   const token = cookies.jwtToken;
   const { 
+<<<<<<< HEAD
     title,address,addedPhotos,description,price,category,
+=======
+    title,address,addedPhotos,description,price,
+>>>>>>> origin/main
     perks,extraInfo,checkIn,checkOut,maxGuests,
   } = req.body;
   jwt.verify(token, 'your-secret-key', {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
+<<<<<<< HEAD
       owner:userData.id,price,category,
+=======
+      owner:userData.id,price,
+>>>>>>> origin/main
       title,address,photos:addedPhotos,description,
       perks,extraInfo,checkIn,checkOut,maxGuests,
     });
@@ -232,10 +265,19 @@ app.get( '/places/:id' , async (req , res)=>{
 app.put( '/places' ,   ( req , res)=>{
   const cookies = req.cookies.jwtToken;
 
+<<<<<<< HEAD
   const   {  price,category,  
     title,address, addedPhotos,description,
     perks,extraInfo,checkIn,checkOut,maxGuests,link } = req.body
  
+=======
+  const   {  price,  
+    title,address, addedPhotos,description,
+    perks,extraInfo,checkIn,checkOut,maxGuests,link } = req.body
+ 
+ console.log(title,address,   addedPhotos, description,
+  perks,extraInfo,checkIn,checkOut,maxGuests,link)
+>>>>>>> origin/main
 
 
 
@@ -248,7 +290,11 @@ if (err) throw err
 
 
      if( placeDoc.owner.toString()  === userData.id ){
+<<<<<<< HEAD
        placeDoc.set({price,category,  
+=======
+       placeDoc.set({price,
+>>>>>>> origin/main
     title,address,photos:addedPhotos,description,
     perks,extraInfo,checkIn,checkOut,maxGuests,
        })
@@ -269,6 +315,7 @@ if (err) throw err
 
    const  {id}  = req.params 
 console.log(id)
+<<<<<<< HEAD
 
        res.json( await Place.findById(id))    
     } );
@@ -321,6 +368,12 @@ console.log(id)
       }
     });
 
+=======
+       res.json( await Place.findById(id))    
+    } );
+ 
+   
+>>>>>>> origin/main
  app.listen(4000, () => {
    console.log(`Server is running on http://localhost:4000`);
  });
