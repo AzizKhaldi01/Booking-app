@@ -16,11 +16,7 @@ import PlaceDetailes from "./pages/PlaceDetailes";
 function App() {
    
   return (
-<<<<<<< HEAD
     <div className="      " >
-=======
-    <div className="     px-2 md:px-11" >
->>>>>>> origin/main
  
       
      <Navbar/>

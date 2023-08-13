@@ -10,7 +10,6 @@ const Userprovider = ({children})=>{
  const [User , setUser] = useState(null)
    const [ready , setReady] = useState(false)
  const [add , setAdd]= useState(false);
-<<<<<<< HEAD
  const [ reload , setReload] = useState(false)
  const [link , setLink]= useState('');
  const [placesdata, setPlacedata] = useState(null)
@@ -24,12 +23,6 @@ const Userprovider = ({children})=>{
    });
  }, [ reload]);
  
-=======
- const [link , setLink]= useState('');
- const [placesdata, setPlacedata] = useState(null)
-
- console.log(link)
->>>>>>> origin/main
 
  useEffect(() => {
   if (!link) {
@@ -59,11 +52,7 @@ const Userprovider = ({children})=>{
   
 
     return( 
-<<<<<<< HEAD
         <Usercontext.Provider  value={{ setPlaces,places, link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata , reload , setReload}}>
-=======
-        <Usercontext.Provider  value={{ link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata}}>
->>>>>>> origin/main
 {children}
 
         </Usercontext.Provider>

@@ -165,11 +165,19 @@ function addtoFilter(e){
 
                 <div className=" flex   w-[60%]  gap-3  justify-between ">
                   <input
+                   onChange={(e) => {
+                    const newValue = parseInt(e.target.value);
+                    setPriceRange([newValue, priceRange[1]]);
+                  }}
                     value={priceRange[0]}
                     className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]  "
                     type="number"
                   />
                   <input
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value);
+                    setPriceRange([priceRange[0], newValue]);
+                  }}
                     value={priceRange[1]}
                     className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]   "
                     type="number"

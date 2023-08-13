@@ -11,6 +11,10 @@ import PerksD from "../component/PerksD";
 import PhotoSlider from "../component/Imageslaider";
 import PlaceIcon from "@mui/icons-material/Place";
 import Gestes from "../component/Gestes";
+import Datepicker from "react-tailwindcss-datepicker";
+
+import {format , differenceInDays} from "date-fns";
+
 function PlaceDetailes() {
   const [morephotos, setMorephotos] = useState(false);
   const [extra, setExtra] = useState(false);
@@ -18,13 +22,51 @@ function PlaceDetailes() {
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const [Aopen, setAopen] = useState(false);
   const [Gopen, setGopen] = useState(false);
+  const [checkOutDate, setCheckOutDate] = useState(new Date());
+  const [checkInDate, setCheckInDate] = useState(new Date());
+
   const [Guest, setGuest] = useState({
     adults: 1,
     children: 0,
     infants: 0,
-    pets: 0
+    pets: 0,
   });
   const { _id } = useParams();
+
+
+  useEffect(() => {
+    const nextDay = new Date(checkInDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    setCheckOutDate(nextDay);
+  }, [checkInDate]);
+
+  const handleCheckOutChange = (event) => {
+    const newDate = new Date(event.target.value);
+    // Check if the new check-out date is greater than or equal to the check-in date
+    
+
+    if (newDate >= checkInDate     ) {
+      setCheckOutDate(newDate);
+    }
+
+    
+  };
+
+  const handleCheckInChange = (event) => {
+    const newDate = new Date(event.target.value);
+    // Check if the new check-in date is less than or equal to the check-out date
+    const Datenow = new Date()
+    if (  newDate >= Datenow) {
+      setCheckInDate(newDate);
+    }
+  };
+
+  const formattedCheckOutDate = format(checkOutDate, 'yyyy-MM-dd');
+  const formattedCheckInDate = format(checkInDate, 'yyyy-MM-dd');
+
+const daysStayed = differenceInDays(checkOutDate, checkInDate);
+ 
+
 
   useEffect(() => {
     axios.get("/place-details/" + _id).then((response) => {
@@ -34,11 +76,9 @@ function PlaceDetailes() {
     });
   }, [_id]);
 
-
   if (isLoading) {
     return <div>Loading...</div>; // Render a loading message or spinner while waiting for data
   }
-
 
   function hendelmorephotos() {
     setMorephotos(!morephotos);
@@ -47,37 +87,35 @@ function PlaceDetailes() {
 
   function incrimentGuests(e) {
     const { name } = e.target; // Get the name from the clicked element
-  
-    setGuest(prevGuest => ({
+
+    setGuest((prevGuest) => ({
       ...prevGuest,
-      [name]: prevGuest[name] + 1 // Increment the corresponding property by 1
+      [name]: prevGuest[name] + 1, // Increment the corresponding property by 1
     }));
   }
 
-const Gdata = [{
-title:"Adults",
-desc:"Age 13+",
-value:Guest.adults,
-},
-{
-  title:"Children",
-  desc:"Ages 2–12",
-  value:Guest.children,
-  
-  },
-  {
-    title:"Infants",
-    desc:"Under 2",
-    value:Guest.infants,
+  const Gdata = [
+    {
+      title: "Adults",
+      desc: "Age 13+",
+      value: Guest.adults,
+    },
+    {
+      title: "Children",
+      desc: "Ages 2–12",
+      value: Guest.children,
+    },
+    {
+      title: "Infants",
+      desc: "Under 2",
+      value: Guest.infants,
     },
 
     {
-      title:"Pets",
-      value:Guest.pets,
-      
-      },
-]
-
+      title: "Pets",
+      value: Guest.pets,
+    },
+  ];
 
   return (
     <div className="  overflow-hidden   px-3 lg:px-12 w-full h-full  gap-12  mt-40 justify-between flex   flex-col-reverse md:flex-row">
@@ -102,11 +140,11 @@ value:Guest.adults,
           <span className=" font-normal  text-gray-700 text-sm  ">/ night</span>{" "}
         </div>
 
-        <div className=" cursor-pointer      flex-row    justify-between    text-sm items-center relative  w-full lg:w-[70%] h-20 border-[#6d9c9a] border-[1px] border-solid rounded-full my-10 flex ">
+        <div className="        flex-row    justify-between    text-sm items-center relative  w-full lg:w-[70%] h-20 border-[#6d9c9a] border-[1px] border-solid rounded-full my-10 flex ">
           <p className=" font-semibold px-8">Check Availability</p>
           <span
             onClick={() => setAopen(!Aopen)}
-            className="bg-[#578280] rounded-full flex items-center justify-center text-white      h-20 w-20  "
+            className="bg-[#578280] cursor-pointer rounded-full flex items-center justify-center text-white      h-20 w-20  "
           >
             <CalendarMonthIcon />
           </span>
@@ -124,11 +162,14 @@ value:Guest.adults,
                   </span>
                 )}
                 <input
-                  className={`h-14 cursor-pointer  px-2 border-[2px] border-solid rounded-lg   ${
+                  className={`h-14 cursor-pointer  border-[#94bebd] px-2 border-[2px] border-solid rounded-lg   ${
                     !Aopen ? "hidden" : "flex"
                   }`}
                   type="date"
                   id="dateInput"
+                  value={formattedCheckInDate}
+                  
+                  onChange={handleCheckInChange}
                   name="dateInput"
                 />
               </div>
@@ -139,10 +180,13 @@ value:Guest.adults,
                   </span>
                 )}
                 <input
-                  className={`h-14  cursor-pointer px-2  border-[2px] border-solid rounded-lg     ${
+                  className={`h-14  cursor-pointer px-2  border-[#94bebd] border-[2px] border-solid rounded-lg     ${
                     !Aopen ? "hidden" : "flex"
                   }`}
                   type="date"
+                  onChange={handleCheckOutChange}
+                  min={formattedCheckInDate}
+                  value={ daysStayed <= 0 ?  'Select the Check Out date'  : formattedCheckOutDate }
                   id="dateInput"
                   name="dateInput"
                 />
@@ -154,37 +198,54 @@ value:Guest.adults,
                 !Aopen ? "hidden" : "flex"
               }  flex  relative  max-w-full  flex-col  `}
             >
-              <h1
-                onClick={() => setGopen(!Gopen)}
-                className="  cursor-pointer  w-full px-4 flex flex-row   gap-2   text-sm  font-medium  pt-3"
-              >
-                {" "}
-                <span className="   flex flex-row gap-3">
-                  {Guest.adults + Guest.infants } Geusts
-                </span>{" "}
-              </h1>
+              <div className=" w-full flex items-center justify-center">
+                <h1
+                  onClick={() => setGopen(!Gopen)}
+                  className="  border-2 border-[#94bebd] rounded-lg cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2   text-sm  font-medium      "
+                >
+                  {" "}
+                  <span className="   flex flex-row gap-3">
+                    {Guest.adults + Guest.infants} Geusts
+                  </span>{" "}
+                </h1>
+              </div>
 
-             { Gopen && <div
-                className={` gap-4      w-full  top-12  shadow-xl   ${
-                  Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
-                } duration-150 rounded-3xl bg-white absolute gap-5   flex flex-col max-w-full px-4   `}
-              >
-
-
-{Gdata.map((item) => (
-  <Gestes
-    setGuest={setGuest}
-    onClick={incrimentGuests}
-    Geust={item.value} // Change this to item.value
-    title={item.title}
-    name={item.title}
-    desc={item.desc}
-  />
-))}
-                
-                 
+              {Gopen && (
+                <div
+                  className={` gap-4      w-full  top-12  shadow-xl   ${
+                    Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
+                  } duration-150 rounded-3xl bg-white absolute gap-5   flex flex-col max-w-full px-4   `}
+                >
+                  {Gdata.map((item) => (
+                    <Gestes
+                      setGuest={setGuest}
+                      onClick={incrimentGuests}
+                      Geust={item.value} // Change this to item.value
+                      title={item.title}
+                      name={item.title}
+                      desc={item.desc}
+                    />
+                  ))}
+                </div>
+              )}
  
-              </div>}
+ 
+              <div className={`  w-full flex items-center justify-center `}>
+                <button className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg">
+                  Reserve
+                </button>
+              </div>
+
+              <div className=" w-full flex   flex-col    text-lg pt-16 px-4">
+                <div className=" flex w-full justify-between ">
+                  <span className="text-base ">${data.price} x { daysStayed <= 0  ?  0    : daysStayed  }   nights</span>
+                   {   daysStayed <= 0  ?  0      :     '$' +  data.price *  daysStayed }
+                </div>
+
+                <span>{}</span>
+              </div> 
+ 
+
 
 
             </div>
