@@ -12,6 +12,7 @@ import PhotoSlider from "../component/Imageslaider";
 import PlaceIcon from "@mui/icons-material/Place";
 import Gestes from "../component/Gestes";
 import Datepicker from "react-tailwindcss-datepicker";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { format, differenceInDays } from "date-fns";
 
@@ -28,11 +29,17 @@ function PlaceDetailes() {
   const [Guest, setGuest] = useState({
     Adults: 1,
     Children: 0,
-    Infants: 1,
-    Pets: 1,
+    Infants: 0,
+    Pets: 0,
   });
-
+ 
   const { _id } = useParams();
+  const daysStayed = differenceInDays(checkOutDate, checkInDate);
+ 
+
+  function handelBooking (){
+    axios.post('/booking-add' , {checkInDate ,checkOutDate,Guest ,daysStayed ,_id  , price:data.price * daysStayed })
+  }
 
   useEffect(() => {
     const nextDay = new Date(checkInDate);
@@ -61,7 +68,7 @@ function PlaceDetailes() {
   const formattedCheckOutDate = format(checkOutDate, "yyyy-MM-dd");
   const formattedCheckInDate = format(checkInDate, "yyyy-MM-dd");
 
-  const daysStayed = differenceInDays(checkOutDate, checkInDate);
+
 
   useEffect(() => {
     axios.get("/place-details/" + _id).then((response) => {
@@ -70,6 +77,10 @@ function PlaceDetailes() {
       setIsLoading(false); // Once data is fetched, set isLoading to false
     });
   }, [_id]);
+
+
+
+  
 
   if (isLoading) {
     return <div>Loading...</div>; // Render a loading message or spinner while waiting for data
@@ -81,23 +92,38 @@ function PlaceDetailes() {
   }
 
     function dicrementGuests(e , title) {
+      e.preventDefault();
      
-    console.log(Guest[title]);
+    
     
     setGuest((prevGuest) => ({
       ...prevGuest,
-      [title]: prevGuest[title] - 1  ,  
+      [title]: prevGuest[title] >  1 ? (title === "Adults" ? prevGuest[title] - 1 : prevGuest[title] - 1) : (title === "Adults" ? 1 : 0),
     }));
   }
 
   function incrementGuests(e , title) {
-     
-    console.log(title);
+  //  Guest.Children + Guest.Adults   <  data.maxGuests 
     
-    setGuest((prevGuest) => ({
-      ...prevGuest,
-      [title]: prevGuest[title] + 1, // Increment the corresponding property by 1
-    }));
+  setGuest((prevGuest) => {
+    const totalGuests = prevGuest.Adults + prevGuest.Children ;
+    const maxGuests = data.maxGuests;
+
+    if ( (totalGuests < maxGuests) ||
+        (title === 'Infants' && prevGuest.Infants < 3) ||
+        (title === 'Pets' && prevGuest.Pets < 2)) {
+      return {
+        ...prevGuest,
+        [title]: prevGuest[title] + 1   
+      };
+    } else {
+      return prevGuest;
+    }
+  });
+    
+
+
+  
   }
 
 
@@ -211,12 +237,13 @@ function PlaceDetailes() {
               <div className=" w-full flex items-center justify-center">
                 <h1
                   onClick={() => setGopen(!Gopen)}
-                  className="    border-2   mt-1 rounded-lg cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
+                  className="    border-2  justify-between    mt-1 rounded-lg cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
                 >
                   {" "}
                   <span className="   flex flex-row gap-3">
-                    {Guest.Adults + Guest.Children    } Geusts {  ', ' +  !Guest.Infants >=  0   ?  '' :Guest.Infants + ' enfant'  } {  ', ' +  Guest.Pets >= 0   ?  '' :Guest.Pets + ' Pets'   }
-                  </span>{" "}
+                    {Guest.Adults + Guest.Children    } Geusts {     Guest.Infants   <    1   ?  '' : ' ,' +     (Guest.Infants == 1 ?   Guest.Infants + ' infant' :Guest.Infants + ' infants' ) } {     Guest.Pets <     1   ?  '' : ' ,' +     (Guest.Pets == 1 ?   Guest.Pets + ' Pet' :Guest.Pets + ' Pets' )   }
+                  </span> 
+ <KeyboardArrowDownIcon  className= {`  duration-150 transition-all ${ !Gopen ?  'rotate-180' : ' rotate-0'}    `} />
                 </h1>
               </div>
 
@@ -235,13 +262,14 @@ function PlaceDetailes() {
                       title={item.title}
                       name={item.title}
                       desc={item.desc}
+                      maxGuests={data.maxGuests}
                     />
                   ))}
                 </div>
               )}
 
               <div className={`  w-full flex items-center justify-center `}>
-                <button className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg">
+                <button onClick={handelBooking} className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg">
                   Reserve
                 </button>
               </div>
