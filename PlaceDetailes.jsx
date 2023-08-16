@@ -13,62 +13,60 @@ import PlaceIcon from "@mui/icons-material/Place";
 import Gestes from "../component/Gestes";
 import Datepicker from "react-tailwindcss-datepicker";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-import { format, differenceInDays } from "date-fns";
+import { useContext } from "react";
+import { useNavigate } from 'react-router-dom';
+import { format, differenceInDays, set } from "date-fns";
+import { BookingContext } from "../context/Bookingconext";
 
 function PlaceDetailes() {
+ 
   const [morephotos, setMorephotos] = useState(false);
   const [extra, setExtra] = useState(false);
-  const [data, setData] = useState({}); // Initialize data as an empty object
+// Initialize data as an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const [Aopen, setAopen] = useState(false);
   const [Gopen, setGopen] = useState(false);
-  const [checkOutDate, setCheckOutDate] = useState(new Date());
-  const [checkInDate, setCheckInDate] = useState(new Date());
-
-  const [Guest, setGuest] = useState({
-    Adults: 1,
-    Children: 0,
-    Infants: 0,
-    Pets: 0,
-  });
+ const {setData, data, handleCheckOutChange , handleCheckInChange , formattedCheckOutDate , formattedCheckInDate,dicrementGuests,incrementGuests , Gdata,   daysStayed,Guest,setGuest ,  checkOutDate, checkInDate, setCheckInDate, setCheckOutDate } = useContext(BookingContext)
  
   const { _id } = useParams();
-  const daysStayed = differenceInDays(checkOutDate, checkInDate);
+  const navigate = useNavigate();
  
+  const handleNext = () => {
+
+    localStorage.setItem('guest', JSON.stringify(Guest));
+    localStorage.setItem('checkInDate', checkInDate.toISOString());
+    localStorage.setItem('checkOutDate', checkOutDate.toISOString());
+    localStorage.setItem('daysStayed', daysStayed.toString());
+    localStorage.setItem('price', data.price.toString());
+
+    localStorage.setItem('imageUrl', data.photos[0] );
+    
+    
+    navigate('/guest-step');
+  };
+
+  
+
 
   function handelBooking (){
-    axios.post('/booking-add' , {checkInDate ,checkOutDate,Guest ,daysStayed ,_id  , price:data.price * daysStayed })
+    axios.post('/booking-add' , {  checkInDate ,checkOutDate,Guest ,daysStayed ,_id  , price:data.price * daysStayed })
   }
 
   useEffect(() => {
     const nextDay = new Date(checkInDate);
-    nextDay.setDate(nextDay.getDate() + 1);
+    nextDay.setDate(nextDay.getDate() + 7);
     setCheckOutDate(nextDay);
   }, [checkInDate]);
 
-  const handleCheckOutChange = (event) => {
-    const newDate = new Date(event.target.value);
-    // Check if the new check-out date is greater than or equal to the check-in date
 
-    if (newDate >= checkInDate) {
-      setCheckOutDate(newDate);
-    }
-  };
-
-  const handleCheckInChange = (event) => {
-    const newDate = new Date(event.target.value);
-    // Check if the new check-in date is less than or equal to the check-out date
-    const Datenow = new Date();
-    if (newDate >= Datenow) {
-      setCheckInDate(newDate);
-    }
-  };
-
-  const formattedCheckOutDate = format(checkOutDate, "yyyy-MM-dd");
-  const formattedCheckInDate = format(checkInDate, "yyyy-MM-dd");
-
-
+  useEffect(() => {
+    setGuest({
+      Adults: 1,
+      Children: 0,
+      Infants: 0,
+      Pets: 0,
+    })
+  }, []);
 
   useEffect(() => {
     axios.get("/place-details/" + _id).then((response) => {
@@ -90,65 +88,6 @@ function PlaceDetailes() {
     setMorephotos(!morephotos);
     document.body.style.overflow = !morephotos ? " hidden" : "auto";
   }
-
-    function dicrementGuests(e , title) {
-      e.preventDefault();
-     
-    
-    
-    setGuest((prevGuest) => ({
-      ...prevGuest,
-      [title]: prevGuest[title] >  1 ? (title === "Adults" ? prevGuest[title] - 1 : prevGuest[title] - 1) : (title === "Adults" ? 1 : 0),
-    }));
-  }
-
-  function incrementGuests(e , title) {
-  //  Guest.Children + Guest.Adults   <  data.maxGuests 
-    
-  setGuest((prevGuest) => {
-    const totalGuests = prevGuest.Adults + prevGuest.Children ;
-    const maxGuests = data.maxGuests;
-
-    if ( (totalGuests < maxGuests) ||
-        (title === 'Infants' && prevGuest.Infants < 3) ||
-        (title === 'Pets' && prevGuest.Pets < 2)) {
-      return {
-        ...prevGuest,
-        [title]: prevGuest[title] + 1   
-      };
-    } else {
-      return prevGuest;
-    }
-  });
-    
-
-
-  
-  }
-
-
-  const Gdata = [
-    {
-      title: "Adults",
-      desc: "Age 13+",
-      value: Guest.Adults,
-    },
-    {
-      title: "Children",
-      desc: "Ages 2–12",
-      value: Guest.Children,
-    },
-    {
-      title: "Infants",
-      desc: "Under 2",
-      value: Guest.Infants,
-    },
-
-    {
-      title: "Pets",
-      value: Guest.Pets,
-    },
-  ];
 
   return (
     <div className="  overflow-hidden   px-3 lg:px-12 w-full h-full  gap-12  mt-40 justify-between flex   flex-col-reverse md:flex-row">
@@ -269,7 +208,7 @@ function PlaceDetailes() {
               )}
 
               <div className={`  w-full flex items-center justify-center `}>
-                <button onClick={handelBooking} className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg">
+                <button onClick={handleNext} className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg">
                   Reserve
                 </button>
               </div>
