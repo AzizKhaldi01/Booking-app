@@ -17,6 +17,7 @@ import { useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import { format, differenceInDays, set } from "date-fns";
 import { BookingContext } from "../context/Bookingconext";
+import Datepick from "../component/Datepick";
 
 function PlaceDetailes() {
  
@@ -33,13 +34,18 @@ function PlaceDetailes() {
  
   const handleNext = () => {
 
+    
+
     localStorage.setItem('guest', JSON.stringify(Guest));
     localStorage.setItem('checkInDate', checkInDate.toISOString());
     localStorage.setItem('checkOutDate', checkOutDate.toISOString());
     localStorage.setItem('daysStayed', daysStayed.toString());
     localStorage.setItem('price', data.price.toString());
-
+    localStorage.setItem('maxgeustes', data.maxGuests );
     localStorage.setItem('imageUrl', data.photos[0] );
+    localStorage.setItem('id', _id  );
+
+    
     
     
     navigate('/guest-step');
@@ -126,48 +132,7 @@ function PlaceDetailes() {
               Aopen ? "h-[300px]" : " h-0"
             }   z-20   top-20  left-0   `}
           >
-            <div className=" flex   gap-1 pt-2 justify-between flex-row w-full px-2">
-              <div className="relative">
-                {Aopen && (
-                  <span className="absolute top-3 left-3 transform -translate-y-1/2 text-[10px]  text-gray-500">
-                    CHECK-IN
-                  </span>
-                )}
-                <input
-                  className={`h-14 cursor-pointer   px-2 border-[2px] border-solid rounded-lg   ${
-                    !Aopen ? "hidden" : "flex"
-                  }`}
-                  type="date"
-                  id="dateInput"
-                  value={formattedCheckInDate}
-                  onChange={handleCheckInChange}
-                  name="dateInput"
-                />
-              </div>
-              <div className="relative">
-                {Aopen && (
-                  <span className="absolute top-3 left-3  transform -translate-y-1/2 text-[10px] text-gray-500">
-                    CHECKOUT
-                  </span>
-                )}
-                <input
-                  className={`h-14  cursor-pointer px-2    border-[2px] border-solid rounded-lg     ${
-                    !Aopen ? "hidden" : "flex"
-                  }`}
-                  type="date"
-                  onChange={handleCheckOutChange}
-                  min={formattedCheckInDate}
-                  value={
-                    daysStayed <= 0
-                      ? "Select the Check Out date"
-                      : formattedCheckOutDate
-                  }
-                  id="dateInput"
-                  name="dateInput"
-                />
-              </div>
-            </div>
-
+  <Datepick daysStayed={daysStayed} Aopen={Aopen} handleCheckInChange={handleCheckInChange} handleCheckOutChange={handleCheckOutChange} formattedCheckOutDate={formattedCheckOutDate} formattedCheckInDate={formattedCheckInDate} />
             <div
               className={` ${
                 !Aopen ? "hidden" : "flex"
