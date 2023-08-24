@@ -5,6 +5,8 @@
 const Place = require('./module/place.js')
  const jwt = require('jsonwebtoken')
  const User = require('./module/User.js');
+ const Booking = require('./module/Booking.js');
+
  const imageDownloader = require('image-downloader')
  const CookieParser = require('cookie-parser')
  const stripe = require('stripe')('sk_test_51NhBfRGDCWqRoBjnEZ1rA5HHQXjXoPaPReFb1aDJS2oUgNEvRDw4SEd2Fl4Q9FbCggmri9hK50cHnJl7TwUsncav006aX7hl0e'); 
@@ -328,29 +330,69 @@ app.post( '/booking-add' , async  ( req , res) =>{
   console.log(checkInDate ,checkOutDate ,Guest,daysStayed,_id ,price)
 }  )
 
-
+ 
 
 app.post('/submit-payment', async (req, res) => {
-  const { paymentMethodId    } = req.body;
-
+  const { paymentMethodId  ,  placeid ,  days ,checkOut , checkIn , } = req.body;
+  const {jwtToken} = req.cookies;
+ 
+  const place = await Place.findById(placeid)
+ 
   try {
+    const amount =Math.round((place.price * days + (place.price * days) / 12) * 100);
     // Create a PaymentIntent using the Stripe API
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1000, // Amount in cents
-      currency: 'usd',
-      payment_method: paymentMethodId,
-      confirm: true,
+       amount: amount  , // Amount in cents
+        currency: 'usd',
+        payment_method:paymentMethodId ,
+        confirm: true,
+        automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never',
+      },
     });
+  
+
+    if (paymentIntent.status === 'succeeded') { 
+
+     
+    jwt.verify(jwtToken ,'your-secret-key' , async (err , userData )=>{
+      if (err) throw err;
+       const {id} = userData
+    
+       const bookingData = {
+        Place: placeid,
+        User: id,
+        days:days,
+        checkIn: checkIn, // Replace with the actual check-in date
+        checkOut: checkOut, // Replace with the actual check-out date
+        name: 'Aziz', // Replace with the actual name
+        phone: '+21307789523', // Replace with the actual phone number
+        price: amount,
+      };
+       Booking.create(bookingData)
+    
+    } )
+  } 
 
     // Handle success and send response
     res.status(200).json({ message: 'Payment successful.' });
-  } catch (error) {
+    //
+
+  } 
+  
+  
+  catch (error) {
     console.error(error.message);
     res.status(500).json({ error: 'An error occurred.' });
   }
-});
+}
+
+);
 
 
 app.listen(4000, '0.0.0.0', () => {
   console.log(`Server is running on http://0.0.0.0:${4000}`);
 });
+
+
