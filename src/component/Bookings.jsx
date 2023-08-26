@@ -3,16 +3,19 @@ import React, { useEffect, useContext, useState } from "react";
 import { BookingContext } from "../context/Bookingconext";
 import congrate from "../img/congrate.png";
 import axios from "axios";
+import AccommSkelaton from "./AccommSkelaton";
 
 function Bookings() {
   const { err, days, setErr } = useContext(BookingContext);
 
   const [data, setData] = useState(null);
+  const [isLoading , setIsLoading]=useState(true)
 
   useEffect(() => {
     axios.get("/get-bookings").then((response) => {
       const { data } = response;
       setData(data);
+      setIsLoading(false)
     });
   }, []);
 
@@ -25,9 +28,11 @@ function Bookings() {
  
  
   return (
-    <div className="  bg-slate-100  h-full w-full grid grid-cols-1 sm:grid-cols-2  p-4 px-7   gap-3 items-center ">
+    <div className="   mt-6 h-full w-full grid grid-cols-1 sm:grid-cols-2  p-4 px-7   gap-3 items-center ">
 
-{data?.map((item)=>(
+
+
+{ isLoading ?       data?.map((item)=>(
   <div className=" cursor-pointer w-full h-full  md:h-[30vh] rounded-xl bg-white   p-3 flex  flex-col   gap-0 md:gap-2  md:flex-row">
 <img className=" w-full  md:w-[30%] object-cover rounded-xl  md:h-full" src={` http://localhost:4000/uploads/${item?.Place?.photos[1]} `} alt="" />
 <div className=" flex  gap-1  flex-col w-full md:py-0 py-2  px-0 md:px-4 h-full ">
@@ -68,7 +73,9 @@ function Bookings() {
 
 </div>
 </div>
-))}
+)):
+<AccommSkelaton cards={4}/>  
+}
 
 
 
