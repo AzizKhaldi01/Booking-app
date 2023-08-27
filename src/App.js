@@ -9,14 +9,22 @@ import Registrer from "./pages/Registrer";
  import { Route , Routes } from "react-router-dom";
 import axios from "axios";
 import Account from "./pages/Account";
-import { SkeletonTheme } from "react-loading-skeleton";
+import BookedPlaceDetails from "./component/BookedPlaceDetails";
+import Booking from "./pages/Booking";
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
 import PlaceDetailes from "./pages/PlaceDetailes";
  axios.defaults.baseURL = 'http://localhost:4000'
   axios.defaults.withCredentials=true
 function App() {
    
+
+  const stripePromise = loadStripe('pk_test_51NhBfRGDCWqRoBjngI9J1i8lsLDi9QmUiVvUw6EpYTHxcNkYdMEvhV6Fr3LMbLGNVVG84SLgYJJZNPywJvpUTIqh00KvikbmRN');
   return (
-    <div className="      " >
+
+    <Elements stripe={stripePromise}>
+    <div className="  font-custom" >
  
       
      <Navbar/>
@@ -29,10 +37,15 @@ function App() {
   <Route path="/account/:subpages" element={<Account/>} />
      <Route path="/placedetails/:_id" element={<PlaceDetailes/>} />
    <Route path="/account/:subpages/:_id" element={<Account/>} />
+   <Route path="/account/bookings/:_id" element={<BookedPlaceDetails/>} />
+
+   <Route path="/guest-step" element={<Booking/>} />
+
 </Routes>
      
        
     </div>
+    </Elements>
   );
 }
 
