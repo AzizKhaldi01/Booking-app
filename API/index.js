@@ -270,7 +270,7 @@ if (err) throw err
    app.get('/place-details/:id' , async (req , res ) =>{
 
    const  {id}  = req.params 
-console.log(id)
+ 
 
        res.json( await Place.findById(id))    
     } );
@@ -390,6 +390,33 @@ app.post('/submit-payment', async (req, res) => {
 
 );
 
+app.get('/get-bookings' , async (req ,  res)=>{
+ 
+ const {jwtToken} = req.cookies;
+
+ jwt.verify( jwtToken , 'your-secret-key'  , {} , async (err , userData)=>{
+  if (err) throw err ;
+  const {id} = userData;
+ 
+  const bookings =  await Booking.find({User:id}).populate('Place')
+
+
+ 
+ 
+
+   res.json( bookings  )
+
+ } )
+}  )
+
+app.get('/get-bookingDetails/:id'   ,  async (req , res)=>{
+  const {id} = req.params
+
+  const bookingdetails = await Booking.findById(id)
+
+ res.json(bookingdetails)
+ 
+} )
 
 app.listen(4000, '0.0.0.0', () => {
   console.log(`Server is running on http://0.0.0.0:${4000}`);
