@@ -5,11 +5,10 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Navbar from "./component/navbar";
 import Registrer from "./pages/Registrer";
-  
  import { Route , Routes } from "react-router-dom";
 import axios from "axios";
 import Account from "./pages/Account";
-import BookedPlaceDetails from "./component/BookedPlaceDetails";
+import BookedPlaceDetails from "./pages/BookedPlaceDetails";
 import Booking from "./pages/Booking";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
