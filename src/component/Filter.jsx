@@ -104,20 +104,20 @@ function addtoFilter(e){
   return (
     <div
       className={` duration-300 ${
-        filtr ? "top-0 z-50 " : "top-[-100%] -z-10 "
+        filtr ? "  z-50 " : "  -z-10 "
       }  text-gray-800 duration-300    flex   fixed h-full w-full relateve `}
     >
       <div
         onClick={exitFilter}
         className={` flex  fixed h-full w-full  duration-300   ${
-          filtr ? " opacity-50   " : "opacity-0      "
+          filtr ? " opacity-50   " : "opacity-0  "
         }  right-0 bg-black`}
       ></div>
 
       <div
         className={`  ${
-          filtr ? " opacity-100  z-50  top-0" : " top-[100%]   -z-10 opacity-0 "
-        }  py-4   duration-300   flex-grow   text-[12px] h-[90vh]           w-[90%] lg:w-[60%] bg-white rounded-lg fixed   top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}
+          filtr ? " opacity-100  z-50  top-[100%] " : " top-[-100%]   -z-10 opacity-0 "
+        }  py-4   duration-300   flex-grow   text-[12px] h-[90vh]           w-[100%] lg:w-[60%] bg-white rounded-lg fixed   top-[55%]  md:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}
       >
         <div className=" flex text-lg flex-row border-b-[1px]  border-solid items-center justify-center  z-10 bg-white h-16 w-full absolute top-0 rounded-t-xl ">
           <span

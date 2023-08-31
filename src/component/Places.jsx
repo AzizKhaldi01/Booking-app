@@ -37,7 +37,7 @@ export default function Places({  _id ,photos,address ,price,title    }) {
             <div className="  text-white  cursor-pointer hover:opacity-70 z-10 absolute top-3 right-3">
               <FavoriteBorderOutlinedIcon />
             </div>
-            <PhotoSlider nonav={true} photos={photos} hight={true} />
+            <PhotoSlider nonav={true} photos={photos} hight={false} />
           </div>
 
           <div className=" h-[20%] w-full px-4 flex flex-row justify-between">

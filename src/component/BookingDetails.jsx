@@ -1,17 +1,31 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { differenceInDays } from "date-fns";
+ 
+import { BookingContext } from '../context/Bookingconext';
 import StarIcon from "@mui/icons-material/Star";
 function BookingDetails({selectedRange }) {
+
+  const { setDays , days }= useContext(BookingContext)
       const price = localStorage.getItem("price");
     let title = localStorage.getItem("title");
     let address = localStorage.getItem("address");
     const daysStayed = differenceInDays(selectedRange[1], selectedRange[0]);
+
+useEffect(()=>{
+
+  localStorage.setItem('daysStayed',  daysStayed.toString() );
+  const days = localStorage.getItem('daysStayed')
+  setDays(days)
+  
+
+}  , [selectedRange] )
+
     const fees = (price * daysStayed) / 12
     let imgUrl = localStorage.getItem("imageUrl");
   
   return (
      
-    <div className=" w-full  flex justify-center items-start  md:w-[40%]      mt-0 md:mt-40  ">
+    <div className=" w-full  flex justify-center items-start  md:w-[50%]      mt-0 md:mt-40  ">
     <div className="  bg-white border-solid border-[1px]    p-[24px]  w-[100%] flex flex-col   relative rounded-xl   md:sticky top-28 md:w-[90%]   h-[400px] ">
       <div className="  gap-2   flex w-full   h-36 justify-between   ">
         <img
@@ -53,7 +67,7 @@ function BookingDetails({selectedRange }) {
           </span>
           <span className=" flex flex-row justify-between w-full">
             
-            Airbnb service fee
+          Reservado service fee
             <span className="  "> ${ fees.toFixed(0)} </span>
           </span>
         </div>

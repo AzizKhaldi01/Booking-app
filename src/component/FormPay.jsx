@@ -53,7 +53,7 @@ const navigate = useNavigate()
 
     e.preventDefault();
      
-
+alert()
     const result = await stripe.createPaymentMethod({
       type: "card",
     
@@ -76,6 +76,7 @@ const navigate = useNavigate()
           days:days,
           checkOut:checkOut,
           checkIn:checkIn,
+ 
           placeid:id,
           paymentMethodId: result.paymentMethod?.id,
         });

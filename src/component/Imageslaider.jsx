@@ -15,7 +15,7 @@ SwiperCore.use([Navigation, Pagination]);
 
  
 
-const PhotoSlider = ({photos , nonav}) => {
+const PhotoSlider = ({photos , nonav , hight ,onClick}) => {
 
 
 
@@ -42,7 +42,7 @@ const PhotoSlider = ({photos , nonav}) => {
     >
       {photos.map((photo, idx) => (
         <SwiperSlide key={idx}>
-          <img    src={` http://localhost:4000/uploads/${photo} `} alt={`Photo ${idx + 1}`} className=" object-cover rounded-xl w-full h-full" />
+          <img   onClick={onClick}  src={` http://localhost:4000/uploads/${photo} `} alt={`Photo ${idx + 1}`} className= {` object-cover rounded-xl w-full   ${hight ? "h-[250px] " : " h-full"  }   `}  />
        
         </SwiperSlide>
       ))}

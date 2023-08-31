@@ -12,7 +12,7 @@ function Navbar() {
   const {User} = useContext(Usercontext);
  
   return (
- <div className=' flex flex-col w-full'> 
+ <div className=' hidden md:flex  flex-col w-full'> 
    <div className=' w-full h-16  items-center  z-30 border-b-[1px]  border-solid bg-white  fixed top-0 right-0 flex flex-row justify-between  px-14 p-10  '>
         
          <Link to= '/'><div className='  text-lg font-medium'>

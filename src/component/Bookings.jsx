@@ -31,7 +31,7 @@ function Bookings() {
       {!isLoading ? (
         BookingDetails?.map((item) => (
           <div className=" relative   w-full h-full  md:h-[30vh] rounded-xl  bg-slate-50 shadow   p-3 flex  flex-col   gap-0 md:gap-2  md:flex-row">
-           <Link to={`/account/bookings/${item?._id}`}> 
+           <Link to={`/account/Trips/${item?._id}`}> 
             <span className=" absolute top-2 right-2  cursor-pointer ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -55,6 +55,8 @@ function Bookings() {
               src={` http://localhost:4000/uploads/${item?.Place?.photos[1]} `}
               alt=""
             />
+<div  className=" w-full flex flex-col h-full justify-between  ">
+
 
             <div className=" flex  gap-1  flex-col w-full md:py-0 py-2  px-0 md:px-4 h-full ">
               <p className=" text-xs gap-1 flex flex-row items-end text-gray-700">
@@ -151,12 +153,14 @@ function Bookings() {
                 </span>
               </div>
 
-              <div className=" flex flex-row items-center ju w-full h-3  justify-between  pt-12  text-gray-800   ">
+             
+            </div>
+ <div className=" flex flex-row items-center   w-full h-3  justify-between   text-lg  py-5  md:py-3  px-1 md:px-4 pb-1 text-gray-800   ">
                 <span className=" flex flex-row items-center  text-bace font-medium  md:text-lg ">
                   total: ${item?.price / 100}
                 </span>
               </div>
-            </div>
+              </div>
           </div>
         ))
       ) : (
