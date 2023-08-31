@@ -6,6 +6,7 @@ import "./index.css";
  import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import Userprovider from './context/pagecontext';
+import Bookingprovider from './context/Bookingconext';
   
 
 
@@ -14,6 +15,7 @@ import Userprovider from './context/pagecontext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <Bookingprovider>
   <Userprovider>
   <React.StrictMode>
    
@@ -23,7 +25,7 @@ root.render(
   
   </React.StrictMode>
    </Userprovider>
- 
+ </Bookingprovider>
 );
 
  

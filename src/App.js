@@ -36,7 +36,7 @@ function App() {
   <Route path="/account/:subpages" element={<Account/>} />
      <Route path="/placedetails/:_id" element={<PlaceDetailes/>} />
    <Route path="/account/:subpages/:_id" element={<Account/>} />
-   <Route path="/account/bookings/:_id" element={<BookedPlaceDetails/>} />
+   <Route path="/account/Trips/:_id" element={<BookedPlaceDetails/>} />
 
    <Route path="/guest-step" element={<Booking/>} />
 
