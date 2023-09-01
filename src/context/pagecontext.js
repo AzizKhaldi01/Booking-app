@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import {  createContext, useEffect, useState   } from "react";
- import { useParams } from "react-router-dom";
+ 
 export const  Usercontext = createContext();
 
 
@@ -9,10 +9,15 @@ const Userprovider = ({children})=>{
  
  const [User , setUser] = useState(null)
    const [ready , setReady] = useState(false)
- const [add , setAdd]= useState(false);
+ const [add , setAdd]= useState(true);
  const [ reload , setReload] = useState(false)
  const [link , setLink]= useState('');
  const [placesdata, setPlacedata] = useState(null)
+ const [list , setList] = useState(true)
+ const [isLoading , setIsLoading] = useState(false)
+
+
+ 
 
  const [places, setPlaces] = useState([]);
 
@@ -20,6 +25,7 @@ const Userprovider = ({children})=>{
    axios.get("/user-places").then(({ data }) => {
     const reversedData = data.reverse();
      setPlaces(data);
+     setIsLoading(true)
    });
  }, [ reload]);
  
@@ -49,10 +55,11 @@ const Userprovider = ({children})=>{
           
     }
   },[])
+
   
 
     return( 
-        <Usercontext.Provider  value={{ setPlaces,places, link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata , reload , setReload}}>
+        <Usercontext.Provider  value={{ isLoading , setIsLoading, list,setList, setPlaces,places, link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata , reload , setReload}}>
 {children}
 
         </Usercontext.Provider>
