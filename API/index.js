@@ -27,7 +27,7 @@ const { ArrowForwardIosTwoTone } = require('@mui/icons-material');
    app.use('/uploads' , express.static(__dirname+'/uploads'))
   app.use(cors({
     credentials:true,
-    origin:'http://localhost:3000'
+    origin:'https://booking-app-front-end-pearl.vercel.app/'
   })) 
  app.get('/test', (req,res)=> 
  {
