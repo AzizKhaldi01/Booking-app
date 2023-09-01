@@ -14,7 +14,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
 import PlaceDetailes from "./pages/PlaceDetailes";
- axios.defaults.baseURL = 'http://localhost:4000'
+ axios.defaults.baseURL = 'https://booking-app-api-ten.vercel.app/'
   axios.defaults.withCredentials=true
 function App() {
    
