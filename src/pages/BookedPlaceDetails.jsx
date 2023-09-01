@@ -2,15 +2,15 @@ import axios from "axios";
 import React, { useEffect, useContext, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import RoomIcon from "@mui/icons-material/Room";
+import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import EastIcon from "@mui/icons-material/East";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import BookingDetails from "../component/BookingDetails";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 function BookedPlaceDetails() {
   const { _id } = useParams();
   const [data, setData] = useState(null);
-
+const navigate = useNavigate();
   useEffect(() => {
     axios.get("/get-bookingDetails/" + _id).then((response) => {
       const { data } = response;
@@ -18,10 +18,15 @@ function BookedPlaceDetails() {
     });
   }, []);
 
+const handelGoback = ()=>{
+  navigate(-1)
+}
+
   const fees =   ( data?.price / 100) / 13  ;
 
   return (
-    <div className="  mt-24 w-full h-full flex flex-col    px-2  lg:px-14 ">
+    <div className=" mt-0   md:mt-24 w-full h-full flex flex-col    px-2  lg:px-14 ">
+      <div className="  w-full bg-white h-14 md:hidden flex  justify-center items-center sticky  top-0 z-20 text-lg font-medium  "> <span onClick={handelGoback}><KeyboardArrowLeftIcon   className=" cursor-pointer absolute top-4 left-2"/></span>  Bookings </div>
       <div className=" gap-3 flex w-full  flex-col  md:flex-row ">
         <div className="">
           <div className=" relative w-full  md:h-[50vh] h-[300px]  cursor-pointer    lg:h-[80vh] rounded-xl ">
@@ -31,7 +36,7 @@ function BookedPlaceDetails() {
               alt=""
             />
 
-            <div className=" z-10 absolute bottom-[10%]   w-full  px-4 text-2xl  md:text-5xl text-white  ">
+            <div className=" z-10 absolute bottom-[10%]   w-full  px-4 text-xl  md:text-5xl text-white  ">
               <h1 className=" max-w-[70%] font-medium ">
                 {data?.Place?.title}
               </h1>
@@ -43,7 +48,7 @@ function BookedPlaceDetails() {
                 background:
                   "linear-gradient(0deg, rgba(0,0,0,0.9472163865546218) 29%, rgba(5,5,5,0.8603816526610644) 46%, rgba(10,10,10,0.7147233893557423) 62%, rgba(28,28,28,0.5186449579831933) 77%, rgba(67,67,67,0.02007352941176472) 96%)",
               }}
-              className=" rounded-b-3xl  absolute bottom-0 h-[60%]  opacity-95 w-full   "
+              className=" rounded-b-3xl  absolute bottom-0 h-[40%]  md:h-[60%]  opacity-95 w-full   "
             ></div>
 
             <div className=" absolute top-3 w-full   px-2 md:px-3 justify-between  flex flex-row  ">
@@ -63,11 +68,11 @@ function BookedPlaceDetails() {
           </div>
         </div>
 
-        <div className=" mx-0  md:mx-4   p-2  py-2 flex flex-col w-full  md:w-[40%] h-full gap-3">
+        <div className=" mx-0  md:mx-4   p-0  md:p-2  py-2 flex flex-col w-full  md:w-[40%] h-full gap-3">
           <div className=" p-4  flex flex-col    border-solid border-[1px] rounded-lg   w-full h-full  ">
            <h1 className=" text-xl">Date Details</h1>
            <div className=" w-full flex flex-col  md:flex-row justify-between   "> 
-            <div className="   h-8  items-center rounded-full   my-3 font-medium flex flex-row    gap-3 ">
+            <div className=" md:text-base text-sm   h-8  items-center rounded-full   my-3  flex flex-row    gap-3 ">
               <span className=" flex flex-row items-center justify-center gap-1 ">
                 {" "}
                 From:{" "}

@@ -11,7 +11,7 @@ import Places from  '../component/Places';
 import Filter from "../component/Filter";
 
 function Home() {
-  const [filtr, setFilter] = useState(true);
+  const [filtr, setFilter] = useState(false);
   const [places, setPlaces] = useState([]);
   const [isloading, setIslowding] = useState(false);
 
@@ -30,7 +30,7 @@ function exitFilter(){
   return (
     <div className=" h-full w-full    flex flex-col  ">
       <div
-        className={`  px-3  md:px-14 justify-between  h-[70px]   w-full     bg-white duration-150  mt-24 sticky   top-20     ease-out   flex items-center        mt-23       z-20     `}
+        className={`  px-3  md:px-14 justify-between  h-[70px]   w-full     bg-white duration-150  mt-0 md:mt-24 sticky   top-0  md:top-20     ease-out   flex items-center                z-20     `}
       >
         <div className=" w-full   h-full  "></div>
         <div
@@ -69,6 +69,7 @@ function exitFilter(){
         {!isloading && <Carteskelaton cards={8} />}
         {places.map((place, index) => (
           <Places
+
             _id={place._id}
             title={place.title}
             address={place.address}

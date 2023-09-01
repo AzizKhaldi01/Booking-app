@@ -5,68 +5,102 @@ import { useParams } from "react-router-dom";
 import BorderAllIcon from "@mui/icons-material/BorderAll";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ExtraInfo from "../component/ExtraInfo";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
 import CloseIcon from "@mui/icons-material/Close";
 import PerksD from "../component/PerksD";
 import PhotoSlider from "../component/Imageslaider";
 import PlaceIcon from "@mui/icons-material/Place";
 import Gestes from "../component/Gestes";
-import Datepicker from "react-tailwindcss-datepicker";
-
-import {format , differenceInDays} from "date-fns";
+import ClearIcon from "@mui/icons-material/Clear";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { BookingContext } from "../context/Bookingconext";
+import Datepick from "../component/Datepick";
+import PlaceDescription from "../component/PlaceDescription";
+import GrayLine from "../component/GrayLine";
 
 function PlaceDetailes() {
   const [morephotos, setMorephotos] = useState(false);
   const [extra, setExtra] = useState(false);
-  const [data, setData] = useState({}); // Initialize data as an empty object
+  // Initialize data as an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const [Aopen, setAopen] = useState(false);
   const [Gopen, setGopen] = useState(false);
-  const [checkOutDate, setCheckOutDate] = useState(new Date());
-  const [checkInDate, setCheckInDate] = useState(new Date());
+  const {
+    setData,
+    data,
+    handleCheckOutChange,
+    handleCheckInChange,
+    formattedCheckOutDate,
+    formattedCheckInDate,
+    dicrementGuests,
+    incrementGuests,
+    Gdata,
+    daysStayed,
+    Guest,
+    setGuest,
+    checkOutDate,
+    checkInDate,
+    setCheckInDate,
+    setCheckOutDate,
+  } = useContext(BookingContext);
 
-  const [Guest, setGuest] = useState({
-    adults: 1,
-    children: 0,
-    infants: 0,
-    pets: 0,
-  });
   const { _id } = useParams();
+  const navigate = useNavigate();
 
+  const handleNext = () => {
+    localStorage.setItem("guest", JSON.stringify(Guest));
+    localStorage.setItem("checkInDate", checkInDate.toISOString());
+    localStorage.setItem("checkOutDate", checkOutDate.toISOString());
+    localStorage.setItem("daysStayed", daysStayed.toString());
+    localStorage.setItem("price", data.price.toString());
+    localStorage.setItem("maxgeustes", data.maxGuests);
+    localStorage.setItem("imageUrl", data.photos[0]);
+    localStorage.setItem("title", data.title);
+    localStorage.setItem("address", data.address);
+
+    localStorage.setItem("id", _id);
+
+    navigate("/guest-step");
+  };
+
+  function handelGoback() {
+    navigate(-1);
+  }
+
+function AddFavorite (e){
+  e.preventDefault();
+  axios.post('/add-favorite' , {placeID:_id}   )
+}
+
+  function handelBooking() {
+    axios.post("/booking-add", {
+      checkInDate,
+      checkOutDate,
+      Guest,
+      daysStayed,
+      _id,
+      price: data.price * daysStayed,
+    });
+  }
 
   useEffect(() => {
     const nextDay = new Date(checkInDate);
-    nextDay.setDate(nextDay.getDate() + 1);
+    nextDay.setDate(nextDay.getDate() + 7);
     setCheckOutDate(nextDay);
   }, [checkInDate]);
 
-  const handleCheckOutChange = (event) => {
-    const newDate = new Date(event.target.value);
-    // Check if the new check-out date is greater than or equal to the check-in date
-    
-
-    if (newDate >= checkInDate     ) {
-      setCheckOutDate(newDate);
-    }
-
-    
-  };
-
-  const handleCheckInChange = (event) => {
-    const newDate = new Date(event.target.value);
-    // Check if the new check-in date is less than or equal to the check-out date
-    const Datenow = new Date()
-    if (  newDate >= Datenow) {
-      setCheckInDate(newDate);
-    }
-  };
-
-  const formattedCheckOutDate = format(checkOutDate, 'yyyy-MM-dd');
-  const formattedCheckInDate = format(checkInDate, 'yyyy-MM-dd');
-
-const daysStayed = differenceInDays(checkOutDate, checkInDate);
- 
-
+  useEffect(() => {
+    setGuest({
+      Adults: 1,
+      Children: 0,
+      Infants: 0,
+      Pets: 0,
+    });
+  }, []);
 
   useEffect(() => {
     axios.get("/place-details/" + _id).then((response) => {
@@ -85,234 +119,238 @@ const daysStayed = differenceInDays(checkOutDate, checkInDate);
     document.body.style.overflow = !morephotos ? " hidden" : "auto";
   }
 
-  function incrimentGuests(e) {
-    const { name } = e.target; // Get the name from the clicked element
-
-    setGuest((prevGuest) => ({
-      ...prevGuest,
-      [name]: prevGuest[name] + 1, // Increment the corresponding property by 1
-    }));
-  }
-
-  const Gdata = [
-    {
-      title: "Adults",
-      desc: "Age 13+",
-      value: Guest.adults,
-    },
-    {
-      title: "Children",
-      desc: "Ages 2–12",
-      value: Guest.children,
-    },
-    {
-      title: "Infants",
-      desc: "Under 2",
-      value: Guest.infants,
-    },
-
-    {
-      title: "Pets",
-      value: Guest.pets,
-    },
-  ];
-
   return (
-    <div className="  overflow-hidden   px-3 lg:px-12 w-full h-full  gap-12  mt-40 justify-between flex   flex-col-reverse md:flex-row">
+    <div className="  overflow-hidden  md:pb-0 pb-20   px-3 lg:px-12 w-full h-full  gap-12   mt-0 md:mt-40 justify-between flex   flex-col-reverse md:flex-row">
       <div className="  w-full md:w-[40%] flex flex-col     ">
-        <div className="  text-2xl md:text-3xl font-bold max-w-[80%] ">
-          {data.title}
+        <div className="md:hidden  scale-110  pb-7 cursor-pointer block relative w-full  ">
+          <div className=" flex flex-row justify-between items-center  mt-3 p-5 w-full absolute h-10 top-2   z-20">
+            <span
+              onClick={handelGoback}
+              className=" h-8 w-8 bg-white rounded-full flex z-30 items-center justify-center "
+            >
+              <KeyboardArrowLeftIcon className="  scale-110" />{" "}
+            </span>
+            <span  onClick={AddFavorite} className=" h-8 w-8 bg-white rounded-full flex items-center justify-center ">
+              <FavoriteBorderIcon className="  scale-90" />
+            </span>
+          </div>
+          <PhotoSlider
+            onClick={hendelmorephotos}
+            nonav={false}
+            photos={data.photos}
+            hight={true}
+          />
         </div>
-        <p className="  text-xs py-3 text-gray-600">
-          {" "}
-          <PlaceIcon fontSize="small" /> {data.address}
-        </p>
-        <div
-          onClick={hendelmorephotos}
-          className="md:hidden  scale-110  py-7 cursor-pointer block   relative w-full    "
-        >
-          <PhotoSlider nonav={false} photos={data.photos} />
-        </div>
+        <div className=" flex w-full p-2 flex-col">
+          <div className="  text-2xl md:text-3xl   font-medium md:font-bold w-full  md:max-w-[90%] ">
+            {data.title}
+          </div>
+          <p className="  md:text-base flex j items-start text-ms  py-2 md:py-4 text-gray-600">
+            {" "}
+            <PlaceIcon fontSize="small" /> {data.address}
+          </p>
+          <GrayLine />
+          <div className="  hidden  md:flex flex-row gap-1 my-4 text-2xl  items-center  font-semibold">
+            ${data.price}
+            <span className=" font-normal  text-gray-700 text-sm  ">
+              / night
+            </span>
+          </div>
+          <div className="  fixed   md:hidden flex  right-0  w-full bottom-0  bg-white h-20 z-20 justify-between p-3 items-center border-solid border-t-[1px] text-xs text-white  border-gray-300 ">
+            <span className="  font-medium   text-gray-700 text-base    ">
+              {" "}
+              ${data.price} / night
+            </span>
+            <button
+              onClick={() => setAopen(!Aopen)}
+              className=" bg-main p-3 text-sm  h-full rounded-md "
+            >
+              Check Availability
+            </button>
+          </div>
+          <div className="          flex-row    justify-between  w-full xl:w-[70%]  text-sm items-center  md:relative   bottom-0 bg-white  right-0   flex ">
+            <div className="  w-full   h-20  hidden md:flex flex-row justify-between  items-center border-[#6d9c9a] border-[1px] border-solid rounded-full  my-0 md:my-6  ">
+              <p className=" font-semibold px-8">Check Availability</p>
+              <span
+                onClick={() => setAopen(!Aopen)}
+                className="bg-[#578280] cursor-pointer rounded-full flex items-center justify-center text-white      h-20 w-20  "
+              >
+                <CalendarMonthIcon />
+              </span>
+            </div>
 
-        <div className=" flex flex-row gap-1 my-4 text-2xl  items-center  font-semibold">
-          {" "}
-          ${data.price}{" "}
-          <span className=" font-normal  text-gray-700 text-sm  ">/ night</span>{" "}
-        </div>
+            <div
+              onClick={() => setAopen(!Aopen)}
+              className={` ${
+                Aopen ? "   md:opacity-0 opacity-30 z-0" : "  opacity-0 -z-10 "
+              } duration-200 fixed w-full h-full  bg-black     top-0 right-0 `}
+            ></div>
 
-        <div className="        flex-row    justify-between    text-sm items-center relative  w-full lg:w-[70%] h-20 border-[#6d9c9a] border-[1px] border-solid rounded-full my-10 flex ">
-          <p className=" font-semibold px-8">Check Availability</p>
-          <span
-            onClick={() => setAopen(!Aopen)}
-            className="bg-[#578280] cursor-pointer rounded-full flex items-center justify-center text-white      h-20 w-20  "
-          >
-            <CalendarMonthIcon />
-          </span>
+            <div
+              className={`    fixed    md:absolute   w-full  md:max-w-[450px]  md:pt-0 border-solid  border-0 md:border-[1px]  pt-10   overflow-hidden   shadow-2xl  duration-150 bg-white rounded-t-xl  md:rounded-xl   ${
+                Aopen
+                  ? "  bottom-0 md:h-[260px] opacity-100"
+                  : " opacity-0  -bottom-[100%]  md:h-0"
+              }   z-20    h-[460px]   md:top-20  left-0   `}
+            >
+              <Datepick
+                daysStayed={daysStayed}
+                Aopen={Aopen}
+                handleCheckInChange={handleCheckInChange}
+                handleCheckOutChange={handleCheckOutChange}
+                formattedCheckOutDate={formattedCheckOutDate}
+                formattedCheckInDate={formattedCheckInDate}
+              />
+
+              <div className=" text-base items-center justify-between px-3  md:hidden flex w-full h-10 bg-white  rounded-t-lg absolute top-0 right-0">
+                <span onClick={() => setAopen(!Aopen)}>
+                  <ClearIcon />{" "}
+                </span>
+              </div>
+              <div
+                className={` ${
+                  !Aopen ? "hidden" : "flex"
+                }  flex  relative  max-w-full  flex-col  `}
+              >
+                <div className=" w-full  flex items-center justify-center">
+                  <div className="  w-[95%] h-[1px]  md:hidden flex  bg-gray-200 my-2 "></div>
+                </div>
+
+                <div className=" px-3 md:hidden  flex  py-2   flex-col w-full h-full gap-3">
+                  <span className="   text-lg font-medium   flex flex-row gap-3">
+                    Guests
+                  </span>
+
+                  <div className=" w-full  flex-col items-center  justify-center ">
+                    {Gdata.map((item) => (
+                      <Gestes
+                        onClick={incrementGuests} // Fix the function name here
+                        dicrementGuests={dicrementGuests}
+                        Geust={item.value} // Change this to item.value
+                        title={item.title}
+                        name={item.title}
+                        desc={item.desc}
+                        maxGuests={data.maxGuests}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className=" w-full  flex items-center justify-center">
+                  <div className="  w-[95%] h-[1px]  md:hidden flex  bg-gray-200 mb-3 "></div>
+                </div>
+
+                <div className=" w-full    hidden  md:flex items-center justify-center">
+                  <h1
+                    onClick={() => setGopen(!Gopen)}
+                    className="    border-2  justify-between    mt-1 rounded-lg cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
+                  >
+                    {" "}
+                    <span className="     flex flex-row gap-3">
+                      {Guest.Adults + Guest.Children} Geusts{" "}
+                      {Guest.Infants < 1
+                        ? ""
+                        : " ," +
+                          (Guest.Infants == 1
+                            ? Guest.Infants + " infant"
+                            : Guest.Infants + " infants")}{" "}
+                      {Guest.Pets < 1
+                        ? ""
+                        : " ," +
+                          (Guest.Pets == 1
+                            ? Guest.Pets + " Pet"
+                            : Guest.Pets + " Pets")}
+                    </span>
+                    <KeyboardArrowDownIcon
+                      className={`  duration-150 transition-all ${
+                        !Gopen ? "rotate-180" : " rotate-0"
+                      }    `}
+                    />
+                  </h1>
+                </div>
+
+                {Gopen && (
+                  <div
+                    className={`  gap-4      w-full  top-12  shadow-xl   ${
+                      Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
+                    } duration-150 rounded-3xl bg-white    z-10 border-solid border-[1px] h-full overflow-auto  pb-10 pt-2 my-3  absolute gap-5    flex flex-col max-w-full px-4   `}
+                  >
+                    {Gdata.map((item) => (
+                      <Gestes
+                        onClick={incrementGuests} // Fix the function name here
+                        dicrementGuests={dicrementGuests}
+                        Geust={item.value} // Change this to item.value
+                        title={item.title}
+                        name={item.title}
+                        desc={item.desc}
+                        maxGuests={data.maxGuests}
+                      />
+                    ))}
+                  </div>
+                )}
+                <div className=" w-full flex   gap-5 h-full     md:flex-col  flex-col-reverse  ">
+                  <div className={`  w-full flex items-center justify-center `}>
+                    <button
+                      onClick={handleNext}
+                      className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg"
+                    >
+                      Reserve
+                    </button>
+                  </div>
+
+                  <div className=" w-full flex   flex-col   items-center    text-lg    px-4">
+                    <div className=" flex w-full justify-between items-center">
+                      <span className="text-sm ">
+                        ${data.price} x {daysStayed <= 0 ? 0 : daysStayed}{" "}
+                        nights
+                      </span>
+                      {daysStayed <= 0 ? 0 : "$" + data.price * daysStayed}
+                    </div>
+
+                    <span>{}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <GrayLine />
+          <PlaceDescription extra={extra} setExtra={setExtra} data={data} />
+          <GrayLine />
 
           <div
-            className={`    absolute   max-w-[450px]     shadow-2xl  duration-150 bg-white rounded-xl   ${
-              Aopen ? "h-[300px]" : " h-0"
-            }   z-20   top-20  left-0   `}
+            className={`  duration-300 ease-out      overflow-hidden    flex flex-col items-center  bg-white fixed h-full  ${
+              morephotos ? " top-0 opacity-[100%] " : " opacity-0 top-[100%]"
+            } w-full right-0    z-50  `}
           >
-            <div className=" flex gap-2 pt-2 justify-between flex-row w-full px-2">
-              <div className="relative">
-                {Aopen && (
-                  <span className="absolute top-3 left-3 transform -translate-y-1/2 text-[10px]  text-gray-500">
-                    CHECK-IN
-                  </span>
-                )}
-                <input
-                  className={`h-14 cursor-pointer  border-[#94bebd] px-2 border-[2px] border-solid rounded-lg   ${
-                    !Aopen ? "hidden" : "flex"
-                  }`}
-                  type="date"
-                  id="dateInput"
-                  value={formattedCheckInDate}
-                  
-                  onChange={handleCheckInChange}
-                  name="dateInput"
-                />
-              </div>
-              <div className="relative">
-                {Aopen && (
-                  <span className="absolute top-3 left-3  transform -translate-y-1/2 text-[10px] text-gray-500">
-                    CHECKOUT
-                  </span>
-                )}
-                <input
-                  className={`h-14  cursor-pointer px-2  border-[#94bebd] border-[2px] border-solid rounded-lg     ${
-                    !Aopen ? "hidden" : "flex"
-                  }`}
-                  type="date"
-                  onChange={handleCheckOutChange}
-                  min={formattedCheckInDate}
-                  value={ daysStayed <= 0 ?  'Select the Check Out date'  : formattedCheckOutDate }
-                  id="dateInput"
-                  name="dateInput"
-                />
-              </div>
+            <div className="  p-3 w-full absolute h-16 bg-white">
+              {" "}
+              <span onClick={hendelmorephotos} className=" cursor-pointer">
+                <CloseIcon fontSize="small" />{" "}
+              </span>{" "}
             </div>
 
             <div
               className={` ${
-                !Aopen ? "hidden" : "flex"
-              }  flex  relative  max-w-full  flex-col  `}
+                !morephotos ? "  opacity-0  " : " opacity-100  "
+              }   duration-1000 rounded-md  flex flex-col items-center      h-full  w-full    overflow-auto   `}
             >
-              <div className=" w-full flex items-center justify-center">
-                <h1
-                  onClick={() => setGopen(!Gopen)}
-                  className="  border-2 border-[#94bebd] rounded-lg cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2   text-sm  font-medium      "
-                >
-                  {" "}
-                  <span className="   flex flex-row gap-3">
-                    {Guest.adults + Guest.infants} Geusts
-                  </span>{" "}
-                </h1>
-              </div>
-
-              {Gopen && (
-                <div
-                  className={` gap-4      w-full  top-12  shadow-xl   ${
-                    Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
-                  } duration-150 rounded-3xl bg-white absolute gap-5   flex flex-col max-w-full px-4   `}
-                >
-                  {Gdata.map((item) => (
-                    <Gestes
-                      setGuest={setGuest}
-                      onClick={incrimentGuests}
-                      Geust={item.value} // Change this to item.value
-                      title={item.title}
-                      name={item.title}
-                      desc={item.desc}
-                    />
-                  ))}
-                </div>
-              )}
- 
- 
-              <div className={`  w-full flex items-center justify-center `}>
-                <button className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg">
-                  Reserve
-                </button>
-              </div>
-
-              <div className=" w-full flex   flex-col    text-lg pt-16 px-4">
-                <div className=" flex w-full justify-between ">
-                  <span className="text-base ">${data.price} x { daysStayed <= 0  ?  0    : daysStayed  }   nights</span>
-                   {   daysStayed <= 0  ?  0      :     '$' +  data.price *  daysStayed }
-                </div>
-
-                <span>{}</span>
-              </div> 
- 
-
-
-
+              {data.photos.map((photo) => (
+                <img
+                  className="  rounded-lg p-2  w-full md:w-[60%]   "
+                  src={"http://localhost:4000/uploads/" + photo}
+                  alt=""
+                />
+              ))}
             </div>
           </div>
-        </div>
 
-        <p className=" w-full  leading-6    text-gray-800 text-[13px] py-3  ">
-          {data.description.length >= 420 ? (
-            <p>
-              {" "}
-              {data.description.substring(0, 420) + "..."}{" "}
-              <p
-                onClick={() => setExtra(!extra)}
-                className=" hover:opacity-70 underline cursor-pointer flex items-center    w-[30%] text-black"
-              >
-                {" "}
-                Show More <ChevronRightIcon />{" "}
-              </p>{" "}
-            </p>
-          ) : (
-            <p>
-              {" "}
-              {data.description}{" "}
-              <p
-                onClick={() => setExtra(!extra)}
-                className=" hover:opacity-70 underline cursor-pointer flex items-center    w-[30%] text-black"
-              >
-                {" "}
-                Show More <ChevronRightIcon />{" "}
-              </p>{" "}
-            </p>
-          )}
-        </p>
+          <ExtraInfo setExtra={setExtra} extra={extra} data={data} />
 
-        <div
-          className={`  duration-300 ease-out      overflow-hidden    flex flex-col items-center  bg-white fixed h-full  ${
-            morephotos ? " top-0 opacity-[100%] " : " opacity-0 top-[100%]"
-          } w-full right-0    z-50  `}
-        >
-          <div className="  p-3 w-full absolute h-16 bg-white">
-            {" "}
-            <span onClick={hendelmorephotos} className=" cursor-pointer">
-              <CloseIcon fontSize="small" />{" "}
-            </span>{" "}
-          </div>
-
-          <div
-            className={` ${
-              !morephotos ? "  opacity-0  " : " opacity-100  "
-            }   duration-1000 rounded-md  flex flex-col items-center      h-full  w-full    overflow-auto   `}
-          >
-            {data.photos.map((photo) => (
-              <img
-                className="  rounded-lg p-2  w-full md:w-[60%]   "
-                src={"http://localhost:4000/uploads/" + photo}
-                alt=""
-              />
+          <div className="   pt-14 flex-row gap-8 grid grid-cols-2   text-xs items-start justify-start w-full">
+            {data.perks.map((perk) => (
+              <PerksD perk={perk} />
             ))}
           </div>
-        </div>
-
-        <ExtraInfo setExtra={setExtra} extra={extra} data={data} />
-
-        <div className="   pt-14 flex-row gap-8 grid grid-cols-2   text-xs items-start justify-start w-full">
-          {data.perks.map((perk) => (
-            <PerksD perk={perk} />
-          ))}
         </div>
       </div>
 

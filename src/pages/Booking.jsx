@@ -2,7 +2,7 @@ import {   React, useEffect, useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import { differenceInDays } from "date-fns";
 import RemoveIcon from "@mui/icons-material/Remove";
 import EditGeusts from "../component/EditGeusts";
 import EditDate from "../component/EditDate";
@@ -59,6 +59,7 @@ function Booking() {
 
   const handleDateChange = (newRange) => {
     setSelectedRange(newRange);
+  
   };
 
   function Savedate() {
@@ -68,14 +69,16 @@ function Booking() {
     // Save ISO 8601 formatted dates to localStorage
     localStorage.setItem("checkInDate", checkInDateUTC);
     localStorage.setItem("checkOutDate", checkOutDateUTC);
-
+   
     setDopen(!Dopen);
+     
+
   }
 
   function incrementGuests(e, title) {
-    //  Guest.Children + Guest.Adults   <  data.maxGuests
+    
 
-    console.log(maxgeustes);
+ 
     setEditGeust((prevGuest) => {
       const totalGuests = prevGuest.Adults + prevGuest.Children;
 
