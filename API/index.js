@@ -1,7 +1,7 @@
  const express = require('express');
  const cors = require('cors');
  const multer = require('multer')
- 
+ const Favorite  = require('./module/Favorite')
 const Place = require('./module/place.js')
  const jwt = require('jsonwebtoken')
  const User = require('./module/User.js');
@@ -17,6 +17,7 @@ const { default: mongoose } = require('mongoose');
 
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const { ArrowForwardIosTwoTone } = require('@mui/icons-material');
 
 
 
@@ -412,10 +413,45 @@ app.get('/get-bookings' , async (req ,  res)=>{
 app.get('/get-bookingDetails/:id'   ,  async (req , res)=>{
   const {id} = req.params
 
-  const bookingdetails = await Booking.findById(id)
+  const bookingdetails = await Booking.findById(id).populate('Place')
 
  res.json(bookingdetails)
  
+} )
+
+
+app.post('/add-favorite'  , async (req , res )=>{
+
+  
+  const {jwtToken} = req.cookies;
+  jwt.verify(jwtToken , 'your-secret-key'   , {} ,async (err , userData)=>{ 
+ if (err) throw err; 
+   const {placeID}= req.body;
+    const {id}= userData;
+    const favoriteData = {
+      Place: placeID,
+      User: id,
+ 
+    };
+    Favorite.create(favoriteData)     
+  } )
+
+  res.json('favorite done .. ')
+} )
+
+
+
+app.get('/get-favorite' , async (req , res)=>{
+
+ const {jwtToken} = req.cookies;
+  jwt.verify(jwtToken , 'your-secret-key'   , {} ,async (err , userData)=>{ 
+ if (err) throw err; 
+ 
+    const {id}= userData;
+    
+ res.json(await Favorite.find({User:id}).populate('Place'))
+  } )
+
 } )
 
 app.listen(4000, '0.0.0.0', () => {
