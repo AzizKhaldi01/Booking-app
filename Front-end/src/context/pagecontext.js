@@ -48,7 +48,7 @@ const Userprovider = ({children})=>{
 
   useEffect(  ()=>{
     if(!User){
-           axios.get('http://localhost:4000/profile',).then(({data})=>{
+           axios.get('https://booking-app-api-ten.vercel.app/profile',).then(({data})=>{
             setUser(data)
              setReady(true)
            })
