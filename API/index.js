@@ -421,11 +421,12 @@ app.post("/add-favorite", async (req, res) => {
     const { id } = userData;
 
     const favoriteId = await Favorite.findOne({ Place: placeID });
-
+console.log(favoriteId?.Place  == placeID )
     if (favoriteId?.Place  == placeID ) {
 
       console.log(favoriteId)
       await Favorite.findOneAndDelete({ Place: placeID });
+      res.json("unliked");
 
     }else{
        const favoriteData = {
@@ -433,7 +434,7 @@ app.post("/add-favorite", async (req, res) => {
       User: id,
     };
     Favorite.create(favoriteData);
-    res.json("favorite done .. ");
+    res.json("liked");
     }
 
 
