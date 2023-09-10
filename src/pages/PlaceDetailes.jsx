@@ -28,6 +28,7 @@ function PlaceDetailes() {
   // Initialize data as an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const [Aopen, setAopen] = useState(false);
+ 
   const [fav, setFav] = useState(true);
 
   const [Gopen, setGopen] = useState(false);
@@ -49,7 +50,7 @@ function PlaceDetailes() {
     setCheckInDate,
     setCheckOutDate,
   } = useContext(BookingContext);
-
+ 
   const { _id } = useParams();
   const navigate = useNavigate();
 
@@ -58,11 +59,11 @@ function PlaceDetailes() {
     localStorage.setItem("checkInDate", checkInDate.toISOString());
     localStorage.setItem("checkOutDate", checkOutDate.toISOString());
     localStorage.setItem("daysStayed", daysStayed.toString());
-    localStorage.setItem("price", data.price.toString());
-    localStorage.setItem("maxgeustes", data.maxGuests);
-    localStorage.setItem("imageUrl", data.photos[0]);
-    localStorage.setItem("title", data.title);
-    localStorage.setItem("address", data.address);
+    localStorage.setItem("price", data.place.price.toString());
+    localStorage.setItem("maxgeustes", data.place.maxGuests);
+    localStorage.setItem("imageUrl", data.place.photos[0]);
+    localStorage.setItem("title", data.place.title);
+    localStorage.setItem("address", data.place.address);
 
     localStorage.setItem("id", _id);
 
@@ -73,10 +74,18 @@ function PlaceDetailes() {
     navigate(-1);
   }
 
+
 function AddFavorite (e){
   e.preventDefault();
-  setFav(!fav)
-  axios.post('/add-favorite' , {placeID:_id}   )
+ 
+  axios.post('/add-favorite' , {placeID:_id}).then((response)=>{
+ 
+    if(response.data == 'liked' ){
+       setFav(true)
+    }else{
+      setFav(false)
+    }  
+  })
 }
 
   function handelBooking() {
@@ -89,6 +98,18 @@ function AddFavorite (e){
       price: data.price * daysStayed,
     });
   }
+
+useEffect(()=>{ 
+   axios.get('/get-favorite').then((response) =>{
+ const  {data} = response;
+ const favoriteItemIds = data.map(item => item?.Place?._id);
+ localStorage.setItem('fav',JSON.stringify(favoriteItemIds))
+ 
+
+  
+} )
+
+},[fav])
 
   useEffect(() => {
     const nextDay = new Date(checkInDate);
@@ -106,17 +127,24 @@ function AddFavorite (e){
   }, []);
 
   useEffect(() => {
-    axios.get("/place-details/" + _id).then((response) => {
+    axios.get("/place-details/"+_id).then((response) => {
       const { data } = response;
       setData(data);
       setIsLoading(false); // Once data is fetched, set isLoading to false
     });
   }, [_id]);
 
+  useEffect(() => {
+     
+    
+    const userLikedItems = JSON.parse(localStorage.getItem('fav'))
+        console.log('aa11 ' + userLikedItems);
+        setFav(userLikedItems.includes(_id));
+ 
+  }, []);
+  
 
- 
-  const isPlaceInFavorites = data?.favoraite?.some(favoriteItem => favoriteItem.Place === data?.place?._id);
- 
+
 
   if (isLoading) {
     return <div>Loading...</div>; // Render a loading message or spinner while waiting for data
@@ -139,7 +167,7 @@ function AddFavorite (e){
               <KeyboardArrowLeftIcon className="  scale-110" />{" "}
             </span>
             <span  onClick={AddFavorite} className=" h-8 w-8 bg-white rounded-full flex items-center justify-center ">
-             {  isPlaceInFavorites &&  fav  ?  <FavoriteIcon className="  text-red-600 scale-90" /> : <FavoriteBorderIcon className="  scale-90" />}
+             {     fav  ?  <FavoriteIcon className="  text-red-600 scale-90" /> : <FavoriteBorderIcon className="  scale-90" />}
             </span>
           </div>
           <PhotoSlider
