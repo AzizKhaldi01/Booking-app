@@ -21,8 +21,11 @@ import { BookingContext } from "../context/Bookingconext";
 import Datepick from "../component/Datepick";
 import PlaceDescription from "../component/PlaceDescription";
 import GrayLine from "../component/GrayLine";
-
+import { Usercontext } from "../context/pagecontext";
 function PlaceDetailes() {
+
+  const {User} = useContext(Usercontext);
+
   const [morephotos, setMorephotos] = useState(false);
   const [extra, setExtra] = useState(false);
   // Initialize data as an empty object
@@ -59,11 +62,11 @@ function PlaceDetailes() {
     localStorage.setItem("checkInDate", checkInDate.toISOString());
     localStorage.setItem("checkOutDate", checkOutDate.toISOString());
     localStorage.setItem("daysStayed", daysStayed.toString());
-    localStorage.setItem("price", data.place.price.toString());
-    localStorage.setItem("maxgeustes", data.place.maxGuests);
-    localStorage.setItem("imageUrl", data.place.photos[0]);
-    localStorage.setItem("title", data.place.title);
-    localStorage.setItem("address", data.place.address);
+    localStorage.setItem("price", data.price.toString());
+    localStorage.setItem("maxgeustes", data.maxGuests);
+    localStorage.setItem("imageUrl", data.photos[0]);
+    localStorage.setItem("title", data.title);
+    localStorage.setItem("address", data.address);
 
     localStorage.setItem("id", _id);
 
@@ -76,6 +79,11 @@ function PlaceDetailes() {
 
 
 function AddFavorite (e){
+
+if(!User){
+  navigate('/login')
+}
+
   e.preventDefault();
  
   axios.post('/add-favorite' , {placeID:_id}).then((response)=>{
@@ -155,6 +163,9 @@ useEffect(()=>{
     document.body.style.overflow = !morephotos ? " hidden" : "auto";
   }
 
+
+
+
   return (
     <div className="  overflow-hidden  md:pb-0 pb-20   px-3 lg:px-12 w-full h-full  gap-12   mt-0 md:mt-40 justify-between flex   flex-col-reverse md:flex-row">
       <div className="  w-full md:w-[40%] flex flex-col     ">
@@ -173,21 +184,21 @@ useEffect(()=>{
           <PhotoSlider
             onClick={hendelmorephotos}
             nonav={false}
-            photos={data?.place?.photos}
+            photos={data?.photos}
             hight={true}
           />
         </div>
         <div className=" flex w-full p-2 flex-col">
           <div className="  text-2xl md:text-3xl   font-medium md:font-bold w-full  md:max-w-[90%] ">
-            {data?.place?.title}
+            {data?.title}
           </div>
           <p className="  md:text-base flex j items-start text-ms  py-2 md:py-4 text-gray-600">
             {" "}
-            <PlaceIcon fontSize="small" /> {data?.place?.address}
+            <PlaceIcon fontSize="small" /> {data?.address}
           </p>
           <GrayLine />
           <div className="  hidden  md:flex flex-row gap-1 my-4 text-2xl  items-center  font-semibold">
-            ${data?.place?.price}
+            ${data?.price}
             <span className=" font-normal  text-gray-700 text-sm  ">
               / night
             </span>
@@ -195,7 +206,7 @@ useEffect(()=>{
           <div className="  fixed   md:hidden flex  right-0  w-full bottom-0  bg-white h-20 z-20 justify-between p-3 items-center border-solid border-t-[1px] text-xs text-white  border-gray-300 ">
             <span className="  font-medium   text-gray-700 text-base    ">
               {" "}
-              ${data?.place?.price} / night
+              ${data?.price} / night
             </span>
             <button
               onClick={() => setAopen(!Aopen)}
@@ -266,7 +277,7 @@ useEffect(()=>{
                         title={item.title}
                         name={item.title}
                         desc={item.desc}
-                        maxGuests={data?.place?.maxGuests}
+                        maxGuests={data?.maxGuests}
                       />
                     ))}
                   </div>
@@ -319,7 +330,7 @@ useEffect(()=>{
                         title={item.title}
                         name={item.title}
                         desc={item.desc}
-                        maxGuests={data?.place?.maxGuests}
+                        maxGuests={data?.maxGuests}
                       />
                     ))}
                   </div>
@@ -337,10 +348,10 @@ useEffect(()=>{
                   <div className=" w-full flex   flex-col   items-center    text-lg    px-4">
                     <div className=" flex w-full justify-between items-center">
                       <span className="text-sm ">
-                        ${data?.place?.price} x {daysStayed <= 0 ? 0 : daysStayed}{" "}
+                        ${data?.price} x {daysStayed <= 0 ? 0 : daysStayed}{" "}
                         nights
                       </span>
-                      {daysStayed <= 0 ? 0 : "$" + data?.place?.price * daysStayed}
+                      {daysStayed <= 0 ? 0 : "$" + data?.price * daysStayed}
                     </div>
 
                     <span>{}</span>
@@ -350,7 +361,7 @@ useEffect(()=>{
             </div>
           </div>
           <GrayLine />
-          <PlaceDescription extra={extra} setExtra={setExtra} data={data.place} />
+          <PlaceDescription extra={extra} setExtra={setExtra} data={data} />
           <GrayLine />
 
           <div
@@ -370,7 +381,7 @@ useEffect(()=>{
                 !morephotos ? "  opacity-0  " : " opacity-100  "
               }   duration-1000 rounded-md  flex flex-col items-center      h-full  w-full    overflow-auto   `}
             >
-              {data?.place?.photos.map((photo) => (
+              {data?.photos.map((photo) => (
                 <img
                   className="  rounded-lg p-2  w-full md:w-[60%]   "
                   src={"http://localhost:4000/uploads/" + photo}
@@ -380,10 +391,10 @@ useEffect(()=>{
             </div>
           </div>
 
-          <ExtraInfo setExtra={setExtra} extra={extra} data={data.place} />
+          <ExtraInfo setExtra={setExtra} extra={extra} data={data} />
 
           <div className="   pt-14 flex-row gap-8 grid grid-cols-2   text-xs items-start justify-start w-full">
-            {data?.place?.perks.map((perk) => (
+            {data?.perks.map((perk) => (
               <PerksD perk={perk} />
             ))}
           </div>
@@ -396,14 +407,14 @@ useEffect(()=>{
       >
         <img
           className=" rounded-[4rem]  h-[75vh] object-cover w-full "
-          src={"http://localhost:4000/uploads/" + data.place?.photos[0]}
+          src={"http://localhost:4000/uploads/" + data?.photos[0]}
           alt=""
         />
         <div className=" w-full  items-center justify-center flex flex-row  gap-3">
           <div
             className="  h-[200px] rounded-[3rem] my-5 bg-cover "
             style={{
-              backgroundImage: `url(http://localhost:4000/uploads/${data.place?.photos[1]})`,
+              backgroundImage: `url(http://localhost:4000/uploads/${data?.photos[1]})`,
 
               backgroundPosition: "center",
               width: "100%",
@@ -412,7 +423,7 @@ useEffect(()=>{
           <div
             className="  h-[200px] rounded-[3rem] my-5 bg-cover "
             style={{
-              backgroundImage: `url(http://localhost:4000/uploads/${data.place?.photos[2]})`,
+              backgroundImage: `url(http://localhost:4000/uploads/${data?.photos[2]})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               width: "100%",
@@ -423,7 +434,7 @@ useEffect(()=>{
         <div className=" relative">
           <img
             className=" h-[60vh] mb-8 rounded-[4rem] object-cover w-full "
-            src={"http://localhost:4000/uploads/" + data.place?.photos[3]}
+            src={"http://localhost:4000/uploads/" + data?.photos[3]}
             alt=""
           />
           <span className=" items-center flex justify-center absolute cursor-pointer border-[1px]  border-gray-600  text-xs gap-2 text-gray-700 border-solid bg-white rounded-lg h-8 bottom-5  right-7  p-2">
