@@ -81,8 +81,8 @@ app.post("/login", async (req, res) => {
 app.get("/profile", async (req, res) => {
   try {
     const cookies = req.cookies;
-
-    if (cookies && cookies.jwtToken) {
+console.log(cookies)
+    if ( cookies.jwtToken) {
       const token = cookies.jwtToken;
 
       jwt.verify(token, "your-secret-key", {}, async (err, userdata) => {
@@ -94,7 +94,7 @@ app.get("/profile", async (req, res) => {
         }
       });
     } else {
-      res.status(401).send("No JWT token found in the cookies");
+      res.json("No JWT token found in the cookies");
     }
   } catch (error) {
     res.status(500).send("Server error");
@@ -214,11 +214,18 @@ app.post("/places", (req, res) => {
 app.get("/user-places", async (req, res) => {
   const cookies = req.cookies;
   const token = cookies.jwtToken;
+
+if(cookies.jwtToken){
   jwt.verify(token, "your-secret-key", {}, async (err, userData) => {
     if (err) throw err;
     const { id } = userData;
     res.json(await Place.find({ owner: id }));
   });
+}else{
+  res.json([])
+}
+
+  
 });
 
 app.get("/places/:id", async (req, res) => {
@@ -277,22 +284,12 @@ app.get("/places-all", async (req, res) => {
 });
 
 app.get("/place-details/:_id", async (req, res) => {
-  const { jwtToken } = req.cookies;
-
-  
-
-  jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err; 
+ 
      const { _id } = req.params;
-    const { id } = userData;
-   const favoraite =   await Favorite.find({User:id}) 
+
   const place =    await Place.findById(_id) 
- res.json({favoraite,place});
-
-   
-   
-  });
-
+ res.json(place);
+ 
 });
 
 app.delete("/place-delete/:id", async (req, res) => {
@@ -415,7 +412,9 @@ app.get("/get-bookingDetails/:id", async (req, res) => {
 
 app.post("/add-favorite", async (req, res) => {
   const { jwtToken } = req.cookies;
-  jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
+
+if(jwtToken){
+    jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
     if (err) throw err;
     const { placeID } = req.body;
     const { id } = userData;
@@ -441,17 +440,29 @@ console.log(favoriteId?.Place  == placeID )
    
   });
 
+}else{
+  res.json('')
+}
+
+
   
 });
 
 app.get("/get-favorite", async (req, res) => {
   const { jwtToken } = req.cookies;
-  jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
+  
+  if(jwtToken){
+    jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
     if (err) throw err;
     const { id } = userData;
 
     res.json(await Favorite.find({ User: id }).populate("Place"));
   });
+  }else{
+    res.json([])
+  }
+  
+  
 });
 
 app.listen(4000, "0.0.0.0", () => {
