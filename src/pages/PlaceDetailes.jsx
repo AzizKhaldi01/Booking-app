@@ -79,18 +79,21 @@ function PlaceDetailes() {
 
 
 function AddFavorite (e){
-
+e.preventDefault();
 if(!User){
+  e.preventDefault();
   navigate('/login')
 }
 
-  e.preventDefault();
+   
  
   axios.post('/add-favorite' , {placeID:_id}).then((response)=>{
  
     if(response.data == 'liked' ){
+      e.preventDefault();
        setFav(true)
     }else{
+      e.preventDefault();
       setFav(false)
     }  
   })
@@ -402,15 +405,19 @@ useEffect(()=>{
       </div>
 
       <div
-        onClick={hendelmorephotos}
-        className=" w-full hidden  md:block gap-10 md:w-[60%]  cursor-pointer "
+      
+        className=" w-full hidden  md:block gap-10 md:w-[60%] relative  cursor-pointer "
       >
-        <img
+ <span  onClick={AddFavorite} className=" z-10  top-7 right-8 absolute h-8 w-8 bg-white rounded-full flex items-center justify-center ">
+             {     fav  ?  <FavoriteIcon className="  text-red-600 scale-90" /> : <FavoriteBorderIcon className="  scale-90" />}
+            </span>
+
+        <img   onClick={hendelmorephotos}
           className=" rounded-[4rem]  h-[75vh] object-cover w-full "
           src={"http://localhost:4000/uploads/" + data?.photos[0]}
           alt=""
         />
-        <div className=" w-full  items-center justify-center flex flex-row  gap-3">
+        <div   onClick={hendelmorephotos} className=" w-full  items-center justify-center flex flex-row  gap-3">
           <div
             className="  h-[200px] rounded-[3rem] my-5 bg-cover "
             style={{
