@@ -94,7 +94,7 @@ console.log(cookies)
         }
       });
     } else {
-      res.json("No JWT token found in the cookies");
+      res.json("");
     }
   } catch (error) {
     res.status(500).send("Server error");
