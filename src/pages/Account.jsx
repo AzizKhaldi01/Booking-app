@@ -19,6 +19,7 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import AddIcon from "@mui/icons-material/Add";
 import { motion, AnimatePresence } from "framer-motion";
 import AccommSkelaton from "../component/AccommSkelaton";
+import Profile from "../component/Profile";
 
 function Account() {
   const navigate = useNavigate();
@@ -40,8 +41,13 @@ function Account() {
   const { subpages } = useParams(null);
  
 
+
+ 
+
+
+ 
   if (ready && !User) {
-    return <Navigate to={"/login"} />;
+    return  navigate('/login')
   }
 
   function btntheme(type = null) {
@@ -53,12 +59,7 @@ function Account() {
     }
   }
 
-  async function logout() {
-    await axios.post("/logout");
-    navigate("/");
 
-    setUser(null);
-  }
 
   function addnewplace() {
     navigate("/account/housing/");
@@ -71,7 +72,7 @@ function Account() {
     <div className="    w-full flex  flex-col md:flex-row h-full     pt-0 md:pt-32 justify-between">
       <div className="flex   flex-col h-full justify-center   w-full item-center">
      
-        <nav className="    z-20    top-4   md:top-24   justify-center    items-center  flex  h-14    sticky        text-base md:text-lg    ">
+        <nav className="     hidden    z-20    top-4   md:top-24   justify-center    items-center   md:flex  h-14    sticky        text-base md:text-lg    ">
         <div className=" px-2 text-sm  md:px-5 flex flex-row items-center justify-between   w-[96%]     py-2  bg-white shadow-lg  rounded-full   ">
           
         <Link className={btntheme("profile")} to={"/account"}>
@@ -95,7 +96,8 @@ function Account() {
         </div>
         
         </nav>
-        {subpages === "Wishlist" && <Wishlist list />}
+        {subpages === undefined  && <Profile   />}
+        {subpages === "Wishlist" && <Wishlist   />}
 
         {subpages === "Trips" && <Bookings />}
 
