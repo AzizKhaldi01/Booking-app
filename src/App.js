@@ -14,6 +14,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
 import PlaceDetailes from "./pages/PlaceDetailes";
+import MobileNav from "./component/MobileNav";
  axios.defaults.baseURL = 'http://localhost:4000'
   axios.defaults.withCredentials=true
 function App() {
@@ -27,6 +28,7 @@ function App() {
  
       
      <Navbar/>
+      <MobileNav/>
 <Routes >
 
 <Route index element={<Home/>} />
