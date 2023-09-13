@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import BorderAllIcon from "@mui/icons-material/BorderAll";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ExtraInfo from "../component/ExtraInfo";
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import CloseIcon from "@mui/icons-material/Close";
 import PerksD from "../component/PerksD";
 import PhotoSlider from "../component/Imageslaider";
@@ -23,16 +23,20 @@ import PlaceDescription from "../component/PlaceDescription";
 import GrayLine from "../component/GrayLine";
 import { Usercontext } from "../context/pagecontext";
 function PlaceDetailes() {
-
-  const {User} = useContext(Usercontext);
+  const { User } = useContext(Usercontext);
 
   const [morephotos, setMorephotos] = useState(false);
   const [extra, setExtra] = useState(false);
   // Initialize data as an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const [Aopen, setAopen] = useState(false);
- 
+  const [msg, setMsg] = useState("");
+
+   
   const [fav, setFav] = useState(true);
+ 
+  const [laod, setLaod] = useState(false);
+
 
   const [Gopen, setGopen] = useState(false);
   const {
@@ -50,54 +54,71 @@ function PlaceDetailes() {
     setGuest,
     checkOutDate,
     checkInDate,
-    setCheckInDate,
+
     setCheckOutDate,
   } = useContext(BookingContext);
- 
+
+
+const Pdata= data
+
+
   const { _id } = useParams();
+
   const navigate = useNavigate();
 
   const handleNext = () => {
-    localStorage.setItem("guest", JSON.stringify(Guest));
-    localStorage.setItem("checkInDate", checkInDate.toISOString());
-    localStorage.setItem("checkOutDate", checkOutDate.toISOString());
-    localStorage.setItem("daysStayed", daysStayed.toString());
-    localStorage.setItem("price", data.price.toString());
-    localStorage.setItem("maxgeustes", data.maxGuests);
-    localStorage.setItem("imageUrl", data.photos[0]);
-    localStorage.setItem("title", data.title);
-    localStorage.setItem("address", data.address);
 
-    localStorage.setItem("id", _id);
+    setLaod(true)
+    axios.get("/booking-check/" + _id).then((response) => {
+      const { data } = response;
+      console.log('data ' +  data)
+    
+      if (data == "booked") {
+        setMsg('booked')
+        setLaod(false)
+      } else {
 
-    navigate("/guest-step");
+
+        setMsg('notbooked')
+        setLaod(false)
+        localStorage.setItem("guest", JSON.stringify(Guest));
+        localStorage.setItem("checkInDate", checkInDate.toISOString());
+        localStorage.setItem("checkOutDate", checkOutDate.toISOString());
+        localStorage.setItem("daysStayed", daysStayed.toString());
+        localStorage.setItem("price", Pdata.price.toString());
+        localStorage.setItem("maxgeustes", Pdata.maxGuests);
+        localStorage.setItem("imageUrl", Pdata.photos[0]);
+        localStorage.setItem("title", Pdata.title);
+        localStorage.setItem("address", Pdata.address);
+
+        localStorage.setItem("id", _id);
+
+        navigate("/guest-step");
+      }
+    });
   };
 
   function handelGoback() {
     navigate(-1);
   }
 
-
-function AddFavorite (e){
-e.preventDefault();
-if(!User){
-  e.preventDefault();
-  navigate('/login')
-}
-
-   
- 
-  axios.post('/add-favorite' , {placeID:_id}).then((response)=>{
- 
-    if(response.data == 'liked' ){
+  function AddFavorite(e) {
+    e.preventDefault();
+    if (!User) {
       e.preventDefault();
-       setFav(true)
-    }else{
-      e.preventDefault();
-      setFav(false)
-    }  
-  })
-}
+      navigate("/login");
+    }
+
+    axios.post("/add-favorite", { placeID: _id }).then((response) => {
+      if (response.data == "liked") {
+        e.preventDefault();
+        setFav(true);
+      } else {
+        e.preventDefault();
+        setFav(false);
+      }
+    });
+  }
 
   function handelBooking() {
     axios.post("/booking-add", {
@@ -110,17 +131,13 @@ if(!User){
     });
   }
 
-useEffect(()=>{ 
-   axios.get('/get-favorite').then((response) =>{
- const  {data} = response;
- const favoriteItemIds = data.map(item => item?.Place?._id);
- localStorage.setItem('fav',JSON.stringify(favoriteItemIds))
- 
-
-  
-} )
-
-},[fav])
+  useEffect(() => {
+    axios.get("/get-favorite").then((response) => {
+      const { data } = response;
+      const favoriteItemIds = data.map((item) => item?.Place?._id);
+      localStorage.setItem("fav", JSON.stringify(favoriteItemIds));
+    });
+  }, [fav]);
 
   useEffect(() => {
     const nextDay = new Date(checkInDate);
@@ -138,7 +155,7 @@ useEffect(()=>{
   }, []);
 
   useEffect(() => {
-    axios.get("/place-details/"+_id).then((response) => {
+    axios.get("/place-details/" + _id).then((response) => {
       const { data } = response;
       setData(data);
       setIsLoading(false); // Once data is fetched, set isLoading to false
@@ -146,16 +163,10 @@ useEffect(()=>{
   }, [_id]);
 
   useEffect(() => {
-     
-    
-    const userLikedItems = JSON.parse(localStorage.getItem('fav'))
-        console.log('aa11 ' + userLikedItems);
-        setFav(userLikedItems.includes(_id));
- 
+    const userLikedItems = JSON.parse(localStorage.getItem("fav"));
+    console.log("aa11 " + userLikedItems);
+    setFav(userLikedItems.includes(_id));
   }, []);
-  
-
-
 
   if (isLoading) {
     return <div>Loading...</div>; // Render a loading message or spinner while waiting for data
@@ -165,9 +176,6 @@ useEffect(()=>{
     setMorephotos(!morephotos);
     document.body.style.overflow = !morephotos ? " hidden" : "auto";
   }
-
-
-
 
   return (
     <div className="  overflow-hidden  md:pb-0 pb-20   px-3 lg:px-12 w-full h-full  gap-12   mt-0 md:mt-40 justify-between flex   flex-col-reverse md:flex-row">
@@ -180,8 +188,15 @@ useEffect(()=>{
             >
               <KeyboardArrowLeftIcon className="  scale-110" />{" "}
             </span>
-            <span  onClick={AddFavorite} className=" h-8 w-8 bg-white rounded-full flex items-center justify-center ">
-             {     fav  ?  <FavoriteIcon className="  text-red-600 scale-90" /> : <FavoriteBorderIcon className="  scale-90" />}
+            <span
+              onClick={AddFavorite}
+              className=" h-8 w-8 bg-white rounded-full flex items-center justify-center "
+            >
+              {fav ? (
+                <FavoriteIcon className="  text-red-600 scale-90" />
+              ) : (
+                <FavoriteBorderIcon className="  scale-90" />
+              )}
             </span>
           </div>
           <PhotoSlider
@@ -340,11 +355,95 @@ useEffect(()=>{
                 )}
                 <div className=" w-full flex   gap-5 h-full     md:flex-col  flex-col-reverse  ">
                   <div className={`  w-full flex items-center justify-center `}>
-                    <button
+                    {/* <button
                       onClick={handleNext}
                       className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg"
                     >
                       Reserve
+                    </button> */}
+
+                    <button
+                      style={{
+                        background: "rgb(87,130,128)",
+                        background:
+                          "linear-gradient(337deg, rgba(87,130,128,1) 31%, rgba(116,154,152,1) 79%, rgba(129,165,163,1) 85%, rgba(151,183,182,1) 100%, rgba(210,232,232,1) 100%)",
+                      }}
+                      disabled={laod}
+                      onClick={handleNext}
+                      className=" md:text-lg hover:opacity-90 h-14  w-full md:w-[27%]  relative  rounded-lg    text-white "
+                    >
+                       { msg=='booked' ? 'Already Booked' :   'Reserve '}
+                      <span
+                        className={` ${
+                          laod ? " opacity-100 " : " opacity-0"
+                        } bg-greedian   absolute top-0 right-0 bg-main rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
+                      >
+                        <span className=" h-full w-full scale-[0.2]  md:scale-[0.4] flex items-center justify-center">
+                          <svg
+                            version="1.1"
+                            id="L9"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xlink="http://www.w3.org/1999/xlink"
+                            x="0px"
+                            y="0px"
+                            viewBox="0 0 100 100"
+                            enable-background="new 0 0 0 0"
+                            xml
+                            space="preserve"
+                          >
+                            <path
+                              fill="#fff"
+                              d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+                            >
+                              <animateTransform
+                                attributeName="transform"
+                                attributeType="XML"
+                                type="rotate"
+                                dur="1s"
+                                from="0 50 50"
+                                to="360 50  50"
+                                repeatCount="indefinite"
+                              />
+                            </path>
+                          </svg>
+                        </span>
+
+                      </span>
+                      <span
+                        className={`  ${
+                          msg == "notbooked" ? " opacity-100" : " opacity-0"
+                        }  duration-200 flex items-center  justify-center z-10 absolute rounded-lg top-0 right-0 h-full w-full bg-green-400    border-solid border-[1px] border-green-400 `}
+                      >
+                        <span className=" w4rAnimated_checkmark scale-[0.4] h-full w-full items-center flex justify-center ">
+                          {msg == "notbooked" && (
+                            <svg
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 130.2 130.2"
+                            >
+                              <circle
+                                class="path circle"
+                                fill="none"
+                                stroke="white"
+                                stroke-width="8"
+                                stroke-miterlimit="10"
+                                cx="65.1"
+                                cy="65.1"
+                                r="62.1"
+                              />
+                              <polyline
+                                class="path check"
+                                fill="none"
+                                stroke="white"
+                                stroke-width="8"
+                                stroke-linecap="round"
+                                stroke-miterlimit="10"
+                                points="100.2,40.2 51.5,88.8 29.8,67.5 "
+                              />
+                            </svg>
+                          )}
+                        </span>
+                      </span>
                     </button>
                   </div>
 
@@ -404,20 +503,28 @@ useEffect(()=>{
         </div>
       </div>
 
-      <div
-      
-        className=" w-full hidden  md:block gap-10 md:w-[60%] relative  cursor-pointer "
-      >
- <span  onClick={AddFavorite} className=" z-10  top-7 right-8 absolute h-8 w-8 bg-white rounded-full flex items-center justify-center ">
-             {     fav  ?  <FavoriteIcon className="  text-red-600 scale-90" /> : <FavoriteBorderIcon className="  scale-90" />}
-            </span>
+      <div className=" w-full hidden  md:block gap-10 md:w-[60%] relative  cursor-pointer ">
+        <span
+          onClick={AddFavorite}
+          className=" z-10  top-7 right-8 absolute h-8 w-8 bg-white rounded-full flex items-center justify-center "
+        >
+          {fav ? (
+            <FavoriteIcon className="  text-red-600 scale-90" />
+          ) : (
+            <FavoriteBorderIcon className="  scale-90" />
+          )}
+        </span>
 
-        <img   onClick={hendelmorephotos}
+        <img
+          onClick={hendelmorephotos}
           className=" rounded-[4rem]  h-[75vh] object-cover w-full "
           src={"http://localhost:4000/uploads/" + data?.photos[0]}
           alt=""
         />
-        <div   onClick={hendelmorephotos} className=" w-full  items-center justify-center flex flex-row  gap-3">
+        <div
+          onClick={hendelmorephotos}
+          className=" w-full  items-center justify-center flex flex-row  gap-3"
+        >
           <div
             className="  h-[200px] rounded-[3rem] my-5 bg-cover "
             style={{
