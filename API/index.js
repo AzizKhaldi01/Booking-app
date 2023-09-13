@@ -81,7 +81,7 @@ app.post("/login", async (req, res) => {
 app.get("/profile", async (req, res) => {
   try {
     const cookies = req.cookies;
-console.log(cookies)
+ 
     if ( cookies.jwtToken) {
       const token = cookies.jwtToken;
 
@@ -392,7 +392,8 @@ app.post("/submit-payment", async (req, res) => {
 app.get("/get-bookings", async (req, res) => {
   const { jwtToken } = req.cookies;
 
-  jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
+if(jwtToken){
+    jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
     if (err) throw err;
     const { id } = userData;
 
@@ -400,6 +401,11 @@ app.get("/get-bookings", async (req, res) => {
 
     res.json(bookings);
   });
+}else{
+  res.json([]);
+}
+
+
 });
 
 app.get("/get-bookingDetails/:id", async (req, res) => {
@@ -464,6 +470,33 @@ app.get("/get-favorite", async (req, res) => {
   
   
 });
+
+
+app.get('/booking-check/:_id'  , async (req , res) => {
+ const { jwtToken } = req.cookies;
+if(jwtToken){
+    jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
+    if (err) throw err;
+    const { id } = userData;
+const {_id}  = req.params
+
+ 
+const bookings = await Booking.find({ User: id, Place: _id }).exec();
+
+if (bookings.length > 0) {
+  // User has booked the place
+  res.json('booked');
+} else {
+  // User has not booked the place
+  res.json('not booked');
+}
+ 
+  });
+  }else{
+    res.json([])
+  }
+  
+}  )
 
 app.listen(4000, "0.0.0.0", () => {
   console.log(`Server is running on http://0.0.0.0:${4000}`);
