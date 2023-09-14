@@ -39,7 +39,7 @@ const navigate = useNavigate()
      if(err== 'successful'){
       
         setTimeout(() => {
-        navigate('/account/bookings') 
+        navigate('/account/Trips') 
     }, 2000);
   
      }

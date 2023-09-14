@@ -4,8 +4,10 @@ import React from "react";
  import userimage from '../img/user.webp'
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from "react-router-dom";
 
 import axios from "axios";
+import Topbar from "./Topbar";
 function Profile() {
 
 const {User , setUser} = useContext(Usercontext);
@@ -20,33 +22,16 @@ const {User , setUser} = useContext(Usercontext);
   }
 
 
-  const GoBack = () => {
-    navigate(-1);
-  };
 
   return (
-    <div className="  w-full relative  flex flex-col   ">
-      <div className="  text-gray-700 flex text-base   h-16 items-center justify-center absolute top-0  right-0  w-full">
-        <span className="  absolute top-5 left-3" onClick={GoBack}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 19.5L8.25 12l7.5-7.5"
-            />
-          </svg>
-        </span>
-        My Profile
-      </div>
-<div className=" w-full flex flex-row h-32  gap-7  justify-start px-4 mt-20 items-center     ">
-    <img className=" p-2 w-[26vw] bg-gray-100  rounded-[50%] " src={userimage}  />
+    <div className="    w-full relative  flex flex-col   ">
+      
+ <Topbar title={'My Profile'}/>
+      <div className="sticky top-5  md:top-10 ">
+
+   
+<div className=" w-full   flex flex-row h-32  gap-7  justify-start px-4  md:mt-0 mt-20 items-center     ">
+    <img className=" p-2    w-[120px]   bg-gray-100  rounded-[50%] " src={userimage}  />
     <div className=" flex flex-col ">
 <h1 className=" text-xl font-semibold ">{User?.name} </h1>
 <p className="  text-gray-700 text-sm  ">
@@ -59,21 +44,21 @@ Traveler</p>
 
 </span>
 </div>
-<div className=" w-full px-4 flex flex-row gap-3 mt-5 text-sm  h-full">
-<div className=" flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 w-full ">
+<div className=" w-full px-4 flex flex-row gap-3 mt-5 text-sm   ">
+<Link to={'/account/Trips'} className="  hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 md:w-[50%]  w-full ">
 <span className=" text-gray-700  font-medium text-xl "> 2 </span>Trips 
-</div>
-<div className=" flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 w-full ">
+</Link>
+<Link to={'/account/Wishlist'} className=" hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 md:w-[50%]  w-full ">
 <span className=" text-gray-700  font-medium text-xl ">13</span>Favorite
-</div>
-<div className=" flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 w-full ">
+</Link>
+<Link to={'/account/housing'} className=" hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 md:w-[50%]  w-full ">
 <span className=" text-gray-700  font-medium text-xl ">3</span>Hosting
-</div>
+</Link>
  
 </div>
 
-<div className=" w-full  flex h-full flex-col gap-5 px-4 mt-5  ">
-<span className=" h-20 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative" >
+<div className=" w-full  flex   pb-4 flex-col gap-5 px-4 mt-5  ">
+<span className=" h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative" >
 <span className=" flex flex-row  gap-2 items-center  text-gray-700 ">
     <span className="   ">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -92,21 +77,21 @@ Account information
 </span>
 
 
-<span className=" text-gray-700 h-20 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative" >
+<span className=" text-gray-700 h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative" >
  Dark Mode <span className=" flex gap-4 h-full py-2 font-normal">
  <button  className="   h-full w-16  text-gray-500 ">On</button> <button className="  shadow-lg  h-full w-16  bg-white rounded-lg ">Off</button>
     </span> 
 </span>
 
-<span className=" h-20 w-full rounded-md bg-gray-100 text-red-600  font-medium flex flex-row items-center   gap-2 px-4 relative" >
-  <span onClick={logout}>
+<span className=" h-16 w-full  rounded-md bg-gray-100 text-red-600  font-medium flex flex-row items-center   gap-2 px-4 relative" >
+  <span className=" hover:opacity-80 cursor-pointer" onClick={logout}>
      <LogoutIcon className=" rotate-180"/> Log out
   </span>
  
   
 </span>
 </div>
-
+   </div>
     </div>
   );
 }

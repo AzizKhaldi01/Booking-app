@@ -40,7 +40,7 @@ const PhotoSlider = ({photos , nonav , hight ,onClick}) => {
       pagination={{ clickable: true }}
       
     >
-      {photos.map((photo, idx) => (
+      {photos?.map((photo, idx) => (
         <SwiperSlide key={idx}>
           <img   onClick={onClick}  src={` http://localhost:4000/uploads/${photo} `} alt={`Photo ${idx + 1}`} className= {` object-cover rounded-xl w-full   ${hight ? "h-[250px] " : " h-full"  }   `}  />
        

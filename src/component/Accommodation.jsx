@@ -8,12 +8,16 @@ import { useContext } from "react";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { Usercontext } from "../context/pagecontext";
 import { motion    } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 function Accommodation({ title, photos, description, id, address }) {
   var { _id } = useParams();
 
-  const { add, setAdd, link, setLink, setReload, reload, list } =
+  const { add, setAdd, setLink, setReload, reload, list , User ,ready} =
     useContext(Usercontext);
+
+    const navigate = useNavigate();
+ 
   const [deletee, setDelete] = useState(false);
 
   useEffect(() => {
@@ -28,6 +32,14 @@ function Accommodation({ title, photos, description, id, address }) {
     setDelete(!deletee);
   }
 
+  
+  if (ready && !User) {
+    return navigate("/login");
+  }
+
+
+
+
   console.log("list  " + list);
   return (
     <>
@@ -35,7 +47,7 @@ function Accommodation({ title, photos, description, id, address }) {
         
         <Link
           className=" justify-center flex flex-col  items-center"
-          to={`/account/accommodation/${id}`}
+          to={`/account/housing/${id}`}
         >
           <motion.div
             initial={{ opacity: 0 }}
@@ -80,20 +92,20 @@ function Accommodation({ title, photos, description, id, address }) {
             <div
               className={`   ${
                 deletee ? "  top-[50%] " : "top-[-100%]"
-              }   flex-col  justify-between p-4 items-center flex  top-1/2  left-1/2 transform -translate-x-1/2 -translate-y-1/2   fixed h-[20%] w-[20%] bg-white shadow-2xl z-[60] rounded-2xl `}
+              }   flex-col  justify-between p-4 items-center flex  top-1/2  left-1/2 transform -translate-x-1/2 -translate-y-1/2   fixed h-[20%] w-[90%]  md:w-[20%] bg-white shadow-2xl z-[60] rounded-2xl `}
             >
               {" "}
               <span className=" pt-4">Are You Sure!</span>
               <div className=" items-center justify-center w-full flex flex-row gap-7 h-[40%] ">
                 <button
                   onClick={hendldelete}
-                  className=" rounded-lg  p-2 px-8  bg-red-500   "
+                  className=" rounded-lg  p-2 px-8  text-white bg-main  "
                 >
                   yes
                 </button>
                 <button
                   onClick={() => setDelete(!deletee)}
-                  className=" rounded-lg  p-2 px-8    bg-gray-200 "
+                  className=" rounded-lg  p-2 px-8     border-main border-solid border-[1px] "
                 >
                   no
                 </button>

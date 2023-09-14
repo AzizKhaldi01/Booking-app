@@ -4,11 +4,16 @@ import { BookingContext } from "../context/Bookingconext";
 import congrate from "../img/congrate.png";
 import axios from "axios";
 import AccommSkelaton from "./AccommSkelaton";
+import { Usercontext } from "../context/pagecontext";
 import { format } from "date-fns";
-
+import Topbar from "./Topbar";
+import { useNavigate } from "react-router-dom";
 function Bookings() {
   const { err, days, setErr  } = useContext(BookingContext);
+  const { User ,ready  } = useContext(Usercontext);
 
+
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
   const [BookingDetails, setBookingDetails] = useState(null);
@@ -26,13 +31,18 @@ function Bookings() {
     }, 3000);
   }, [err]);
 
+  if (ready && !User) {
+    return navigate("/login");
+  }
   return (
-    <div className="   mt-6 h-full w-full grid grid-cols-1 sm:grid-cols-2  p-4 px-7   gap-3 items-center ">
+    <div className=" md:mt-6   mt-10 h-full w-full grid grid-cols-1 xl:grid-cols-2  p-4 px-2   gap-3 items-center ">
+    
+     <Topbar title={'Trips'}/>
       {!isLoading ? (
         BookingDetails?.map((item) => (
-          <div className=" relative   w-full h-full  md:h-[30vh] rounded-xl  bg-slate-50 shadow   p-3 flex  flex-col   gap-0 md:gap-2  md:flex-row">
+          <div className=" relative   w-full h-full  md:h-[26vh] rounded-xl  bg-slate-50 shadow   p-3 flex  flex-col   gap-0 md:gap-2  md:flex-row">
            <Link to={`/account/Trips/${item?._id}`}> 
-            <span className=" absolute top-2 right-2  cursor-pointer ">
+            <span className=" bg-white  p-1 bg-opacity-70 rounded-md   absolute  top-4 md:top-2  right-4 md:right-2  cursor-pointer ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -51,7 +61,7 @@ function Bookings() {
                </Link>
             
             <img
-              className=" w-full  md:w-[30%] object-cover rounded-xl  md:h-full"
+              className=" w-full  md:w-[32%] object-cover rounded-xl  md:h-full"
               src={` http://localhost:4000/uploads/${item?.Place?.photos[1]} `}
               alt=""
             />
@@ -83,9 +93,9 @@ function Bookings() {
                 {item?.Place?.address}{" "}
               </p>
 
-              <h1 className=" text-lg"> {item?.Place?.title} </h1>
-              <div className=" text-white flex flex-row  gap-1 text-xs w-full py-3">
-                <span className=" flex flex-row gap-1 p-1 px-2 items-end bg-main rounded-xl">
+              <h1 className=" text-lg"> {item?.Place?.title.length >= 20  ?  item?.Place?.title.slice(0, 22) + '..' : item?.Place?.title     } </h1>
+              <div className=" text-white flex flex-row  gap-1 text-xs w-full  py-3">
+                <span className=" flex flex-row gap-1 p-1 px-1 items-end bg-main rounded-xl">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -103,7 +113,7 @@ function Bookings() {
                   {item?.days} Night
                 </span>
 
-                <span className=" flex flex-row gap-1 p-1 px-2 items-end bg-main rounded-xl">
+                <span className=" flex flex-row gap-1 p-1 px-1 items-end bg-main rounded-xl">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
