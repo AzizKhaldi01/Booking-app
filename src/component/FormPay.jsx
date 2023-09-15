@@ -53,7 +53,7 @@ const navigate = useNavigate()
 
     e.preventDefault();
      
-alert()
+ 
     const result = await stripe.createPaymentMethod({
       type: "card",
     

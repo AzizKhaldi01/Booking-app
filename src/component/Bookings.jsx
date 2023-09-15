@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BookingContext } from "../context/Bookingconext";
 import congrate from "../img/congrate.png";
 import axios from "axios";
-import AccommSkelaton from "./AccommSkelaton";
+import AccommSkelaton from "./Skelatons/AccommSkelaton";
 import { Usercontext } from "../context/pagecontext";
 import { format } from "date-fns";
 import Topbar from "./Topbar";

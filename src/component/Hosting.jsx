@@ -8,7 +8,7 @@ import {    AnimatePresence } from "framer-motion";
 import Accommodation from "../component/Accommodation";
  import NewAccommodation from './NewAccommodation';
 import AddIcon from "@mui/icons-material/Add";
-import AccommSkelaton from "../component/AccommSkelaton";
+import AccommSkelaton from "../component/Skelatons/AccommSkelaton";  
   
 function Hosting( ) {
     const {
