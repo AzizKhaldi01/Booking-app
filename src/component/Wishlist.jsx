@@ -2,9 +2,11 @@ import { React, useEffect, useState } from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
+import Favskelaton from "./Skelatons/Favskelaton";
 import axios from "axios";
 function Wishlist() {
   const [data, setData] = useState();
+  const [loading  , setLoading]= useState(true);
 
   const { User } = useContext(Usercontext);
 
@@ -12,6 +14,7 @@ function Wishlist() {
     axios.get("/get-favorite").then((response) => {
       const { data } = response;
       setData(data);
+      setLoading(false)
     });
   }, []);
 
@@ -23,7 +26,10 @@ function Wishlist() {
      
      
       <div className="  w-full   grid md:grid-cols-2 grid-cols-1 gap-3  lg:grid-cols-3 ">
-        {data?.map((item) => (
+        {  loading ?  <Favskelaton cards={6} />  :
+        
+        
+        data?.map((item) => (
           <div className=" flex flex-row gap-2 w-full    p-2  cursor-pointer h-[250px]   ">
             <img
               className="  h-full  w-[60%] rounded-l-3xl object-cover  "
