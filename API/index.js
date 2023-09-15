@@ -467,8 +467,24 @@ app.get("/get-favorite", async (req, res) => {
   }else{
     res.json([])
   }
+ 
+});
+
+
+app.get("/get-favorite-placeID", async (req, res) => {
+  const { jwtToken } = req.cookies;
   
-  
+  if(jwtToken){
+    jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
+    if (err) throw err;
+    const { id } = userData;
+
+    res.json(await Favorite.find({ User: id }));
+  });
+  }else{
+    res.json([])
+  }
+ 
 });
 
 
@@ -483,11 +499,13 @@ const {_id}  = req.params
  
 const bookings = await Booking.find({ User: id, Place: _id }).exec();
 
+console.log(bookings)
+
 if (bookings.length > 0) {
-  // User has booked the place
+  
   res.json('booked');
 } else {
-  // User has not booked the place
+   
   res.json('not booked');
 }
  
