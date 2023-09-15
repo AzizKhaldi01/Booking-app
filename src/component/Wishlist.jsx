@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
 import Favskelaton from "./Skelatons/Favskelaton";
 import axios from "axios";
-function Wishlist() {
+function Wishlist({  Popen}) {
   const [data, setData] = useState();
   const [loading  , setLoading]= useState(true);
 
-  const { User } = useContext(Usercontext);
+  const { User , ready  } = useContext(Usercontext);
 
   useEffect(() => {
     axios.get("/get-favorite").then((response) => {
@@ -21,16 +21,16 @@ function Wishlist() {
   console.log(data);
   return (
 <>
-{ User ?
+{ User && ready ?
     <div className="  flex flex-col  md:pb-2 pb-20 pt-16 w-full h-full  justify-center px-3  md:px-12">
      
      
-      <div className="  w-full   grid md:grid-cols-2 grid-cols-1 gap-3  lg:grid-cols-3 ">
+      <div className=  {` w-full   grid md:grid-cols-2 grid-cols-1 gap-3  ${ !Popen ? ' lg:grid-cols-3' :'lg:grid-cols-4'  }  `} >
         {  loading ?  <Favskelaton cards={6} />  :
         
         
         data?.map((item) => (
-          <div className=" flex flex-row gap-2 w-full    p-2  cursor-pointer h-[250px]   ">
+          <div className=" flex flex-row gap-2 w-full    p-2  cursor-pointer h-[200px]   ">
             <img
               className="  h-full  w-[60%] rounded-l-3xl object-cover  "
               src={` http://localhost:4000/uploads/${item?.Place.photos[0]}`}

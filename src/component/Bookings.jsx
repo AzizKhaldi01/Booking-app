@@ -8,7 +8,9 @@ import { Usercontext } from "../context/pagecontext";
 import { format } from "date-fns";
 import Topbar from "./Topbar";
 import { useNavigate } from "react-router-dom";
-function Bookings() {
+
+function Bookings({  Popen}) {
+
   const { err, days, setErr  } = useContext(BookingContext);
   const { User ,ready  } = useContext(Usercontext);
 
@@ -35,7 +37,7 @@ function Bookings() {
     return navigate("/login");
   }
   return (
-    <div className=" md:mt-6   mt-10 h-full w-full grid grid-cols-1 xl:grid-cols-2  p-4 px-2   gap-3 items-center ">
+    <div className= {` md:mt-6   mt-10 h-full w-full grid grid-cols-1 xl:grid-cols-2  ${  Popen ? 'px-12 ' :' px-5 '  }    p-4   gap-3 items-center `} >
     
      <Topbar title={'Trips'}/>
       {!isLoading ? (

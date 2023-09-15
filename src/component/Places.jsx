@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect , useState } from 'react'
 import PhotoSlider from "../component/Imageslaider";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import {  motion} from 'framer-motion';
@@ -9,8 +9,11 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
  import { Usercontext } from '../context/pagecontext';
 import { Link } from 'react-router-dom';
-export default function Places({  _id ,photos,address ,price,title      }) {
+import Massege from './Massege';
+export default function Places({  _id ,photos,address ,price,title }) {
 const {User} = useContext(Usercontext);
+const [Favadded, setFavadded] = useState('');
+const [fav, setFav] = useState(true);
 
 const navigate = useNavigate();
 
@@ -45,9 +48,15 @@ const navigate = useNavigate();
         });
       }
 
-      const fav = localStorage.getItem('favPlaces')
-  let favplace = fav.includes(_id)
+ 
 
+     useEffect(() => {
+      const userLikedItems = JSON.parse(localStorage.getItem("favPlaces"));
+      console.log("aa11 " + userLikedItems);
+      setFav(userLikedItems.includes(_id));
+    }, []);
+
+     console.log(fav)
 
   return (  
     
@@ -68,9 +77,9 @@ const navigate = useNavigate();
            animate={{ opacity: 1  }}
            transition={{ duration: 1 }}
           className=" relative     mx-2  mt-1 flex justify-center   w-[95%]   h-[70%]  rounded-xl   ">
-            <div onClick={AddFavorite(e,_id)  } className="  text-white  cursor-pointer hover:opacity-70 z-10 absolute top-3 right-3">
+            <div onClick={(e) => AddFavorite(e, _id) } className="  text-white  cursor-pointer hover:opacity-70 z-10 absolute top-3 right-3">
              
-             { favplace ?    <FavoriteIcon className="  text-red-600 scale-90" /> :<FavoriteBorderOutlinedIcon />} 
+             { fav ?    <FavoriteIcon className="  text-red-600 scale-90" /> :<FavoriteBorderOutlinedIcon />} 
             </div>
 
             <PhotoSlider nonav={true} photos={photos} hight={false} />
@@ -96,6 +105,8 @@ const navigate = useNavigate();
             </div>
           </div>
           </motion.div>
+
+          <Massege img={ photos[0]} msg={Favadded} setMsg={setFavadded} />
         </Link>
   )
 }

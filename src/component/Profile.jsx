@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 
 import axios from "axios";
 import Topbar from "./Topbar";
-function Profile() {
-  const { User, setUser } = useContext(Usercontext);
+function Profile({setPopen ,Popen}) {
+  const { User, setUser  } = useContext(Usercontext);
 
   const navigate = useNavigate();
 
@@ -21,16 +21,34 @@ function Profile() {
   }
 
   return (
-    <div className="    w-full relative  flex flex-col   ">
+    <div className="    w-full relative  flex flex-col ">
       <Topbar title={"My Profile"} />
-      <div className="sticky top-5  md:top-10 ">
+
+      <span onClick={()=>  setPopen(!Popen)  } className= {` ${Popen ? ' rotate-180 bg-main text-white'  : 'rotate-0  bg-slate-100' } duration-100  cursor-pointer  hidden md:flex   absolute top-4 z-10 right-3  rounded-[50%] p-2 `} >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+        </span>
+
+      <div className=    {` ${!Popen   ? ' opacity-100' : ' opacity-0'  }  h-full   pt-7 sticky top-5  md:top-10 `}>
         <div className=" w-full   flex flex-row h-32  gap-7  justify-start px-4  md:mt-0 mt-20 items-center     ">
           <img
             className=" p-2    w-[120px]   bg-gray-100  rounded-[50%] "
             src={userimage}
           />
           <div className=" flex flex-col ">
-            <h1 className=" text-xl font-semibold ">{User?.name} </h1>
+            <h1 className="  text-xl   md:text-lg font-semibold ">{User?.name} </h1>
             <p className="  text-gray-700 text-sm  ">Traveler</p>
           </div>
           <span className=" text-gray-600 cursor-pointer">
