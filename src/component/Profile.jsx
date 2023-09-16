@@ -41,7 +41,7 @@ function Profile({setPopen ,Popen}) {
           </svg>
         </span>
 
-      <div className=    {` ${!Popen   ? ' opacity-100' : ' opacity-0'  }  h-full   pt-7 sticky top-5  md:top-10 `}>
+      <div className=    {` ${!Popen   ? ' opacity-100' : ' opacity-0'  }  h-full   pt-7    `}>
         <div className=" w-full   flex flex-row h-32  gap-7  justify-start px-4  md:mt-0 mt-20 items-center     ">
           <img
             className=" p-2    w-[120px]   bg-gray-100  rounded-[50%] "
@@ -93,7 +93,7 @@ function Profile({setPopen ,Popen}) {
         </div>
 
         <div className=" w-full  flex   pb-4 flex-col gap-5 px-4 mt-5  ">
-          <span className=" h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
+          <Link to={'/account'} className=" h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
             <span className=" flex flex-row  gap-2 items-center  text-gray-700 ">
               <span className="   ">
                 <svg
@@ -127,7 +127,7 @@ function Profile({setPopen ,Popen}) {
                 d="M8.25 4.5l7.5 7.5-7.5 7.5"
               />
             </svg>
-          </span>
+          </Link>
 
           <span className=" text-gray-700 h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
             Dark Mode{" "}

@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
 import Favskelaton from "./Skelatons/Favskelaton";
+ 
 import axios from "axios";
 function Wishlist({  Popen}) {
   const [data, setData] = useState();
@@ -18,7 +19,7 @@ function Wishlist({  Popen}) {
     });
   }, []);
 
-  console.log(data);
+  console.log(data?.place?._id);
   return (
 <>
 { User && ready ?
@@ -30,7 +31,8 @@ function Wishlist({  Popen}) {
         
         
         data?.map((item) => (
-          <div className=" flex flex-row gap-2 w-full    p-2  cursor-pointer h-[200px]   ">
+         
+         <Link className=" flex flex-row gap-2 w-full    p-2  cursor-pointer h-[200px]   ">
             <img
               className="  h-full  w-[60%] rounded-l-3xl object-cover  "
               src={` http://localhost:4000/uploads/${item?.Place.photos[0]}`}
@@ -60,8 +62,9 @@ function Wishlist({  Popen}) {
                 }}
               ></div>
             </div>
-          </div>
+          </Link>
         ))}
+
       </div>
     </div>
   :
