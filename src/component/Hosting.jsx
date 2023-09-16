@@ -10,7 +10,7 @@ import Accommodation from "../component/Accommodation";
 import AddIcon from "@mui/icons-material/Add";
 import AccommSkelaton from "../component/Skelatons/AccommSkelaton";  
   
-function Hosting( ) {
+function Hosting({Popen} ) {
     const {
         User,
         ready,
@@ -39,7 +39,7 @@ function Hosting( ) {
     
 
   return (
-    <div className=" flex flex-col item-center justify-center w-full    md:py-0      py-10    ">
+    <div className=  {`flex flex-col item-center  justify-center w-full  ${ Popen ? 'px-0': ' px-10' }    md:py-0      py-10 `}  >
     <div className=" w-full h-20  pt-3    flex justify-between  px-6  md:px-10 items-end  ">
       <div className=" flex   h-8 w-16 rounded-md   flex-row items-center justify-center   border-solid border-[1px]  border-main ">
         <span
