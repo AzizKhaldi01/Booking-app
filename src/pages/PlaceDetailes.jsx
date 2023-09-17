@@ -22,6 +22,7 @@ import Datepick from "../component/Datepick";
 import PlaceDescription from "../component/PlaceDescription";
 import GrayLine from "../component/GrayLine";
 import { Usercontext } from "../context/pagecontext";
+import Massege from "../component/Massege";
 function PlaceDetailes() {
   const { User } = useContext(Usercontext);
 
@@ -32,10 +33,10 @@ function PlaceDetailes() {
   const [Aopen, setAopen] = useState(false);
   const [msg, setMsg] = useState("");
 
-   
   const [fav, setFav] = useState(true);
- 
+
   const [laod, setLaod] = useState(false);
+  const [Favadded, setFavadded] = useState('');
 
 
   const [Gopen, setGopen] = useState(false);
@@ -58,29 +59,24 @@ function PlaceDetailes() {
     setCheckOutDate,
   } = useContext(BookingContext);
 
-
-const Pdata= data
-
+  const Pdata = data;
 
   const { _id } = useParams();
 
   const navigate = useNavigate();
 
   const handleNext = () => {
-
-    setLaod(true)
+    setLaod(true);
     axios.get("/booking-check/" + _id).then((response) => {
       const { data } = response;
-      console.log('data ' +  data)
-    
+      console.log("data " + data);
+
       if (data == "booked") {
-        setMsg('booked')
-        setLaod(false)
+        setMsg("booked");
+        setLaod(false);
       } else {
-
-
-        setMsg('notbooked')
-        setLaod(false)
+        setMsg("notbooked");
+        setLaod(false);
         localStorage.setItem("guest", JSON.stringify(Guest));
         localStorage.setItem("checkInDate", checkInDate.toISOString());
         localStorage.setItem("checkOutDate", checkOutDate.toISOString());
@@ -113,23 +109,16 @@ const Pdata= data
       if (response.data == "liked") {
         e.preventDefault();
         setFav(true);
+        setFavadded('added')
       } else {
         e.preventDefault();
         setFav(false);
+        setFavadded('removed')
       }
     });
   }
 
-  function handelBooking() {
-    axios.post("/booking-add", {
-      checkInDate,
-      checkOutDate,
-      Guest,
-      daysStayed,
-      _id,
-      price: data.price * daysStayed,
-    });
-  }
+ 
 
   useEffect(() => {
     axios.get("/get-favorite").then((response) => {
@@ -248,13 +237,13 @@ const Pdata= data
               onClick={() => setAopen(!Aopen)}
               className={` ${
                 Aopen ? "   md:opacity-0 opacity-30 z-0" : "  opacity-0 -z-10 "
-              } duration-200 fixed w-full h-full  bg-black     top-0 right-0 `}
+              } duration-200 fixed w-full h-full   bg-black     top-0 right-0 `}
             ></div>
 
             <div
               className={`    fixed    md:absolute   w-full  md:max-w-[450px]  md:pt-0 border-solid  border-0 md:border-[1px]  pt-10   overflow-hidden   shadow-2xl  duration-150 bg-white rounded-t-xl  md:rounded-xl   ${
                 Aopen
-                  ? "  bottom-0 md:h-[260px] opacity-100"
+                  ? "  bottom-0 md:h-[270px]  opacity-100"
                   : " opacity-0  -bottom-[100%]  md:h-0"
               }   z-20    h-[460px]   md:top-20  left-0   `}
             >
@@ -289,9 +278,9 @@ const Pdata= data
                   <div className=" w-full  flex-col items-center  justify-center ">
                     {Gdata.map((item) => (
                       <Gestes
-                        onClick={incrementGuests} // Fix the function name here
+                        onClick={incrementGuests}
                         dicrementGuests={dicrementGuests}
-                        Geust={item.value} // Change this to item.value
+                        Geust={item.value}
                         title={item.title}
                         name={item.title}
                         desc={item.desc}
@@ -305,7 +294,7 @@ const Pdata= data
                   <div className="  w-[95%] h-[1px]  md:hidden flex  bg-gray-200 mb-3 "></div>
                 </div>
 
-                <div className=" w-full    hidden  md:flex items-center justify-center">
+                <div className=" w-full     hidden  md:flex items-center justify-center">
                   <h1
                     onClick={() => setGopen(!Gopen)}
                     className="    border-2  justify-between    mt-1 rounded-lg cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
@@ -334,25 +323,6 @@ const Pdata= data
                   </h1>
                 </div>
 
-                {Gopen && (
-                  <div
-                    className={`  gap-4      w-full  top-12  shadow-xl   ${
-                      Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
-                    } duration-150 rounded-3xl bg-white    z-10 border-solid border-[1px] h-full overflow-auto  pb-10 pt-2 my-3  absolute gap-5    flex flex-col max-w-full px-4   `}
-                  >
-                    {Gdata.map((item) => (
-                      <Gestes
-                        onClick={incrementGuests} // Fix the function name here
-                        dicrementGuests={dicrementGuests}
-                        Geust={item.value} // Change this to item.value
-                        title={item.title}
-                        name={item.title}
-                        desc={item.desc}
-                        maxGuests={data?.maxGuests}
-                      />
-                    ))}
-                  </div>
-                )}
                 <div className=" w-full flex   gap-5 h-full     md:flex-col  flex-col-reverse  ">
                   <div className={`  w-full flex items-center justify-center `}>
                     {/* <button
@@ -363,22 +333,19 @@ const Pdata= data
                     </button> */}
 
                     <button
-                      style={{
-                        background: "rgb(87,130,128)",
-                        background:
-                          "linear-gradient(337deg, rgba(87,130,128,1) 31%, rgba(116,154,152,1) 79%, rgba(129,165,163,1) 85%, rgba(151,183,182,1) 100%, rgba(210,232,232,1) 100%)",
-                      }}
                       disabled={laod}
                       onClick={handleNext}
-                      className=" md:text-lg hover:opacity-90 h-14  w-full md:w-[27%]  relative  rounded-lg    text-white "
+                      className={` ${
+                        msg == "booked" ? "bg-gray-800" : "bg-main"
+                      }   md:text-lg hover:opacity-90 h-14  w-full   mx-3    relative  rounded-lg    text-white  `}
                     >
-                       { msg=='booked' ? 'Already Booked' :   'Reserve '}
+                      {msg == "booked" ? "Already Booked" : "Reserve "}
                       <span
                         className={` ${
                           laod ? " opacity-100 " : " opacity-0"
-                        } bg-greedian   absolute top-0 right-0 bg-main rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
+                        } bg-greedian   absolute top-0 right-0    bg-main rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
                       >
-                        <span className=" h-full w-full scale-[0.2]  md:scale-[0.4] flex items-center justify-center">
+                        <span className=" h-full w-full scale-[0.2]  md:scale-[0.2] flex items-center justify-center">
                           <svg
                             version="1.1"
                             id="L9"
@@ -407,7 +374,6 @@ const Pdata= data
                             </path>
                           </svg>
                         </span>
-
                       </span>
                       <span
                         className={`  ${
@@ -447,7 +413,7 @@ const Pdata= data
                     </button>
                   </div>
 
-                  <div className=" w-full flex   flex-col   items-center    text-lg    px-4">
+                  <div className=" w-full flex   flex-col   items-center    text-lg       px-4">
                     <div className=" flex w-full justify-between items-center">
                       <span className="text-sm ">
                         ${data?.price} x {daysStayed <= 0 ? 0 : daysStayed}{" "}
@@ -459,6 +425,25 @@ const Pdata= data
                     <span>{}</span>
                   </div>
                 </div>
+                {Gopen && (
+                  <div
+                    className={`  gap-4      w-full  top-12  shadow-xl   ${
+                      Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
+                    } duration-150 rounded-3xl bg-white     border-solid border-[1px] h-full overflow-auto  pb-16 z-20 pt-2 my-3  absolute gap-5    flex flex-col max-w-full px-4   `}
+                  >
+                    {Gdata.map((item) => (
+                      <Gestes
+                        onClick={incrementGuests} // Fix the function name here
+                        dicrementGuests={dicrementGuests}
+                        Geust={item.value} // Change this to item.value
+                        title={item.title}
+                        name={item.title}
+                        desc={item.desc}
+                        maxGuests={data?.maxGuests}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -557,6 +542,7 @@ const Pdata= data
           </span>
         </div>
       </div>
+       <Massege img={Pdata.photos[0]} msg={Favadded} setMsg={setFavadded} />
     </div>
   );
 }

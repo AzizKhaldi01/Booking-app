@@ -3,18 +3,21 @@ import React, { useEffect, useContext, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import RoomIcon from "@mui/icons-material/Room";
 import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import EastIcon from "@mui/icons-material/East";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import TripSkelaton from "../component/Skelatons/TripSkelaton";
 function BookedPlaceDetails() {
   const { _id } = useParams();
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
 const navigate = useNavigate();
   useEffect(() => {
     axios.get("/get-bookingDetails/" + _id).then((response) => {
       const { data } = response;
       setData(data);
+      setLoading(false)
     });
   }, []);
 
@@ -25,9 +28,16 @@ const handelGoback = ()=>{
   const fees =   ( data?.price / 100) / 13  ;
 
   return (
+
+    
     <div className=" mt-0   md:mt-24 w-full h-full flex flex-col    px-2  lg:px-14 ">
+     
+     
       <div className="  w-full bg-white h-14 md:hidden flex  justify-center items-center sticky  top-0 z-20 text-lg font-medium  "> <span onClick={handelGoback}><KeyboardArrowLeftIcon   className=" cursor-pointer absolute top-4 left-2"/></span>  Bookings </div>
-      <div className=" gap-3 flex w-full  flex-col  md:flex-row ">
+    
+    
+    
+     {loading ?   <TripSkelaton/> :    <div className=" gap-3 flex w-full  flex-col  md:flex-row ">
         <div className="">
           <div className=" relative w-full  md:h-[50vh] h-[300px]  cursor-pointer    lg:h-[80vh] rounded-xl ">
             <img
@@ -165,7 +175,7 @@ const handelGoback = ()=>{
             </div>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "react-loading-skeleton/dist/skeleton.css";
-import Carteskelaton from "../component/Carteskelaton";
+import Carteskelaton from "../component/Skelatons/Carteskelaton";
 import Places from  '../component/Places';
 import Filter from "../component/Filter";
 
@@ -10,10 +10,21 @@ function Home() {
   const [filtr, setFilter] = useState(false);
   const [places, setPlaces] = useState([]);
   const [isloading, setIslowding] = useState(false);
+  const [fav , setFav]= useState(null)
+  
+
 
 function exitFilter(){
   setFilter(false)
 }
+
+  useEffect(() => {
+    axios.get("/get-favorite-placeID").then((response) => {
+const {data} = response;
+      const placId = data.map((item)=>item?.Place); 
+      localStorage.setItem("favPlaces" , JSON.stringify(placId));
+    });
+  }, [fav]);
 
   useEffect(() => {
     axios.get("/places-all").then((response) => {
@@ -22,7 +33,7 @@ function exitFilter(){
     });
   }, []);
 
- 
+ console.log( 'places  ' + fav)
   return (
     <div className=" h-full w-full    flex flex-col  ">
       <div
@@ -65,7 +76,8 @@ function exitFilter(){
         {!isloading && <Carteskelaton cards={8} />}
         {places.map((place, index) => (
           <Places
-
+          fav={fav}
+          setFav={setFav}
             _id={place._id}
             title={place.title}
             address={place.address}

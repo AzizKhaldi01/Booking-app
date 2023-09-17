@@ -2,7 +2,7 @@ import {   React, useEffect, useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { differenceInDays } from "date-fns";
+
 import RemoveIcon from "@mui/icons-material/Remove";
 import EditGeusts from "../component/EditGeusts";
 import EditDate from "../component/EditDate";
@@ -185,7 +185,7 @@ function Booking() {
   };
 
   return (
-    <div className="  md:bg-white bg-gray-100  relative text-gray-900  px-2 lg:px-20 flex   flex-col-reverse md:flex-row  h-full ">
+    <div className="  md:pb-0 pb-20 md:bg-white bg-gray-100  relative text-gray-900  px-2 lg:px-20 flex   flex-col-reverse md:flex-row  h-full ">
       <div className="      pt-32 md:pt-40    w-full  md:w-[70%]  ">
         <h1 className=" w-full    px-6    items-center  pb-0  md:pb-10  flex  right-0  justify-center  md:justify-start   md:relative  fixed top-0 md:bg-transparent  bg-white  md:h-0 h-20 md:z-0  z-50        text-lg  md:text-3xl">
           <span
