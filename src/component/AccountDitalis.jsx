@@ -1,22 +1,31 @@
-import     { useContext ,React , useState, useEffect } from 'react'
+import     { React , useState, useEffect } from 'react'
+import { useContext } from 'react';
+import { Usercontext } from '../context/pagecontext';
 import userimage from "../img/user.webp";
-import { Usercontext } from '../context/pagecontext'
+ 
 import axios from 'axios';
 
 function AccountDitalis() {
 
-const {User} = useContext(Usercontext);
+ const {User , ready}= useContext(Usercontext)
 
-const [FirstName , setFirtsName]=useState('')
-const [LastName , setLastName]=useState('')
+const [FirstName , setFirtsName]=useState(null)
+const [LastName , setLastName]=useState('') 
+const [Email , setEmail]=useState('') 
+const [Update , setUpdate]=useState(true)
 
-const [Email , setEmail]=useState('')
 
-
-const [Update , setUpdate]=useState(false)
 
  
+console.log(FirstName)
 
+useEffect(() => {
+    if (User && ready) {
+        setFirtsName(User.firstname || ''); // Use '' as the default value if User.firstname is null or undefined
+      setLastName(User.lastname || ''); // Use '' as the default value if User.lastname is null or undefined
+      setEmail(User.email || ''); // Use '' as the default value if User.email is null or undefined
+    }
+  }, [ User]);
 
 function handelupdate (){
     setUpdate(!Update)
@@ -34,6 +43,9 @@ function handelChangeEmail (e){
     setEmail(e.target.value)
 }
 
+if (!User || !ready) {
+    return <div>Loading...</div>;
+  }
 
 function  handelUpdateProfile(e) {
     e.preventDefault();
@@ -73,7 +85,7 @@ function  handelUpdateProfile(e) {
 </div>
 
 { Update  ?    <div className=' flex flex-row items-center gap-2'>
- <button onClick={()=>  setUpdate(false) } className='   text-main  p-2 px-3 border-solid border-[1px] border-main rounded'>x</button> <button onClick={handelUpdateProfile} className=' bg-main  p-2 px-3 text-white rounded'>Save</button>
+ <button onClick={()=>  setUpdate(false) } className='   text-main  p-2 px-3 border-solid border-[1px] border-main rounded'>x</button> <button className=' bg-main  p-2 px-3 text-white rounded'>Save</button>
 </div>    :     <button onClick={handelupdate} className=' bg-main p-2 px-3 rounded text-white'>Update Profile</button>}
 
 </div>
@@ -98,7 +110,7 @@ function  handelUpdateProfile(e) {
 <div className=' flex flex-row w-full  justify-between pb-7 font-medium px-2'>
 
     <span>Change Password</span>
-<button  disabled={!Update} className=  {`  text-gray-600  p-2 px-3 rounded  ${ Update  ?  ' border-solid border-[1px] border-main  text-main ' : '' } `}  >Change</button>
+<button disabled={!Update} className=  {`  text-gray-600  p-2 px-3 rounded  ${ Update  ?  ' border-solid border-[1px] border-main  text-main ' : '' } `}  >Change</button>
 </div>
     </form>
   )
