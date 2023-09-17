@@ -81,16 +81,16 @@ app.post("/login", async (req, res) => {
 app.get("/profile", async (req, res) => {
   try {
     const cookies = req.cookies;
- 
-    if ( cookies.jwtToken) {
+
+    if (cookies.jwtToken) {
       const token = cookies.jwtToken;
 
       jwt.verify(token, "your-secret-key", {}, async (err, userdata) => {
         if (err) {
           res.status(401).json({ error: "Invalid or expired JWT token" });
         } else {
-          const { name, email, _id } = await User.findById(userdata.id);
-          res.json({ name, email, _id });
+          const { firstname  , lastname, email, _id } = await User.findById(userdata.id);
+          res.json({firstname , lastname , email, _id });
         }
       });
     } else {
@@ -111,7 +111,7 @@ app.post("/Registre", async (req, res) => {
       return res.status(400).json({ message: "Password is required." });
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 10); // Using bcrypt with a salt factor of 10
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
     const userDoc = await User.create({
       name,
@@ -215,26 +215,21 @@ app.get("/user-places", async (req, res) => {
   const cookies = req.cookies;
   const token = cookies.jwtToken;
 
-if(cookies.jwtToken){
-  jwt.verify(token, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
-    const { id } = userData;
-    res.json(await Place.find({ owner: id }));
-  });
-}else{
-  res.json([])
-}
-
-  
+  if (cookies.jwtToken) {
+    jwt.verify(token, "your-secret-key", {}, async (err, userData) => {
+      if (err) throw err;
+      const { id } = userData;
+      res.json(await Place.find({ owner: id }));
+    });
+  } else {
+    res.json([]);
+  }
 });
 
 app.get("/places/:id", async (req, res) => {
   const { id } = req.params;
 
   res.json(await Place.findById(id));
-
-
-  
 });
 
 app.put("/places", (req, res) => {
@@ -284,12 +279,10 @@ app.get("/places-all", async (req, res) => {
 });
 
 app.get("/place-details/:_id", async (req, res) => {
- 
-     const { _id } = req.params;
+  const { _id } = req.params;
 
-  const place =    await Place.findById(_id) 
- res.json(place);
- 
+  const place = await Place.findById(_id);
+  res.json(place);
 });
 
 app.delete("/place-delete/:id", async (req, res) => {
@@ -392,20 +385,18 @@ app.post("/submit-payment", async (req, res) => {
 app.get("/get-bookings", async (req, res) => {
   const { jwtToken } = req.cookies;
 
-if(jwtToken){
+  if (jwtToken) {
     jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
-    const { id } = userData;
+      if (err) throw err;
+      const { id } = userData;
 
-    const bookings = await Booking.find({ User: id }).populate("Place");
+      const bookings = await Booking.find({ User: id }).populate("Place");
 
-    res.json(bookings);
-  });
-}else{
-  res.json([]);
-}
-
-
+      res.json(bookings);
+    });
+  } else {
+    res.json([]);
+  }
 });
 
 app.get("/get-bookingDetails/:id", async (req, res) => {
@@ -419,102 +410,138 @@ app.get("/get-bookingDetails/:id", async (req, res) => {
 app.post("/add-favorite", async (req, res) => {
   const { jwtToken } = req.cookies;
 
-if(jwtToken){
+  if (jwtToken) {
     jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
-    const { placeID } = req.body;
-    const { id } = userData;
+      if (err) throw err;
+      const { placeID } = req.body;
+      const { id } = userData;
 
-    const favoriteId = await Favorite.findOne({ Place: placeID });
-console.log(favoriteId?.Place  == placeID )
-    if (favoriteId?.Place  == placeID ) {
-
-      console.log(favoriteId)
-      await Favorite.findOneAndDelete({ Place: placeID });
-      res.json("unliked");
-
-    }else{
-       const favoriteData = {
-      Place: placeID,
-      User: id,
-    };
-    Favorite.create(favoriteData);
-    res.json("liked");
-    }
-
-
-   
-  });
-
-}else{
-  res.json('')
-}
-
-
-  
+      const favoriteId = await Favorite.findOne({ Place: placeID });
+      console.log(favoriteId?.Place == placeID);
+      if (favoriteId?.Place == placeID) {
+        console.log(favoriteId);
+        await Favorite.findOneAndDelete({ Place: placeID });
+        res.json("unliked");
+      } else {
+        const favoriteData = {
+          Place: placeID,
+          User: id,
+        };
+        Favorite.create(favoriteData);
+        res.json("liked");
+      }
+    });
+  } else {
+    res.json("");
+  }
 });
 
 app.get("/get-favorite", async (req, res) => {
   const { jwtToken } = req.cookies;
-  
-  if(jwtToken){
+
+  if (jwtToken) {
     jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
-    const { id } = userData;
+      if (err) throw err;
+      const { id } = userData;
 
-    res.json(await Favorite.find({ User: id }).populate("Place"));
-  });
-  }else{
-    res.json([])
+      res.json(await Favorite.find({ User: id }).populate("Place"));
+    });
+  } else {
+    res.json([]);
   }
- 
 });
-
 
 app.get("/get-favorite-placeID", async (req, res) => {
   const { jwtToken } = req.cookies;
-  
-  if(jwtToken){
-    jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
-    const { id } = userData;
 
-    res.json(await Favorite.find({ User: id }));
-  });
-  }else{
-    res.json([])
+  if (jwtToken) {
+    jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
+      if (err) throw err;
+      const { id } = userData;
+
+      res.json(await Favorite.find({ User: id }));
+    });
+  } else {
+    res.json([]);
   }
- 
 });
 
-
-app.get('/booking-check/:_id'  , async (req , res) => {
- const { jwtToken } = req.cookies;
-if(jwtToken){
+app.get("/booking-check/:_id", async (req, res) => {
+  const { jwtToken } = req.cookies;
+  if (jwtToken) {
     jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
-    const { id } = userData;
-const {_id}  = req.params
+      if (err) throw err;
+      const { id } = userData;
+      const { _id } = req.params;
 
- 
-const bookings = await Booking.find({ User: id, Place: _id }).exec();
+      const bookings = await Booking.find({ User: id, Place: _id }).exec();
 
-console.log(bookings)
+      console.log(bookings);
 
-if (bookings.length > 0) {
-  
-  res.json('booked');
-} else {
-   
-  res.json('not booked');
-}
- 
-  });
-  }else{
-    res.json([])
+      if (bookings.length > 0) {
+        res.json("booked");
+      } else {
+        res.json("not booked");
+      }
+    });
+  } else {
+    res.json([]);
   }
-  
-}  )
+});
+
+app.post("/updateprofile", async (req, res) => {
+  const { FirstName, LastName, Email } = req.body;
+  console.log(FirstName, LastName, Email);
+
+  const { jwtToken } = req.cookies;
+
+  jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
+    if (err) throw err;
+    const {id} = userData;
+    if (Email && FirstName && LastName) {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+       
+      if (emailPattern.test(Email)       ) {
+
+        const maxLength = FirstName.length <= 35 && LastName.length <= 35;
+
+ console.log(maxLength)
+
+if( maxLength){
+
+
+        const UserDoc = await User.findById(userData.id);
+        
+ 
+
+        const emailExist = await User.findOne({ email: Email});
+ 
+        if ( emailExist == null || Email  == UserDoc.email    ) {
+         
+
+          UserDoc.set({
+            email:Email,
+            firstname:FirstName,
+            lastname:LastName,
+          });
+          await UserDoc.save(); 
+          res.status(200).json({ message: "saved" });
+        } else {
+          res.status(400).json({ message: "emailexist" });
+        }
+     }else{
+      res.status(400).json({ message: "maxChar" });
+     }
+     
+     
+      } else {
+        res.status(400).json({ message: "Invalid email format" });
+      }
+    } else {
+      res.status(400).json({ message: "Missing required properties" });
+    }
+  });
+});
 
 app.listen(4000, "0.0.0.0", () => {
   console.log(`Server is running on http://0.0.0.0:${4000}`);
