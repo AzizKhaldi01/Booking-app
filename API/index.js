@@ -503,7 +503,7 @@ app.post("/updateprofile", async (req, res) => {
        
       if (emailPattern.test(Email)       ) {
 
-        const maxLength = FirstName.length <= 35 && LastName.length <= 35;
+        const maxLength = FirstName.length <= 35 && LastName.length <= 35 && Email.length <= 40  ; 
 
  console.log(maxLength)
 
