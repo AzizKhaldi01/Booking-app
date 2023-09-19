@@ -527,15 +527,15 @@ if( maxLength){
           await UserDoc.save(); 
           res.status(200).json({ message: "saved" });
         } else {
-          res.status(400).json({ message: "emailexist" });
+          res.json({ message: "emailexist" });
         }
      }else{
-      res.status(400).json({ message: "maxChar" });
+      res.json({ message: "maxChar" });
      }
      
      
       } else {
-        res.status(400).json({ message: "Invalid email format" });
+        res.json({ message: "Invalid email format" });
       }
     } else {
       res.status(400).json({ message: "Missing required properties" });
