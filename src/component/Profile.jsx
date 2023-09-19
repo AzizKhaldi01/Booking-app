@@ -24,7 +24,7 @@ function Profile({setPopen ,Popen}) {
     <div className="    w-full relative  flex flex-col ">
       <Topbar title={"My Profile"} />
 
-      <span onClick={()=>  setPopen(!Popen)  } className= {` ${Popen ? ' rotate-180 bg-main text-white'  : 'rotate-0  bg-slate-100' } duration-100  cursor-pointer  hidden md:flex   absolute top-4 z-10 right-3  rounded-[50%] p-2 `} >
+      <span onClick={()=>  setPopen(!Popen)  } className= {` ${Popen ? ' rotate-180 bg-main text-white'  : 'rotate-0  bg-slate-100' } duration-100  cursor-pointer  hidden md:flex   absolute top-12  z-10 right-3  rounded-[50%] p-2 `} >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -41,7 +41,7 @@ function Profile({setPopen ,Popen}) {
           </svg>
         </span>
 
-      <div className=    {` ${!Popen   ? ' opacity-100' : ' opacity-0'  }  h-full   pt-7    `}>
+      <div className=    {` ${!Popen   ? ' opacity-100' : ' opacity-0'  }  h-full   pt-14      `}>
         <div className=" w-full   flex flex-row h-32  gap-7  justify-start px-4  md:mt-0 mt-20 items-center     ">
           <img
             className=" p-2    w-[120px]   bg-gray-100  rounded-[50%] "

@@ -19,10 +19,19 @@ const [Msg , setMsg]=useState('')
 
 
 
+useEffect(() => {
+  if (Msg !== ''   && Msg !== 'emailexist' ) {
+    const timer = setTimeout(() => {
+       
+      setMsg('');
+    }, 4000);
 
+    return () => clearTimeout(timer);
+  }
+}, [Msg]);
 
  
-console.log(FirstName)
+console.log(Msg)
 
 useEffect(() => {
     if (User && ready) {
@@ -33,6 +42,7 @@ useEffect(() => {
   }, [ User , Update ]);
 
 function handelupdate (){
+ 
     setUpdate(!Update)
 }
 
@@ -45,6 +55,7 @@ function handelChangeLastName (e){
 } 
 
 function handelChangeEmail (e){
+  setMsg('')
     setEmail(e.target.value)
 }
 
@@ -70,69 +81,36 @@ if (!User || !ready) {
 // });
 
 
-// function  handelUpdateProfile(e) {
-//     setisLoading(true)
-//     e.preventDefault();
-//     axios.post('/updateprofile' , {FirstName , LastName , Email }   ).then((response) =>{
+function  handelUpdateProfile(e) {
+    setisLoading(true)
+    e.preventDefault();
+    axios.post('/updateprofile' , {FirstName , LastName , Email }   ).then((response) =>{
 
-//         const {message} = response.data;
+        const {message} = response.data;
 
-//         setisLoading(false)
-//     if(message == 'saved'){
-//         setMsg('saved')
-//     }
+        setisLoading(false)
+    if(message == 'saved'   ){
+        setMsg('saved')
+    }
 
-//     else if (message == 'emailexist')  {
-//         setMsg('emailexist')
-//     }
-//     else if (message == 'maxChar')  {
-//         setMsg('maxChar')
-//     }
-//     else if (message == 'Invalid email format')  {
-//         setMsg('Invalid email format')
-//     }
+    else if (message == 'emailexist'   )  {
+        setMsg('emailexist')
+    }
+    else if (message == 'maxChar'  )  {
+         alert('Max Char is 35 char')
+    }
+    else if (message == 'Invalid email format' && response.status === 400)  {
+      alert('Invalid email format')
+        setMsg('Invalid email format')
+    }
 
 
-//     }  )
-// }
+    }  )
+}
 
 
 console.log(Msg)
 
-function handelUpdateProfile(e) {
-    setisLoading(true);
-    e.preventDefault();
-  
-    axios
-      .post('/updateprofile', { FirstName, LastName, Email })
-      .then((response) => {
-        const { message } = response.data;
-        setisLoading(false);
-  
-        switch (message) {
-          case 'saved':
-            setMsg('saved');
-            break;
-          case 'emailexist':
-            setMsg('emailexist');
-            break;
-          case 'maxChar':
-            setMsg('maxChar');
-            break;
-          case 'Invalid email format':
-            setMsg('Invalid email format');
-            break;
-          default:
-            setMsg('Unknown error');
-            break;
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating profile:', error);
-        setisLoading(false);
-        setMsg('An error occurred while updating your profile');
-      });
-  }
 
 
   return (
@@ -154,7 +132,7 @@ function handelUpdateProfile(e) {
 </div>
 
 { Update  ?    <div className=' flex flex-row items-center gap-2'>
- <button onClick={()=>  setUpdate(false) } className='   text-main  p-2 px-3 border-solid border-[1px] border-main rounded'>x</button> <button className=' bg-main  p-2 px-3 text-white rounded relative' >Save  
+ <button onClick={()=> { setUpdate(false);  setMsg('')  }} className='   text-main  p-2 px-3 border-solid border-[1px] border-main rounded'>x</button> <button className=' bg-main  p-2 px-3 text-white rounded relative' >Save  
  <span className= {` ${   isLoading ? ' opacity-100 ' : ' opacity-0' } bg-greedian   absolute top-0 right-0 bg-main rounded-lg duration-200 h-full w-full flex items-center justify-center   `}>
   <span className=" h-full w-full scale-[0.2]  md:scale-[0.4] flex items-center justify-center">
  <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg"  xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -185,25 +163,21 @@ function handelUpdateProfile(e) {
 <AccountMassge Msg={Msg} />
  <div className=' w-full flex flex-row gap-5'>
     <span className=' flex flex-col w-full gap-3 items-start '>
-        <label className='   px-2 text-sm text-gray-700' htmlFor="">First Name</label><input disabled={!Update} className=  {`w-full h-12 ${Update ? '  border-solid border-main border-[1px] ' : 'bg-slate-50' }  ${Msg == 'maxChar' ?  ' border-red-500' :  '' }  rounded-md px-3 `}  placeholder='First Name' onChange={handelChangeFirstName} type="text" value={FirstName}  />
+        <label className='   px-2 text-sm text-gray-700' htmlFor="">First Name</label><input disabled={!Update} className=  {`w-full h-12 ${Update ? '  border-solid border-main border-[1px] ' : 'bg-slate-50' }     rounded-md px-3 `}  placeholder='First Name' onChange={handelChangeFirstName} type="text" value={FirstName}  />
         {Msg === 'maxChar' ?  
   <p className='px-2 text-xs text-red-500'>Max Char is 35</p> :''
  }
     </span>
     <span className=' flex flex-col  w-full gap-3 items-start'>
-        <label className='  px-2  text-sm text-gray-700' htmlFor="">Last Name</label><input disabled={!Update} className={`w-full h-12 ${Update ? '  border-solid border-main border-[1px] ' : 'bg-slate-50' }  ${Msg == 'maxChar' ?  ' border-red-500' :  '' }  rounded-md px-3 `}  placeholder='First Name' type="text" onChange={handelChangeLastName} value={LastName}  />
-        {Msg === 'maxChar' ?  
-  <p className='px-2 text-xs text-red-500'>Max Char is 35</p> :''
- }
+        <label className='  px-2  text-sm text-gray-700' htmlFor="">Last Name</label><input disabled={!Update} className={`w-full h-12 ${Update ? '  border-solid border-main border-[1px] ' : 'bg-slate-50' }     rounded-md px-3 `}  placeholder='First Name' type="text" onChange={handelChangeLastName} value={LastName}  />
+         
     </span>
  </div>
  <span className=' flex flex-col  w-full gap-3 items-start'>
-        <label className='  px-2  text-sm text-gray-700' htmlFor="">Email Address</label><input disabled={!Update} className={`w-full h-12 ${Update ? '  border-solid border-main border-[1px] ' : 'bg-slate-50' }  ${Msg == 'emailexist'  || Msg == 'Invalid email format'  ? ' border-red-500 ' : ''  }  rounded-md px-3 `}  placeholder='First Name' type="text" onChange={handelChangeEmail} value={Email}  />
-        {Msg === 'emailexist' ? (
-  <p className='px-2 text-xs text-red-500'>This email already exists.</p>
-) : Msg === 'Invalid email format' ? (
-  <p className='px-2 text-xs text-red-500'>Invalid email format.</p>
-) : ''}
+        <label className='  px-2  text-sm text-gray-700' htmlFor="">Email Address</label><input disabled={!Update} className={`w-full h-12 ${Update ? '  border-solid border-main border-[1px] ' : 'bg-slate-50' }  ${Msg == 'emailexist'    ? ' border-red-500 ' : ''  }  rounded-md px-3 `}  placeholder='First Name' type="text" onChange={handelChangeEmail} value={Email}  />
+        {Msg === 'emailexist' ?  
+  <p className='px-2 text-xs text-red-500'>This email already exists.</p> :''
+    }
     </span>
  <span className=' flex flex-col  w-full gap-3 items-start'>
         <label className=' px-2   text-sm text-gray-700' htmlFor="">Job</label><input disabled={!Update} className={`w-full h-12 ${Update ? '  border-solid border-main border-[1px] ' : 'bg-slate-50' }   rounded-md px-3 `} placeholder='First Name' type="text" value={'Developer'}  />
