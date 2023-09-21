@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import PersonIcon from '@mui/icons-material/Person';
+
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { Usercontext } from "../context/pagecontext";
-import HolidayVillageOutlinedIcon from '@mui/icons-material/HolidayVillageOutlined';
+import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import Bookings from "../component/Bookings";
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import Wishlist from "../component/Wishlist";
-import userimage from "../img/user.webp";
-import LuggageOutlinedIcon from '@mui/icons-material/LuggageOutlined';
-
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import LuggageOutlinedIcon from "@mui/icons-material/LuggageOutlined";
+import collapse from "../img/collapse.svg";
 import Profile from "../component/Profile";
 
 import Hosting from "../component/Hosting";
@@ -18,14 +18,14 @@ import AccountDitalis from "../component/AccountDitalis";
 
 function Account() {
   const { subpages } = useParams(null);
-  const [Popen, setPopen] = useState(false);
+  const [Popen, setPopen] = useState(true);
   const { User } = useContext(Usercontext);
 
   function btntheme(type = null) {
     let clases =
-      "py-2 h-10   p-2  md:p-3 rounded-full      w-28  flex justify-center items-center gap-1   h-full";
+      " p-2 m-4  group relative  rounded-md  hover:bg-main hover:bg-opacity-20  cursor-pointer ";
     if (subpages === type || (subpages === undefined && type === "profile")) {
-      return clases + "  bg-main  text-white  ";
+      return    "  p-2 m-4  bg-main  text-white  group relative rounded-md  cursor-pointer";
     } else {
       return clases;
     }
@@ -42,55 +42,73 @@ function Account() {
       </span>
       <div className="flex   flex-row h-full justify-center   w-full item-center">
         <span
-          className={`   sticky top-10 ${
+          className={` h-[89vh]   sticky top-10 flex flex-col ${
             Popen ? " w-28     " : "w-[32%]"
-          }   sticky top-0  overflow-hidden  ${
+          }   sticky top-0     ${
             !User ? "  md:hidden " : "  hidden md:flex "
           }  duration-200   `}
         >
-         { !Popen ?  <Profile setPopen={setPopen} Popen={Popen} />  : <div className="   top-22 h-[90vh] sticky  w-full  flex flex-col items-center  p-3  ">
-         <span onClick={()=>  setPopen(!Popen)  } className= {` ${Popen ? ' rotate-180  text-main'  : 'rotate-0   ' } duration-100  cursor-pointer  hidden md:flex   absolute top-12  z-10 right-8 rounded-[50%] p-2 `} >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5"
+          {!Popen ? (
+            <Profile setPopen={setPopen} Popen={Popen} />
+          ) : (
+            <div className=" top-22 h-full sticky  w-full  flex flex-col items-center z-50  p-3   ">
+              <div className=" h-[70%]   w-full pt-24 flex flex-col justify-between items-center    ">
+                <Link  to={"/account"}   className={btntheme('profile')} >
+                  <PersonOutlineOutlinedIcon />
+                  <span className=" text-sm absolute top-1 left-12 p-1 px-2 text-white bg-main bg-opacity-80 rounded-md    group-hover:opacity-100 opacity-0 -z-10 group-hover:z-10 ">
+                    Account
+                  </span>
+                </Link>
+                <Link  to={"/account/Wishlist"}  className={btntheme('Wishlist')}>
+                  <FavoriteBorderOutlinedIcon />
+                  <span className=" text-sm absolute top-1 left-12 p-1 px-2 text-white bg-main bg-opacity-80 rounded-md   group-hover:opacity-100 opacity-0 -z-10 group-hover:z-10 ">
+                    WishList
+                  </span>
+                </Link>
+
+                <Link  to={"/account/Trips"}  className={btntheme('Trips')}  >
+                  <LuggageOutlinedIcon />
+                  <span className=" text-sm absolute top-1 left-12 p-1 px-2 text-white bg-main bg-opacity-80 rounded-md   group-hover:opacity-100 opacity-0 -z-10 group-hover:z-10 ">
+                    Trips
+                  </span>
+                </Link>
+
+                <Link  to={"/account/housing"} className={btntheme('housing')} >
+                  <HolidayVillageOutlinedIcon />
+                  <span className=" text-sm absolute top-1 left-12 p-1 px-2 text-white bg-main bg-opacity-80 rounded-md   group-hover:opacity-100 opacity-0 -z-10 group-hover:z-10 ">
+                    Housing
+                  </span>
+                </Link>
+              </div>
+            </div>
+          )}
+
+          <span
+            className={` ${
+              !Popen ? "      justify-start  " : "  justify-center  "
+            } h-[15%] hidden  md:flex  flex-row   px-5 text-gray-800   items-center   `}
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 19.5L8.25 12l7.5-7.5"
-            />
-          </svg>
-        </span>
-<div className=" h-[80%]   w-full pt-24 flex flex-col justify-between items-center ">
- 
-<img
-            className="      w-[100px]     rounded-[50%] "
-            src={userimage}
-          />
-   <span className=" p-4 mt-8">
- <FavoriteBorderOutlinedIcon />
- </span>
-
-
- <span className=" p-4">
- <LuggageOutlinedIcon />
- </span>
- 
- <span className=" p-4">
- <HolidayVillageOutlinedIcon />
- </span>
- 
-
- 
-</div>
-
- 
-
-         </div> }
+            <div
+              className=" flex flex-row gap-2"
+              onClick={() => setPopen(!Popen)}
+            >
+              <img
+                className={` ${
+                  Popen ? "   rotate-180  " : "   "
+                } cursor-pointer w-[19px] `}
+                src={collapse}
+                alt=""
+              />
+              <p
+                className={`  ${
+                  Popen ? " hidden   " : " flex "
+                }   cursor-pointer text-sm`}
+              >
+                 
+                Collapse 
+              </p>
+            </div>
+          </span>
         </span>
 
         <div className="  flex flex-row  md:flex-col w-full h-full justify-center items-center">
