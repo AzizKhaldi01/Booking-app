@@ -15,6 +15,8 @@ const Userprovider = ({children})=>{
  const [placesdata, setPlacedata] = useState(null)
  const [list , setList] = useState(true)
  const [isLoading , setIsLoading] = useState(false)
+ const [Saved , setSaved] = useState(false)
+
 
 
  
@@ -23,7 +25,7 @@ const Userprovider = ({children})=>{
 
  useEffect(() => {
    axios.get("/user-places").then(({ data }) => {
-    const reversedData = data.reverse();
+    const reversedData = data?.reverse();
      setPlaces(data);
      setIsLoading(true)
    });
@@ -47,19 +49,20 @@ const Userprovider = ({children})=>{
 
 
   useEffect(  ()=>{
-    if(!User){
+   
            axios.get('http://localhost:4000/profile',).then(({data})=>{
             setUser(data)
              setReady(true)
            })
           
-    }
-  },[])
+  
+  },[Saved])
 
   
+ 
 
     return( 
-        <Usercontext.Provider  value={{ isLoading , setIsLoading, list,setList, setPlaces,places, link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata , reload , setReload}}>
+        <Usercontext.Provider  value={{ Saved , setSaved , isLoading , setIsLoading, list,setList, setPlaces,places, link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata , reload , setReload}}>
 {children}
 
         </Usercontext.Provider>
