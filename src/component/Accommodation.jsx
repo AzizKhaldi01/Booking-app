@@ -7,17 +7,17 @@ import axios from "axios";
 import { useContext } from "react";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { Usercontext } from "../context/pagecontext";
-import { motion    } from "framer-motion";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 function Accommodation({ title, photos, description, id, address }) {
   var { _id } = useParams();
 
-  const { add, setAdd, setLink, setReload, reload, list , User ,ready} =
+  const { add, setAdd, setLink, setReload, reload, list, User, ready } =
     useContext(Usercontext);
 
-    const navigate = useNavigate();
- 
+  const navigate = useNavigate();
+
   const [deletee, setDelete] = useState(false);
 
   useEffect(() => {
@@ -32,19 +32,14 @@ function Accommodation({ title, photos, description, id, address }) {
     setDelete(!deletee);
   }
 
-  
   if (ready && !User) {
     return navigate("/login");
   }
-
-
-
 
   console.log("list  " + list);
   return (
     <>
       {list ? (
-        
         <Link
           className=" justify-center flex flex-col  items-center"
           to={`/account/housing/${id}`}
@@ -114,12 +109,9 @@ function Accommodation({ title, photos, description, id, address }) {
           </motion.div>
         </Link>
       ) : (
-
-
-
         <Link
           className=" justify-center flex flex-col  items-center"
-          to={`/account/accommodation/${id}`}
+          to={`/account/housing/${id}`}
         >
           <div
             initial={{ opacity: 0 }}
