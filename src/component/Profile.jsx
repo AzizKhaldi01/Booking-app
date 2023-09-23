@@ -5,7 +5,8 @@ import userimage from "../img/user.webp";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
-
+import FirstPageOutlinedIcon from '@mui/icons-material/FirstPageOutlined';
+import collapse from '../img/collapse.svg'
 import axios from "axios";
 import Topbar from "./Topbar";
 function Profile({setPopen ,Popen}) {
@@ -24,31 +25,16 @@ function Profile({setPopen ,Popen}) {
     <div className="    w-full relative  flex flex-col ">
       <Topbar title={"My Profile"} />
 
-      <span onClick={()=>  setPopen(!Popen)  } className= {` ${Popen ? ' rotate-180 bg-main text-white'  : 'rotate-0  bg-slate-100' } duration-100  cursor-pointer  hidden md:flex   absolute top-12  z-10 right-3  rounded-[50%] p-2 `} >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 19.5L8.25 12l7.5-7.5"
-            />
-          </svg>
-        </span>
+     
 
-      <div className=    {` ${!Popen   ? ' opacity-100' : ' opacity-0'  }  h-full   pt-14      `}>
-        <div className=" w-full   flex flex-row h-32  gap-7  justify-start px-4  md:mt-0 mt-20 items-center     ">
+      <div className=    {` ${!Popen   ? ' opacity-100' : ' opacity-0'  }  h-full   pt-8      flex flex-col  gap-6  `}>
+        <div className=" w-full   flex flex-row h-32  gap-7  justify-start px-4  md:mt-0 mt-20 items-center ">
           <img
             className=" p-2    w-[120px]   bg-gray-100  rounded-[50%] "
             src={userimage}
           />
           <div className=" flex flex-col ">
-            <h1 className="  text-xl   md:text-lg font-semibold ">{User?.name} </h1>
+            <h1 className="  text-xl   md:text-lg font-semibold ">{User?.firstname} </h1>
             <p className="  text-gray-700 text-sm  ">Traveler</p>
           </div>
           <span className=" text-gray-600 cursor-pointer">
@@ -68,32 +54,32 @@ function Profile({setPopen ,Popen}) {
             </svg>
           </span>
         </div>
-        <div className=" w-full px-4 flex flex-row gap-3 mt-5 text-sm   ">
+        <div className=" w-full px-4 flex flex-row gap-3   text-sm   ">
           <Link
             to={"/account/Trips"}
-            className="  hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 md:w-[50%]  w-full "
+            className="  hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg  md:h-20 h-24 md:w-[50%]  w-full "
           >
             <span className=" text-gray-700  font-medium text-xl "> 2 </span>
             Trips
           </Link>
           <Link
             to={"/account/Wishlist"}
-            className=" hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 md:w-[50%]  w-full "
+            className=" hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg  md:h-20 h-24 md:w-[50%]  w-full "
           >
             <span className=" text-gray-700  font-medium text-xl ">13</span>
             Favorite
           </Link>
           <Link
             to={"/account/housing"}
-            className=" hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg h-24 md:w-[50%]  w-full "
+            className=" hover:bg-gray-400  hover:text-white flex flex-col justify-center  items-center   text-gray-500 bg-gray-100 rounded-lg  md:h-20 h-24 md:w-[50%]  w-full "
           >
             <span className=" text-gray-700  font-medium text-xl ">3</span>
             Hosting
           </Link>
         </div>
 
-        <div className=" w-full  flex   pb-4 flex-col gap-5 px-4 mt-5  ">
-          <Link to={'/account'} className=" h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
+        <div className=" w-full  flex   pb-4 flex-col gap-4 px-4 mt-0  ">
+          <Link to={'/account'} className="  md:h-14 h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
             <span className=" flex flex-row  gap-2 items-center  text-gray-700 ">
               <span className="   ">
                 <svg
@@ -129,7 +115,7 @@ function Profile({setPopen ,Popen}) {
             </svg>
           </Link>
 
-          <span className=" text-gray-700 h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
+          <span className=" text-gray-700  md:h-14 h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
             Dark Mode{" "}
             <span className=" flex gap-4 h-full py-2 font-normal">
               <button className="   h-full w-16  text-gray-500 ">On</button>{" "}
@@ -139,13 +125,17 @@ function Profile({setPopen ,Popen}) {
             </span>
           </span>
 
-          <span className=" h-16 w-full  rounded-md bg-gray-100 text-red-600  font-medium flex flex-row items-center   gap-2 px-4 relative">
+          <span className="  md:h-14 h-16 w-full  rounded-md bg-gray-100 text-red-600  font-medium flex flex-row items-center   gap-2 px-4 relative">
             <span className=" hover:opacity-80 cursor-pointer" onClick={logout}>
               <LogoutIcon className=" rotate-180" /> Log out
             </span>
           </span>
         </div>
+
+
       </div>
+
+
     </div>
   );
 }
