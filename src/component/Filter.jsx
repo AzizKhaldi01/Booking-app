@@ -9,13 +9,19 @@ import BungalowOutlinedIcon from "@mui/icons-material/BungalowOutlined";
 import axios from "axios";
 
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import { useNavigate } from "react-router-dom";
 
 function Filter({ filtr, setFiltr, setPlaces, exitFilter  }) {
-  const [priceRange, setPriceRange] = useState([40, 1000]);
+ 
 
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
+const [filterCriteria, setFilterCriteria] = useState({
+  priceRange: [40, 1000],
+  perks:{},
+  category:{}
 
+});
 
 useEffect ( ()=>{
 console.log(perks)
@@ -24,6 +30,25 @@ console.log(perks)
 
 ,[perks] ) 
 
+
+
+
+const navigate = useNavigate()
+ 
+useEffect(() => { 
+  // Update the URL whenever filter criteria change
+  const queryParams = new URLSearchParams();
+
+  // Add filter criteria to the query parameters
+  for (const key in filterCriteria) {
+    if (filterCriteria[key] !== '') {
+      queryParams.append(key, filterCriteria[key]);
+    }
+  }
+
+  // Set the URL with the filter criteria
+  navigate(`?${queryParams.toString()}`, { replace: true });
+}, [filterCriteria]);
 
 function addtoFilter(e){
     
@@ -38,29 +63,31 @@ function addtoFilter(e){
  
   function ClearFilter() {
     setCategory([]);
-    setPriceRange([40, 1000]);
+    // setPriceRange([40, 1000]);
   }
 
   function handelfilter(e) {
     e.preventDefault();
-    axios
-      .get("/filter", {
-        params: {
-          minPrice: priceRange[0],
-          maxPrice: priceRange[1],
-          category,
-          perks,
-        },
-      })
-      .then((response) => {
-        setPlaces(response.data.data);
-      });
-    exitFilter();
+    // axios
+    //   .get("/filter", {
+    //     params: {
+    //       minPrice: priceRange[0],
+    //       maxPrice: priceRange[1],
+    //       category,
+    //       perks,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setPlaces(response.data.data);
+    //   });
+    // exitFilter();
   }
 
-  const handlePriceChange = (event, newValue) => {
-    setPriceRange(newValue);
-    console.log(priceRange);
+  const handlePriceChange = (e, newValue) => {
+    setFilterCriteria((prevFilterCriteria) => ({
+      ...prevFilterCriteria,
+      priceRange: newValue,
+    }));
   };
 
   const Propertytypes = [
@@ -154,7 +181,7 @@ function addtoFilter(e){
                 <div className=" w-[60%] ">
                   <Slider
                     style={{ color: "black" }} // Change this color to your desired color
-                    value={priceRange}
+                    value={filterCriteria.priceRange}
                     onChange={handlePriceChange}
                     valueLabelDisplay="auto"
                     min={0}
@@ -166,19 +193,25 @@ function addtoFilter(e){
                 <div className=" flex   w-[60%]  gap-3  justify-between ">
                   <input
                    onChange={(e) => {
-                    const newValue = parseInt(e.target.value);
-                    setPriceRange([newValue, priceRange[1]]);
+                    const newMaxValue = parseInt(e.target.value);
+                    setFilterCriteria((prevFilterCriteria) => ([
+                      prevFilterCriteria.priceRange[0], // Keep the min value unchanged
+                      newMaxValue, // Update the max value
+                    ]));
                   }}
-                    value={priceRange[0]}
+                    value={filterCriteria.priceRange[0] }
                     className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]  "
                     type="number"
                   />
                   <input
-                  onChange={(e) => {
-                    const newValue = parseInt(e.target.value);
-                    setPriceRange([priceRange[0], newValue]);
-                  }}
-                    value={priceRange[1]}
+                 onChange={(e) => {
+                  const newMaxValue = parseInt(e.target.value);
+                  setFilterCriteria((prevFilterCriteria) => ([
+                    prevFilterCriteria.priceRange[1], // Keep the min value unchanged
+                    newMaxValue, // Update the max value
+                  ]));
+                }}
+                    value={filterCriteria.priceRange[1]}
                     className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]   "
                     type="number"
                   />
