@@ -19,6 +19,8 @@ function Wishlist({ Popen }) {
     });
   }, []);
 
+
+
   return (
     <>
       {User && ready ? (
@@ -33,7 +35,7 @@ function Wishlist({ Popen }) {
             ) : (
               data?.map((item) => (
                 <Link
-                  to={`/placedetails/${data?.place?._id} `}
+                  to={`/placedetails/${item?.Place?._id}`}
                   className=" flex flex-row gap-2 w-full    p-2  cursor-pointer h-[200px]   "
                 >
                   <img

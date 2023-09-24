@@ -56,7 +56,7 @@ const navigate = useNavigate();
       setFav(userLikedItems.includes(_id));
     }, []);
 
-     console.log(fav)
+ 
 
   return (  
     
