@@ -4,8 +4,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import Amenities from "../component/Amenities";
 import Propertytype from "../component/Propertytype";
 import { useState } from "react";
+import queryString from 'query-string';
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import BungalowOutlinedIcon from "@mui/icons-material/BungalowOutlined";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -13,42 +15,71 @@ import { useNavigate } from "react-router-dom";
 
 function Filter({ filtr, setFiltr, setPlaces, exitFilter  }) {
  
-
+ const location = useLocation();
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
+  const [aFilter,  setaFilter] = useState({
+     priceRange: [40, 1000],
+  });
+
 const [filterCriteria, setFilterCriteria] = useState({
   priceRange: [40, 1000],
-  perks:{},
-  category:{}
-
+ 
 });
 
-useEffect ( ()=>{
-console.log(perks)
-
-} 
-
-,[perks] ) 
+ 
 
 
 
 
 const navigate = useNavigate()
  
-useEffect(() => { 
-  // Update the URL whenever filter criteria change
-  const queryParams = new URLSearchParams();
 
-  // Add filter criteria to the query parameters
-  for (const key in filterCriteria) {
-    if (filterCriteria[key] !== '') {
-      queryParams.append(key, filterCriteria[key]);
-    }
+useEffect(() => {
+
+  
+  const queryParams = new URLSearchParams(location.search);
+  const perksParam =  queryParams.get('perks'); 
+  const categoryParam =  queryParams.get('category'); 
+  const priceRangeParam = queryParams.get('priceRange');
+  const parsedPriceRange = priceRangeParam ? priceRangeParam.split(',').map(str => parseInt(str, 10)) : null;
+
+  console.log('Parsed Price Range:', parsedPriceRange); // Add this for debugging
+
+  if (parsedPriceRange  ||  categoryParam || perksParam  ) {
+    setFilterCriteria({
+      
+      priceRange: parsedPriceRange,
+    });
+    const categoryParamnew = categoryParam.split(',');
+    setCategory(categoryParamnew  )
+    const perksParamnew = perksParam.split(',');
+    setPerks(perksParamnew)
+
   }
+}, []);
 
-  // Set the URL with the filter criteria
-  navigate(`?${queryParams.toString()}`, { replace: true });
-}, [filterCriteria]);
+console.log(' perks '+perks)
+// Rest of your component code
+
+// Update the URL when filterCriteria changes
+useEffect(() => {
+  const queryParams = new URLSearchParams();
+  
+    queryParams.set('priceRange', filterCriteria.priceRange);
+    queryParams.set('perks', perks);
+    queryParams.set('category', category);
+
+   
+
+ 
+const  newparams = queryParams.toString()
+  
+
+  navigate(`/?${newparams}`);
+}, [filterCriteria ,category , perks]);
+
+
 
 function addtoFilter(e){
     
