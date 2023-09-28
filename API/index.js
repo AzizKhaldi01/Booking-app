@@ -280,9 +280,16 @@ app.get("/places-all", async (req, res) => {
 
 app.get("/place-details/:_id", async (req, res) => {
   const { _id } = req.params;
-
-  const place = await Place.findById(_id);
+ 
+try{
+   const place = await Place.findById(_id);
+ 
   res.json(place);
+}catch{
+  res.json('')
+}
+ 
+ 
 });
 
 app.delete("/place-delete/:id", async (req, res) => {
@@ -542,6 +549,22 @@ if( maxLength){
     }
   });
 });
+
+
+app.get('/UrlFilter/:fillter'  , async (req, res) => { 
+   const {fillter} =  req.params
+
+   const result = {};
+   result.category = { $in: fillter };
+   try {
+    const filteredItems = await Place.find(result);
+    res.json(filteredItems);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+ 
+} )
 
 app.listen(4000, "0.0.0.0", () => {
   console.log(`Server is running on http://0.0.0.0:${4000}`);
