@@ -9,6 +9,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CloseIcon from "@mui/icons-material/Close";
 import PerksD from "../component/PerksD";
 import PhotoSlider from "../component/Imageslaider";
+import Skeleton from "react-loading-skeleton";
 import PlaceIcon from "@mui/icons-material/Place";
 import Gestes from "../component/Gestes";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -23,6 +24,7 @@ import PlaceDescription from "../component/PlaceDescription";
 import GrayLine from "../component/GrayLine";
 import { Usercontext } from "../context/pagecontext";
 import Massege from "../component/Massege";
+import PlaceDtlsSkelaton from "../component/Skelatons/PlaceDtlsSkelaton";
 function PlaceDetailes() {
   const { User } = useContext(Usercontext);
 
@@ -61,6 +63,8 @@ function PlaceDetailes() {
 
   const Pdata = data;
 
+
+
   const { _id } = useParams();
 
   const navigate = useNavigate();
@@ -94,6 +98,8 @@ function PlaceDetailes() {
     });
   };
 
+
+
   function handelGoback() {
     navigate(-1);
   }
@@ -123,7 +129,7 @@ function PlaceDetailes() {
   useEffect(() => {
     axios.get("/get-favorite").then((response) => {
       const { data } = response;
-      const favoriteItemIds = data.map((item) => item?.Place?._id);
+      const favoriteItemIds = data?.map((item) => item?.Place?._id);
       localStorage.setItem("fav", JSON.stringify(favoriteItemIds));
     });
   }, [fav]);
@@ -157,17 +163,24 @@ function PlaceDetailes() {
     setFav(userLikedItems.includes(_id));
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Render a loading message or spinner while waiting for data
-  }
+ 
 
   function hendelmorephotos() {
     setMorephotos(!morephotos);
     document.body.style.overflow = !morephotos ? " hidden" : "auto";
   }
 
+  if(Pdata.length >= 0   ){
+    return <div className=" pt-20">
+     this place dose'nt exict 
+    </div>
+  }
+
   return (
-    <div className="  overflow-hidden  md:pb-0 pb-20   px-3 lg:px-12 w-full h-full  gap-12   mt-0 md:mt-40 justify-between flex   flex-col-reverse md:flex-row">
+
+
+<>
+   {  isLoading  ?   <PlaceDtlsSkelaton/>   :   ( <div className="  overflow-hidden  md:pb-0 pb-20   px-3 lg:px-12 w-full h-full  gap-12   mt-0 md:mt-40 justify-between flex   flex-col-reverse md:flex-row">
       <div className="  w-full md:w-[40%] flex flex-col     ">
         <div className="md:hidden  scale-110  pb-7 cursor-pointer block relative w-full  ">
           <div className=" flex flex-row justify-between items-center  mt-3 p-5 w-full absolute h-10 top-2   z-20">
@@ -197,7 +210,7 @@ function PlaceDetailes() {
         </div>
         <div className=" flex w-full p-2 flex-col">
           <div className="  text-2xl md:text-3xl   font-medium md:font-bold w-full  md:max-w-[90%] ">
-            {data?.title}
+            {   data?.title     }
           </div>
           <p className="  md:text-base flex j items-start text-ms  py-2 md:py-4 text-gray-600">
             {" "}
@@ -212,7 +225,7 @@ function PlaceDetailes() {
           </div>
           <div className="  fixed   md:hidden flex  right-0  w-full bottom-0  bg-white h-20 z-20 justify-between p-3 items-center border-solid border-t-[1px] text-xs text-white  border-gray-300 ">
             <span className="  font-medium   text-gray-700 text-base    ">
-              {" "}
+              
               ${data?.price} / night
             </span>
             <button
@@ -276,7 +289,7 @@ function PlaceDetailes() {
                   </span>
 
                   <div className=" w-full  flex-col items-center  justify-center ">
-                    {Gdata.map((item) => (
+                    {Gdata?.map((item) => (
                       <Gestes
                         onClick={incrementGuests}
                         dicrementGuests={dicrementGuests}
@@ -431,7 +444,7 @@ function PlaceDetailes() {
                       Gopen ? "h-[250px] opacity-100" : "h-0 opacity-0"
                     } duration-150 rounded-3xl bg-white     border-solid border-[1px] h-full overflow-auto  pb-16 z-20 pt-2 my-3  absolute gap-5    flex flex-col max-w-full px-4   `}
                   >
-                    {Gdata.map((item) => (
+                    {Gdata?.map((item) => (
                       <Gestes
                         onClick={incrementGuests} // Fix the function name here
                         dicrementGuests={dicrementGuests}
@@ -468,7 +481,7 @@ function PlaceDetailes() {
                 !morephotos ? "  opacity-0  " : " opacity-100  "
               }   duration-1000 rounded-md  flex flex-col items-center      h-full  w-full    overflow-auto   `}
             >
-              {data?.photos.map((photo) => (
+              {data?.photos?.map((photo) => (
                 <img
                   className="  rounded-lg p-2  w-full md:w-[60%]   "
                   src={"http://localhost:4000/uploads/" + photo}
@@ -481,7 +494,7 @@ function PlaceDetailes() {
           <ExtraInfo setExtra={setExtra} extra={extra} data={data} />
 
           <div className="   pt-14 flex-row gap-8 grid grid-cols-2   text-xs items-start justify-start w-full">
-            {data?.perks.map((perk) => (
+            {data?.perks?.map((perk) => (
               <PerksD perk={perk} />
             ))}
           </div>
@@ -543,7 +556,8 @@ function PlaceDetailes() {
         </div>
       </div>
        <Massege img={Pdata.photos[0]} msg={Favadded} setMsg={setFavadded} />
-    </div>
+    </div>) }
+    </>
   );
 }
 
