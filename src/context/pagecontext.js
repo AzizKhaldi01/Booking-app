@@ -13,7 +13,7 @@ const Userprovider = ({children})=>{
  const [ reload , setReload] = useState(false)
  const [link , setLink]= useState('');
  const [placesdata, setPlacedata] = useState(null)
- const [list , setList] = useState(true)
+ const [list , setList] = useState(false)
  const [isLoading , setIsLoading] = useState(false)
  const [Saved , setSaved] = useState(false)
 
