@@ -20,6 +20,8 @@ import MobileNav from "./component/MobileNav";
 function App() {
    
 
+  
+
   const stripePromise = loadStripe('pk_test_51NhBfRGDCWqRoBjngI9J1i8lsLDi9QmUiVvUw6EpYTHxcNkYdMEvhV6Fr3LMbLGNVVG84SLgYJJZNPywJvpUTIqh00KvikbmRN');
   return (
 
@@ -32,6 +34,7 @@ function App() {
 <Routes >
 
 <Route index element={<Home/>} />
+ 
   <Route path="/login" element={<Login/>} />
   <Route path="/Registre" element={<Registrer/>} />
   <Route path="/account" element={<Account/>} />
