@@ -4,123 +4,98 @@ import CloseIcon from "@mui/icons-material/Close";
 import Amenities from "../component/Amenities";
 import Propertytype from "../component/Propertytype";
 import { useState } from "react";
-import queryString from 'query-string';
+import queryString from "query-string";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import BungalowOutlinedIcon from "@mui/icons-material/BungalowOutlined";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useNavigate } from "react-router-dom";
 
-function Filter({ filtr, setFiltr, setPlaces, exitFilter  }) {
- 
- const location = useLocation();
+function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
+  const location = useLocation();
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
-  const [aFilter,  setaFilter] = useState({
-     priceRange: [40, 1000],
-  });
 
-const [filterCriteria, setFilterCriteria] = useState({
-  priceRange: [40, 1000],
- 
-});
+  const [priceRange, setPriceRange] = useState([40, 1000]);
 
- 
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const perksParam = queryParams.get("perks");
+    const categoryParam = queryParams.get("category");
+    const priceRangeParam = queryParams.get("priceRange");
+    const parsedPriceRange = priceRangeParam
+      ? priceRangeParam.split(",").map((str) => parseInt(str, 10))
+      : null;
 
+    console.log("Parsed Price Range:", parsedPriceRange); // Add this for debugging
 
+    if (parsedPriceRange || categoryParam || perksParam) {
+      setPriceRange(parsedPriceRange);
+      const categoryParamnew = categoryParam.split(",");
+      setCategory(categoryParamnew);
+      const perksParamnew = perksParam.split(",");
 
-const navigate = useNavigate()
- 
+      setPerks(perksParamnew);
+    }
+  }, []);
 
-useEffect(() => {
+  console.log(" perks " + perks);
 
-  
-  const queryParams = new URLSearchParams(location.search);
-  const perksParam =  queryParams.get('perks'); 
-  const categoryParam =  queryParams.get('category'); 
-  const priceRangeParam = queryParams.get('priceRange');
-  const parsedPriceRange = priceRangeParam ? priceRangeParam.split(',').map(str => parseInt(str, 10)) : null;
+  useEffect(() => {}, [priceRange, category, perks]);
 
-  console.log('Parsed Price Range:', parsedPriceRange); // Add this for debugging
-
-  if (parsedPriceRange  ||  categoryParam || perksParam  ) {
-    setFilterCriteria({
-      
-      priceRange: parsedPriceRange,
-    });
-    const categoryParamnew = categoryParam.split(',');
-    setCategory(categoryParamnew  )
-    const perksParamnew = perksParam.split(',');
-    setPerks(perksParamnew)
-
+  function addtoFilter(e) {
+    const { name, checked } = e.target;
+    if (checked) {
+      setPerks([...perks, name]);
+    } else {
+      setPerks([...perks.filter((selectedName) => selectedName !== name)]);
+    }
   }
-}, []);
 
-console.log(' perks '+perks)
-// Rest of your component code
-
-// Update the URL when filterCriteria changes
-useEffect(() => {
-  const queryParams = new URLSearchParams();
-  
-    queryParams.set('priceRange', filterCriteria.priceRange);
-    queryParams.set('perks', perks);
-    queryParams.set('category', category);
-
-   
-
- 
-const  newparams = queryParams.toString()
-  
-
-  navigate(`/?${newparams}`);
-}, [filterCriteria ,category , perks]);
-
-
-
-function addtoFilter(e){
-    
-    const {name , checked } = e.target
-        if(checked){
-            setPerks([...perks , name ])
-          }else{
-            setPerks([...perks.filter(selectedName=> selectedName !== name )])
-          }
-     }
-
- 
   function ClearFilter() {
     setCategory([]);
-    // setPriceRange([40, 1000]);
   }
 
   function handelfilter(e) {
     e.preventDefault();
-    // axios
-    //   .get("/filter", {
-    //     params: {
-    //       minPrice: priceRange[0],
-    //       maxPrice: priceRange[1],
-    //       category,
-    //       perks,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setPlaces(response.data.data);
-    //   });
-    // exitFilter();
+
+    const queryParams = new URLSearchParams();
+
+    queryParams.set("priceRange", priceRange);
+    queryParams.set("perks", perks);
+    queryParams.set("category", category);
+
+    const newparams = queryParams.toString();
+
+    navigate(`/?${newparams}`);
+
+    axios
+      .get("/filter", {
+        params: {
+          minPrice: priceRange[0],
+          maxPrice: priceRange[1],
+          category,
+          perks,
+        },
+      })
+      .then((response) => {
+        setPlaces(response.data.data);
+      });
+    exitFilter();
   }
 
   const handlePriceChange = (e, newValue) => {
-    setFilterCriteria((prevFilterCriteria) => ({
+    setPriceRange((prevFilterCriteria) => ({
       ...prevFilterCriteria,
       priceRange: newValue,
     }));
   };
 
+  
   const Propertytypes = [
     {
       icon: <BungalowOutlinedIcon />,
@@ -131,7 +106,7 @@ function addtoFilter(e){
       title: "ApartmentIcon",
     },
     {
-      icon: <HomeOutlinedIcon /> ,
+      icon: <HomeOutlinedIcon />,
       title: "House",
     },
 
@@ -157,7 +132,18 @@ function addtoFilter(e){
     }
   };
 
-  const perksfilter = ["Radio", "Pets", "entrance", "tv", "parking", "wifi" , "Kitchen", "Washing machine", "Gym","Pool" ];
+  const perksfilter = [
+    "Radio",
+    "Pets",
+    "entrance",
+    "tv",
+    "parking",
+    "wifi",
+    "Kitchen",
+    "Washing machine",
+    "Gym",
+    "Pool",
+  ];
 
   return (
     <div
@@ -174,7 +160,9 @@ function addtoFilter(e){
 
       <div
         className={`  ${
-          filtr ? " opacity-100  z-50  top-[100%] " : " top-[-100%]   -z-10 opacity-0 "
+          filtr
+            ? " opacity-100  z-50  top-[100%] "
+            : " top-[-100%]   -z-10 opacity-0 "
         }     duration-300   flex-grow   text-[12px] h-[90vh]           w-[100%] lg:w-[60%] bg-white rounded-lg fixed   top-[55%]  md:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}
       >
         <div className=" flex text-lg flex-row border-b-[1px]  border-solid items-center justify-center  z-10 bg-white h-16 w-full absolute top-0 rounded-t-xl ">
@@ -212,7 +200,7 @@ function addtoFilter(e){
                 <div className=" w-[60%] ">
                   <Slider
                     style={{ color: "black" }} // Change this color to your desired color
-                    value={filterCriteria.priceRange}
+                    value={priceRange}
                     onChange={handlePriceChange}
                     valueLabelDisplay="auto"
                     min={0}
@@ -223,27 +211,27 @@ function addtoFilter(e){
 
                 <div className=" flex   w-[60%]  gap-3  justify-between ">
                   <input
-                   onChange={(e) => {
-                    const newMaxValue = parseInt(e.target.value);
-                    setFilterCriteria((prevFilterCriteria) => ([
-                      prevFilterCriteria.priceRange[0], // Keep the min value unchanged
-                      newMaxValue, // Update the max value
-                    ]));
-                  }}
-                    value={filterCriteria.priceRange[0] }
+                    onChange={(e) => {
+                      const newMaxValue = parseInt(e.target.value);
+                      setPriceRange((prevFilterCriteria) => [
+                        prevFilterCriteria.priceRange[0], // Keep the min value unchanged
+                        newMaxValue, // Update the max value
+                      ]);
+                    }}
+                    value={priceRange[0]}
                     className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]  "
                     type="number"
                   />
                   <input
-                 onChange={(e) => {
-                  const newMaxValue = parseInt(e.target.value);
-                  setFilterCriteria((prevFilterCriteria) => ([
-                    prevFilterCriteria.priceRange[1], // Keep the min value unchanged
-                    newMaxValue, // Update the max value
-                  ]));
-                }}
-                    value={filterCriteria.priceRange[1]}
-                    className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]   "
+                    onChange={(e) => {
+                      const newMaxValue = parseInt(e.target.value);
+                      setPriceRange((prevFilterCriteria) => [
+                        prevFilterCriteria.priceRange[0], // Keep the min value unchanged
+                        newMaxValue, // Update the max value
+                      ]);
+                    }}
+                    value={priceRange[1]} // Bind to the max value
+                    className="border-[1px] text-[16px] border-gray-300 border-solid rounded-lg px-2 h-12 w-[50%]"
                     type="number"
                   />
                 </div>
@@ -269,12 +257,14 @@ function addtoFilter(e){
           <div className=" w-full    pb-20   flex flex-col gap-9">
             <h1 className=" px-7 text-2xl font-medium">Amenities</h1>
 
-            <div
-              style={{}}
-              className="  grid-cols-2   grid   px-7 w-full  "
-            >
+            <div style={{}} className="  grid-cols-2   grid   px-7 w-full  ">
               {perksfilter.map((item) => (
-                <Amenities name={item} value={item} key={item.index}   addtoFilter={addtoFilter}   />
+                <Amenities
+                  name={item}
+                  value={item}
+                  key={item.index}
+                  addtoFilter={addtoFilter}
+                />
               ))}
             </div>
           </div>
