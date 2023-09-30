@@ -302,13 +302,16 @@ app.delete("/place-delete/:id", async (req, res) => {
 app.get("/filter", async (req, res) => {
   const { perks, category, minPrice, maxPrice } = req.query;
 
-  console.log(perks);
-  // Build the filter object based on the query parameters
+
+ 
+
+  console.log(req.query);
+  
   const filter = {};
-  if (perks) {
+  if (perks && perks?.length < 0  ) {
     filter.perks = { $all: perks };
   }
-  if (category) {
+  if (category && category?.length < 0  ) {
     filter.category = { $in: category };
   }
   if (minPrice && maxPrice) {
