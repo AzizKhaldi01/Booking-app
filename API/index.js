@@ -274,9 +274,7 @@ app.put("/places", (req, res) => {
   });
 });
 
-app.get("/places-all", async (req, res) => {
-  res.json(await Place.find());
-});
+ 
 
 app.get("/place-details/:_id", async (req, res) => {
   const { _id } = req.params;
@@ -302,16 +300,16 @@ app.delete("/place-delete/:id", async (req, res) => {
 app.get("/filter", async (req, res) => {
   const { perks, category, minPrice, maxPrice } = req.query;
 
-
  
+   console.log(req.query);
+   console.log('filter');
 
-  console.log(req.query);
   
   const filter = {};
-  if (perks && perks?.length < 0  ) {
+  if (perks || perks?.length < 0  ) {
     filter.perks = { $all: perks };
   }
-  if (category && category?.length < 0  ) {
+  if (category || category?.length < 0  ) {
     filter.category = { $in: category };
   }
   if (minPrice && maxPrice) {
@@ -334,7 +332,13 @@ app.get("/filter", async (req, res) => {
     console.error("Error fetching items:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+ 
+ 
+
+ 
 });
+
+
 
 app.post("/booking-add", async (req, res) => {
   const { checkInDate, checkOutDate, Guest, daysStayed, _id, price } = req.body;
@@ -462,8 +466,9 @@ app.get("/get-favorite", async (req, res) => {
 });
 
 app.get("/get-favorite-placeID", async (req, res) => {
+ 
   const { jwtToken } = req.cookies;
-
+ 
   if (jwtToken) {
     jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
       if (err) throw err;
@@ -568,6 +573,42 @@ app.get('/UrlFilter/:fillter'  , async (req, res) => {
   }
  
 } )
+
+
+// app.get('/all-places'  , async (req, res) => { 
+//   const {fillter} =  req.body
+
+//   const result = {};
+//   result.category = { $in: fillter };
+//   try {
+//    const filteredItems = await Place.find(result);
+//    res.json(filteredItems);
+//  } catch (error) {
+//    console.error("Error fetching items:", error);
+//    res.status(500).json({ error: "Internal Server Error" });
+//  }
+
+// } )
+
+
+app.get("/all-places", async (req, res) => {
+  const filt = req.body.filtercheck;  
+  console.log('filt  ' +  filt)
+
+ 
+  const data = await Place.find()
+   res.json(data);
+   console.log("data");
+});
+ 
+// app.get("/all-places"  , async (req, res) =>{
+
+    
+//    console.log('params  ' +  req.body)
+//   // const data = await Place.find()
+//   //  res.json(data);
+//    console.log("data");
+// });
 
 app.listen(4000, "0.0.0.0", () => {
   console.log(`Server is running on http://0.0.0.0:${4000}`);
