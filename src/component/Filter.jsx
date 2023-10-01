@@ -3,7 +3,7 @@ import Slider from "@mui/material/Slider";
 import CloseIcon from "@mui/icons-material/Close";
 import Amenities from "../component/Amenities";
 import Propertytype from "../component/Propertytype";
-import { useState } from "react";
+import { useState, useContext} from "react";
 import queryString from "query-string";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import BungalowOutlinedIcon from "@mui/icons-material/BungalowOutlined";
@@ -12,37 +12,57 @@ import axios from "axios";
 
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useNavigate } from "react-router-dom";
-
-function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
+ import { Usercontext } from "../context/pagecontext";
+function Filter({ filtr, setFiltr, setPlaces, exitFilter , setIslowding ,isloading}) {
   const location = useLocation();
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
 
   const [priceRange, setPriceRange] = useState([40, 1000]);
-
+  const { setFilterCheck , FilterCheck}= useContext(Usercontext)
   const navigate = useNavigate();
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const perksParam = queryParams.get("perks");
-    const categoryParam = queryParams.get("category");
-    const priceRangeParam = queryParams.get("priceRange");
-    const parsedPriceRange = priceRangeParam
-      ? priceRangeParam.split(",").map((str) => parseInt(str, 10))
-      : null;
+    async function fetchData() {
+      const queryParams = new URLSearchParams(window.location.search);
+      const perksParam = queryParams.get("perks");
+      const categoryParam = queryParams.get("category");
+      const priceRangeParam = queryParams.get("priceRange");
+      const parsedPriceRange = priceRangeParam
+        ? priceRangeParam.split(",").map((str) => parseInt(str, 10))
+        : null;
 
-    console.log("Parsed Price Range:", parsedPriceRange); // Add this for debugging
+      console.log("Parsed Price Range:", parsedPriceRange);
 
-    if (parsedPriceRange || categoryParam || perksParam) {
-      setPriceRange(parsedPriceRange);
-      const categoryParamnew = categoryParam.split(",");
-      setCategory(categoryParamnew);
-      const perksParamnew = perksParam.split(",");
+      if (parsedPriceRange || categoryParam || perksParam) {
+        setPriceRange(parsedPriceRange);
+        const categoryParamNew = categoryParam ? categoryParam.split(",") : null;
+        setCategory(categoryParamNew);
+        const perksParamNew = perksParam ? perksParam.split(",") : null;
+        setPerks(perksParamNew);
 
-      setPerks(perksParamnew);
+        try {
+
+          const response = await axios.get("/filter", {
+            params: {
+              minPrice: parsedPriceRange ? parsedPriceRange[0] : null,
+              maxPrice: parsedPriceRange ? parsedPriceRange[1] : null,
+              category:categoryParamNew,
+              perks:perksParamNew
+            },
+          });
+          setPlaces(response.data.data);  
+          setIslowding(true)
+          
+        } catch (error) {
+         
+          console.error("Error fetching data:", error);
+        }
+      }
     }
-  }, []);
 
+    fetchData();
+  }, []);
   console.log(" perks " + perks);
 
   useEffect(() => {}, [priceRange, category, perks]);
@@ -60,14 +80,37 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
     setCategory([]);
   }
 
+  
+
+  useEffect(()=> {
+    const queryParams = new URLSearchParams(window.location.search);
+    const perksParam = queryParams.get("perks");
+    const categoryParam = queryParams.get("category");
+    const priceRangeParam = queryParams.get("priceRange");
+    if(priceRangeParam || categoryParam || perksParam){
+      setFilterCheck(true)
+      localStorage.setItem('FilterCheck', FilterCheck );
+    }else{
+      setFilterCheck(false)
+      localStorage.setItem('FilterCheck', FilterCheck );
+    }
+  },[FilterCheck , window.location.search] )
+   
+  console.log( "filteer "+ FilterCheck)
+ 
   function handelfilter(e) {
     e.preventDefault();
+    perks?.filter((perk) => perk !== "");
+    perks?.filter((perk) => perk !== "null");
+
+    category?.filter((caty) => caty !== "");
 
     const queryParams = new URLSearchParams();
 
+    queryParams.set("category", category);
     queryParams.set("priceRange", priceRange);
     queryParams.set("perks", perks);
-    queryParams.set("category", category);
+
 
     const newparams = queryParams.toString();
 
@@ -89,13 +132,24 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
   }
 
   const handlePriceChange = (e, newValue) => {
-    setPriceRange((prevFilterCriteria) => ({
-      ...prevFilterCriteria,
-      priceRange: newValue,
-    }));
+    setPriceRange(newValue);
   };
 
-  
+  useEffect(() => {
+    if (priceRange[0] < 40) {
+      // Create a new array with the updated value for priceRange[0]
+      const newPriceRange = [...priceRange];
+      newPriceRange[0] = 40;
+      // Update the state with the new array
+      setPriceRange(newPriceRange);
+    } else if (priceRange[1] > 2000) {
+      // Create a new array with the updated value for priceRange[1]
+      const newPriceRange = [...priceRange];
+      newPriceRange[1] = 2000;
+      // Update the state with the new array
+      setPriceRange(newPriceRange);
+    }
+  }, [priceRange]);
   const Propertytypes = [
     {
       icon: <BungalowOutlinedIcon />,
@@ -124,7 +178,7 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
     },
   ];
   const handleItemClick = (item) => {
-    if (!category.includes(item.title)) {
+    if (!category?.includes(item.title)) {
       setCategory([...category, item.title]);
       console.log(category);
     } else {
@@ -212,11 +266,8 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
                 <div className=" flex   w-[60%]  gap-3  justify-between ">
                   <input
                     onChange={(e) => {
-                      const newMaxValue = parseInt(e.target.value);
-                      setPriceRange((prevFilterCriteria) => [
-                        prevFilterCriteria.priceRange[0], // Keep the min value unchanged
-                        newMaxValue, // Update the max value
-                      ]);
+                      const newValue = parseInt(e.target.value);
+                      setPriceRange([newValue, priceRange[1]]);
                     }}
                     value={priceRange[0]}
                     className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]  "
@@ -224,14 +275,11 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
                   />
                   <input
                     onChange={(e) => {
-                      const newMaxValue = parseInt(e.target.value);
-                      setPriceRange((prevFilterCriteria) => [
-                        prevFilterCriteria.priceRange[0], // Keep the min value unchanged
-                        newMaxValue, // Update the max value
-                      ]);
+                      const newValue = parseInt(e.target.value);
+                      setPriceRange([priceRange[0], newValue]);
                     }}
-                    value={priceRange[1]} // Bind to the max value
-                    className="border-[1px] text-[16px] border-gray-300 border-solid rounded-lg px-2 h-12 w-[50%]"
+                    value={priceRange[1]}
+                    className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]   "
                     type="number"
                   />
                 </div>
@@ -244,7 +292,7 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter }) {
                 {Propertytypes.map((item) => (
                   <Propertytype
                     onClick={() => handleItemClick(item)}
-                    isSelected={category.includes(item.title)}
+                    isSelected={category?.includes(item.title)}
                     key={item.index}
                     icon={item.icon}
                     title={item.title}
