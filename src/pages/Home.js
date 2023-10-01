@@ -1,14 +1,14 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import "react-loading-skeleton/dist/skeleton.css";
 import Carteskelaton from "../component/Skelatons/Carteskelaton";
 import Places from "../component/Places";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import Filter from "../component/Filter";
 import FilterNav from "../component/FilterNav";
 import { filterdata } from "../component/Filterdata";
- 
+import { Usercontext } from "../context/pagecontext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
 
@@ -21,14 +21,10 @@ function Home() {
   const [places, setPlaces] = useState([]);
   const [isloading, setIslowding] = useState(false);
   const [fav, setFav] = useState(null);
-  const [UrlFilter, setUrlFilter] = useState('');
+  const [UrlFilter, setUrlFilter] = useState("");
   const [scrolling, setScrolling] = useState(false);
-
- 
-const navigate = useNavigate();
  
 
-   
   function exitFilter() {
     setFilter(false);
   }
@@ -43,53 +39,42 @@ const navigate = useNavigate();
 
 
 
-  const location = useLocation();
- 
- 
- 
 
-  useEffect(()=>{ 
-  // axios.get('/UrlFilter/'+  ).then((response)=>{
-  //   const {data} = response;
-  //   setPlaces(data)
- 
-  // } )
-  
-  const filterString = UrlFilter.toString();
- navigate(`/?${filterString}`);
-  },[UrlFilter])
+const filtercheck = localStorage.getItem('FilterCheck') 
 
-
-console.log(UrlFilter)
-
-
+console.log( typeof  filtercheck )
   useEffect(() => {
-    axios.get("/places-all").then((response) => {
-      setPlaces([...response.data]);
-      setIslowding(!isloading);
-    });
+
+
+    if ( filtercheck == 'false') {
+      axios.get("/all-places", { params: { filtercheck } }).then((response) => {
+        setPlaces(response.data);
+        setIslowding(true);
+      });
+    }
   }, []);
 
+ 
 
   useEffect(() => {
     // Add event listener to track scroll position
-    window.addEventListener('scroll', handleScroll);
-    
+    window.addEventListener("scroll", handleScroll);
+
     // Clean up the event listener when the component unmounts
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   const handleScroll = () => {
     // Check the scroll position and update the state
-    if (window.scrollY > 100) { // You can adjust this threshold as needed
+    if (window.scrollY > 100) {
+      // You can adjust this threshold as needed
       setScrolling(true);
     } else {
       setScrolling(false);
     }
   };
-
 
   const breakpoints = {
     // when window width is >= 320px
@@ -113,14 +98,12 @@ console.log(UrlFilter)
     },
   };
 
-
-
-
-
   return (
     <div className=" h-full w-full    flex flex-col  ">
       <div
-        className={`  px-3  md:px-14 justify-center   h-[90px] md:h-[112px]   w-full    gap-5  bg-white    mt-0 md:mt-16 pt-5 md:pt-12   ${scrolling   ? 'shadow-md'  : ''}    sticky   top-0  md:top-12    ease-out   flex items-start z-20     `}
+        className={`  px-3  md:px-14 justify-center   h-[90px] md:h-[112px]   w-full    gap-5  bg-white    mt-0 md:mt-16 pt-5 md:pt-12   ${
+          scrolling ? "shadow-md" : ""
+        }    sticky   top-0  md:top-12    ease-out   flex items-start z-20     `}
       >
         <Swiper
           breakpoints={breakpoints}
@@ -131,7 +114,7 @@ console.log(UrlFilter)
         >
           {filterdata.map((item) => (
             <SwiperSlide>
-              <FilterNav text={item.text} img={item.img}    />
+              <FilterNav text={item.text} img={item.img} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -159,11 +142,11 @@ console.log(UrlFilter)
         </div>
       </div>
 
-      <Filter filtr={filtr} exitFilter={exitFilter} setPlaces={setPlaces} />
+      <Filter filtr={filtr} exitFilter={exitFilter} setPlaces={setPlaces} setIslowding={setIslowding} isloading={isloading} />
 
       <div className="  px-3 md:px-11  w-full h-full duration-150    gap-1 md:gap-5   mt-10 grid   grid-cols-1 md:grid-cols-3    sm:grid-cols-2  lg:grid-cols-4     ">
         {!isloading && <Carteskelaton cards={8} />}
-        {places.map((place, index) => (
+        {places?.map((place, index) => (
           <Places
             fav={fav}
             setFav={setFav}
