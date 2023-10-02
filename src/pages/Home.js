@@ -6,6 +6,7 @@ import Carteskelaton from "../component/Skelatons/Carteskelaton";
 import Places from "../component/Places";
 import { useLocation, useNavigate } from "react-router-dom";
 import Filter from "../component/Filter";
+ 
 import FilterNav from "../component/FilterNav";
 import { filterdata } from "../component/Filterdata";
 import { Usercontext } from "../context/pagecontext";
@@ -23,7 +24,8 @@ function Home() {
   const [fav, setFav] = useState(null);
   const [UrlFilter, setUrlFilter] = useState("");
   const [scrolling, setScrolling] = useState(false);
- 
+  const [type , setType] = useState('')
+   const navigate = useNavigate()
 
   function exitFilter() {
     setFilter(false);
@@ -38,15 +40,39 @@ function Home() {
   }, [fav]);
 
 
+useEffect(()=> {
+    
+ 
+     const queryParams = new URLSearchParams(window.location.search);
+  queryParams.set("type", type);
+   
+  const newparams = queryParams.toString();
+  // const newUrl = `${window.location.pathname}${newparams}`;
+  //   navigate(`/?${newparams}`);
+  // const newUrl = `${window.location.search}?${newparams}`;
+  // window.history.replaceState(null, '', newUrl);
+  navigate(`/?${newparams}`);
+
+
+},[type ] )
+
+
+useEffect(()=> {
+  const queryParams = new URLSearchParams(window.location.search);
+  const typeParam = queryParams?.get("type");
+  const perksParam = queryParams?.get("perks");
+  console.log( 'typeee  ' +typeParam)
+  setType(typeParam)
+},[ ] )
+
+console.log( 'type ' + type)
 
 
 const filtercheck = localStorage.getItem('FilterCheck') 
 
 console.log( typeof  filtercheck )
   useEffect(() => {
-
-
-    if ( filtercheck == 'false') {
+    if ( filtercheck != 'false') {
       axios.get("/all-places", { params: { filtercheck } }).then((response) => {
         setPlaces(response.data);
         setIslowding(true);
@@ -114,7 +140,7 @@ console.log( typeof  filtercheck )
         >
           {filterdata.map((item) => (
             <SwiperSlide>
-              <FilterNav text={item.text} img={item.img} />
+              <FilterNav text={item.text} img={item.img} setType={setType}   />
             </SwiperSlide>
           ))}
         </Swiper>
