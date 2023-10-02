@@ -13,7 +13,7 @@ import axios from "axios";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useNavigate } from "react-router-dom";
  import { Usercontext } from "../context/pagecontext";
-function Filter({ filtr, setFiltr, setPlaces, exitFilter , setIslowding ,isloading}) {
+function Filter({ filtr,   setPlaces, exitFilter , setIslowding   }) {
   const location = useLocation();
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
@@ -25,11 +25,11 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter , setIslowding ,isloadi
   useEffect(() => {
     async function fetchData() {
       const queryParams = new URLSearchParams(window.location.search);
-      const perksParam = queryParams.get("perks");
-      const categoryParam = queryParams.get("category");
-      const priceRangeParam = queryParams.get("priceRange");
+      const perksParam = queryParams?.get("perks");
+      const categoryParam = queryParams?.get("category");
+      const priceRangeParam = queryParams?.get("priceRange");
       const parsedPriceRange = priceRangeParam
-        ? priceRangeParam.split(",").map((str) => parseInt(str, 10))
+        ? priceRangeParam.split(",")?.map((str) => parseInt(str, 10))
         : null;
 
       console.log("Parsed Price Range:", parsedPriceRange);
@@ -63,7 +63,7 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter , setIslowding ,isloadi
 
     fetchData();
   }, []);
-  console.log(" perks " + perks);
+ 
 
   useEffect(() => {}, [priceRange, category, perks]);
 
@@ -84,14 +84,14 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter , setIslowding ,isloadi
 
   useEffect(()=> {
     const queryParams = new URLSearchParams(window.location.search);
-    const perksParam = queryParams.get("perks");
-    const categoryParam = queryParams.get("category");
-    const priceRangeParam = queryParams.get("priceRange");
+    const perksParam = queryParams?.get("perks");
+    const categoryParam = queryParams?.get("category");
+    const priceRangeParam = queryParams?.get("priceRange");
     if(priceRangeParam || categoryParam || perksParam){
-      setFilterCheck(true)
+      setFilterCheck(false)
       localStorage.setItem('FilterCheck', FilterCheck );
     }else{
-      setFilterCheck(false)
+      setFilterCheck(true)
       localStorage.setItem('FilterCheck', FilterCheck );
     }
   },[FilterCheck , window.location.search] )
@@ -105,11 +105,15 @@ function Filter({ filtr, setFiltr, setPlaces, exitFilter , setIslowding ,isloadi
 
     category?.filter((caty) => caty !== "");
 
-    const queryParams = new URLSearchParams();
+    const queryParams = new URLSearchParams(window.location.search);
 
     queryParams.set("category", category);
     queryParams.set("priceRange", priceRange);
-    queryParams.set("perks", perks);
+if(perks){
+  queryParams.set("perks", perks);
+}
+
+    
 
 
     const newparams = queryParams.toString();
