@@ -6,13 +6,13 @@ import Carteskelaton from "../component/Skelatons/Carteskelaton";
 import Places from "../component/Places";
 import { useLocation, useNavigate } from "react-router-dom";
 import Filter from "../component/Filter";
- 
 import FilterNav from "../component/FilterNav";
 import { filterdata } from "../component/Filterdata";
 import { Usercontext } from "../context/pagecontext";
+
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
-
 import "../../src/index.css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -24,8 +24,9 @@ function Home() {
   const [fav, setFav] = useState(null);
   const [UrlFilter, setUrlFilter] = useState("");
   const [scrolling, setScrolling] = useState(false);
-  const [type , setType] = useState('')
-   const navigate = useNavigate()
+  const [type, setType] = useState("");
+  const navigate = useNavigate();
+  const {ResetFilter } = useContext(Usercontext)
 
   function exitFilter() {
     setFilter(false);
@@ -39,40 +40,32 @@ function Home() {
     });
   }, [fav]);
 
+  function FilterType(text) {
+    setType(text);
 
-useEffect(()=> {
-    
- 
-     const queryParams = new URLSearchParams(window.location.search);
-  queryParams.set("type", type);
-   
-  const newparams = queryParams.toString();
-  // const newUrl = `${window.location.pathname}${newparams}`;
-  //   navigate(`/?${newparams}`);
-  // const newUrl = `${window.location.search}?${newparams}`;
-  // window.history.replaceState(null, '', newUrl);
-  navigate(`/?${newparams}`);
+    const queryParams = new URLSearchParams(window.location.search);
 
+    queryParams.set("type", text);
 
-},[type ] )
+    const newparams = queryParams.toString();
 
+    navigate(`/?${newparams}`);
+  }
 
-useEffect(()=> {
-  const queryParams = new URLSearchParams(window.location.search);
-  const typeParam = queryParams?.get("type");
-  const perksParam = queryParams?.get("perks");
-  console.log( 'typeee  ' +typeParam)
-  setType(typeParam)
-},[ ] )
-
-console.log( 'type ' + type)
-
-
-const filtercheck = localStorage.getItem('FilterCheck') 
-
-console.log( typeof  filtercheck )
   useEffect(() => {
-    if ( filtercheck != 'false') {
+    const queryParams = new URLSearchParams(window.location.search);
+    const typeParam = queryParams?.get("type");
+    const perksParam = queryParams?.get("perks");
+    console.log("typeee  " + typeParam);
+    setType(typeParam);
+  }, []);
+
+  const filtercheck = localStorage.getItem("FilterCheck");
+
+   
+ 
+  useEffect(() => {
+    if (filtercheck != "false") {
       axios.get("/all-places", { params: { filtercheck } }).then((response) => {
         setPlaces(response.data);
         setIslowding(true);
@@ -80,7 +73,7 @@ console.log( typeof  filtercheck )
     }
   }, []);
 
- 
+  
 
   useEffect(() => {
     // Add event listener to track scroll position
@@ -101,6 +94,7 @@ console.log( typeof  filtercheck )
       setScrolling(false);
     }
   };
+
 
   const breakpoints = {
     // when window width is >= 320px
@@ -124,6 +118,7 @@ console.log( typeof  filtercheck )
     },
   };
 
+
   return (
     <div className=" h-full w-full    flex flex-col  ">
       <div
@@ -140,7 +135,12 @@ console.log( typeof  filtercheck )
         >
           {filterdata.map((item) => (
             <SwiperSlide>
-              <FilterNav text={item.text} img={item.img} setType={setType}   />
+              <FilterNav
+                FilterType={FilterType}
+                text={item.text}
+                img={item.img}
+                type={type}
+              />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -168,7 +168,14 @@ console.log( typeof  filtercheck )
         </div>
       </div>
 
-      <Filter filtr={filtr} exitFilter={exitFilter} setPlaces={setPlaces} setIslowding={setIslowding} isloading={isloading} />
+      <Filter
+        filtr={filtr}
+        type={type}
+        exitFilter={exitFilter}
+        setPlaces={setPlaces}
+        setIslowding={setIslowding}
+        isloading={isloading}
+      />
 
       <div className="  px-3 md:px-11  w-full h-full duration-150    gap-1 md:gap-5   mt-10 grid   grid-cols-1 md:grid-cols-3    sm:grid-cols-2  lg:grid-cols-4     ">
         {!isloading && <Carteskelaton cards={8} />}
