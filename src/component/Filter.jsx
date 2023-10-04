@@ -3,7 +3,7 @@ import Slider from "@mui/material/Slider";
 import CloseIcon from "@mui/icons-material/Close";
 import Amenities from "../component/Amenities";
 import Propertytype from "../component/Propertytype";
-import { useState, useContext} from "react";
+import { useState, useContext } from "react";
 import queryString from "query-string";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import BungalowOutlinedIcon from "@mui/icons-material/BungalowOutlined";
@@ -12,14 +12,13 @@ import axios from "axios";
 
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useNavigate } from "react-router-dom";
- import { Usercontext } from "../context/pagecontext";
-function Filter({ filtr,   setPlaces, exitFilter , setIslowding   }) {
+import { Usercontext } from "../context/pagecontext";
+function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
   const location = useLocation();
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
-
   const [priceRange, setPriceRange] = useState([40, 1000]);
-  const { setFilterCheck , FilterCheck}= useContext(Usercontext)
+  const { setFilterCheck, FilterCheck   } = useContext(Usercontext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +27,8 @@ function Filter({ filtr,   setPlaces, exitFilter , setIslowding   }) {
       const perksParam = queryParams?.get("perks");
       const categoryParam = queryParams?.get("category");
       const priceRangeParam = queryParams?.get("priceRange");
+      const typeParam = queryParams?.get("type");
+
       const parsedPriceRange = priceRangeParam
         ? priceRangeParam.split(",")?.map((str) => parseInt(str, 10))
         : null;
@@ -36,26 +37,26 @@ function Filter({ filtr,   setPlaces, exitFilter , setIslowding   }) {
 
       if (parsedPriceRange || categoryParam || perksParam) {
         setPriceRange(parsedPriceRange);
-        const categoryParamNew = categoryParam ? categoryParam.split(",") : null;
+        const categoryParamNew = categoryParam
+          ? categoryParam.split(",")
+          : null;
         setCategory(categoryParamNew);
         const perksParamNew = perksParam ? perksParam.split(",") : null;
         setPerks(perksParamNew);
 
         try {
-
           const response = await axios.get("/filter", {
             params: {
+              type: typeParam,
               minPrice: parsedPriceRange ? parsedPriceRange[0] : null,
               maxPrice: parsedPriceRange ? parsedPriceRange[1] : null,
-              category:categoryParamNew,
-              perks:perksParamNew
+              category: categoryParamNew,
+              perks: perksParamNew,
             },
           });
-          setPlaces(response.data.data);  
-          setIslowding(true)
-          
+          setPlaces(response.data.data);
+          setIslowding(true);
         } catch (error) {
-         
           console.error("Error fetching data:", error);
         }
       }
@@ -63,7 +64,6 @@ function Filter({ filtr,   setPlaces, exitFilter , setIslowding   }) {
 
     fetchData();
   }, []);
- 
 
   useEffect(() => {}, [priceRange, category, perks]);
 
@@ -78,28 +78,27 @@ function Filter({ filtr,   setPlaces, exitFilter , setIslowding   }) {
 
   function ClearFilter() {
     setCategory([]);
+    setPerks([]);
   }
 
-  
-
-  useEffect(()=> {
+  useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const perksParam = queryParams?.get("perks");
     const categoryParam = queryParams?.get("category");
     const priceRangeParam = queryParams?.get("priceRange");
-    if(priceRangeParam || categoryParam || perksParam){
-      setFilterCheck(false)
-      localStorage.setItem('FilterCheck', FilterCheck );
-    }else{
-      setFilterCheck(true)
-      localStorage.setItem('FilterCheck', FilterCheck );
+    if (priceRangeParam || categoryParam || perksParam) {
+      setFilterCheck(false);
+      localStorage.setItem("FilterCheck", FilterCheck);
+    } else {
+      setFilterCheck(true);
+      localStorage.setItem("FilterCheck", FilterCheck);
     }
-  },[FilterCheck , window.location.search] )
-   
-  console.log( "filteer "+ FilterCheck)
- 
+  }, [FilterCheck, window.location.search]);
+
+  console.log("filteer " + FilterCheck);
+
   function handelfilter(e) {
-    e.preventDefault();
+    e?.preventDefault();
     perks?.filter((perk) => perk !== "");
     perks?.filter((perk) => perk !== "null");
 
@@ -109,12 +108,9 @@ function Filter({ filtr,   setPlaces, exitFilter , setIslowding   }) {
 
     queryParams.set("category", category);
     queryParams.set("priceRange", priceRange);
-if(perks){
-  queryParams.set("perks", perks);
-}
-
-    
-
+    if (perks) {
+      queryParams.set("perks", perks);
+    }
 
     const newparams = queryParams.toString();
 
@@ -123,6 +119,7 @@ if(perks){
     axios
       .get("/filter", {
         params: {
+          type,
           minPrice: priceRange[0],
           maxPrice: priceRange[1],
           category,
@@ -134,6 +131,13 @@ if(perks){
       });
     exitFilter();
   }
+  useEffect(() => {
+    if (!type) {
+      return;
+    }
+
+    handelfilter();
+  }, [type]);
 
   const handlePriceChange = (e, newValue) => {
     setPriceRange(newValue);
@@ -154,6 +158,7 @@ if(perks){
       setPriceRange(newPriceRange);
     }
   }, [priceRange]);
+
   const Propertytypes = [
     {
       icon: <BungalowOutlinedIcon />,
@@ -221,7 +226,7 @@ if(perks){
           filtr
             ? " opacity-100  z-50  top-[100%] "
             : " top-[-100%]   -z-10 opacity-0 "
-        }     duration-300   flex-grow   text-[12px] h-[90vh]           w-[100%] lg:w-[60%] bg-white rounded-lg fixed   top-[55%]  md:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}
+        }     duration-300   flex-grow   text-[12px] h-[90vh] w-[100%] lg:w-[60%] bg-white rounded-lg fixed   top-[55%]  md:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}
       >
         <div className=" flex text-lg flex-row border-b-[1px]  border-solid items-center justify-center  z-10 bg-white h-16 w-full absolute top-0 rounded-t-xl ">
           <span

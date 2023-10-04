@@ -7,7 +7,7 @@ import axios from "axios";
 import AccountMassge from "./AccountMassge";
 
 function AccountDitalis() {
-  const { User, ready ,Saved , setSaved  } = useContext(Usercontext);
+  const { User, ready, Saved, setSaved } = useContext(Usercontext);
 
   const [FirstName, setFirtsName] = useState(null);
   const [LastName, setLastName] = useState("");
@@ -57,8 +57,6 @@ function AccountDitalis() {
     return <div>Loading...</div>;
   }
 
-  
-
   function handelUpdateProfile(e) {
     setisLoading(true);
     e.preventDefault();
@@ -70,15 +68,13 @@ function AccountDitalis() {
         setisLoading(false);
         if (message == "saved") {
           setMsg("saved");
-          setUpdate(false)
-          setSaved(!Saved)
+          setUpdate(false);
+          setSaved(!Saved);
         } else if (message == "emailexist") {
           setMsg("emailexist");
         } else if (message == "maxChar") {
           alert("Max Char is 35 char");
-        } else if (
-          message == "Invalid email format" 
-        ) {
+        } else if (message == "Invalid email format") {
           alert("Invalid email format");
           setMsg("Invalid email format");
         }
@@ -118,7 +114,7 @@ function AccountDitalis() {
               className="   text-main  p-2 px-3 border-solid border-[1px] border-main rounded"
             >
               x
-            </button> 
+            </button>
             <button className=" bg-main  p-2 px-3 text-white rounded relative">
               Save
               <span
