@@ -298,7 +298,7 @@ app.delete("/place-delete/:id", async (req, res) => {
 });
 
 app.get("/filter", async (req, res) => {
-  const { perks, category, minPrice, maxPrice } = req.query;
+  const { perks, category, minPrice, maxPrice , type } = req.query;
 
  
    console.log(req.query);
@@ -320,9 +320,14 @@ app.get("/filter", async (req, res) => {
     filter.price = { $lte: maxPrice };
   }
 
+  if (type) {
+    filter.category = { $in: [type] };
+  }
+
+ 
   // Count the total number of filtered items
   const totalItems = await Place.countDocuments(filter);
-
+ 
   // Apply pagination using Mongoose's skip and limit methods
 
   try {
