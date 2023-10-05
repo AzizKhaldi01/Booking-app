@@ -175,42 +175,65 @@ app.post("/uploads", upload.array("files", 3), (req, res) => {
   res.json({ filenames: renamedFiles });
 });
 
-app.post("/places", (req, res) => {
-  const cookies = req.cookies;
-  const token = cookies.jwtToken;
-  const {
-    title,
-    address,
-    addedPhotos,
-    description,
-    price,
-    category,
-    perks,
-    extraInfo,
-    checkIn,
-    checkOut,
-    maxGuests,
-  } = req.body;
-  jwt.verify(token, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
-    const placeDoc = await Place.create({
-      owner: userData.id,
-      price,
-      category,
-      title,
-      address,
-      photos: addedPhotos,
-      description,
-      perks,
-      extraInfo,
-      checkIn,
-      checkOut,
-      maxGuests,
-    });
-    res.json(placeDoc);
-  });
-});
+app.post('/places', async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    const token = cookies.jwtToken;
 
+    // Verify the JWT token with your secret key
+    jwt.verify(token, 'your-secret-key', {}, async (err, userData) => {
+      if (err) {
+        throw err;
+      }
+
+      // Extract data from the request body
+      const {
+        title,
+        address,
+        addedPhotos,
+        description,
+        price,
+        category,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuests,
+      } = req.body;
+
+
+      if(title && address &&   addedPhotos && description && price && category && perks && extraInfo && checkIn && checkOut && maxGuests){
+         const placeDoc = await Place.create({
+        owner: userData.id,
+        price,
+        category,
+        title,
+        address,
+        photos: addedPhotos,
+        description,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuests,
+      });
+
+      // Respond with a JSON success message
+      res.json({ message: 'Place created successfully' });
+      }else {
+        res.status(400).json( 'Set All The Information' );
+      }
+
+
+      // Create a new Place document
+   
+    });
+  } catch (error) {
+    // Handle errors in a more sophisticated way, e.g., logging and providing meaningful error responses
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 app.get("/user-places", async (req, res) => {
   const cookies = req.cookies;
   const token = cookies.jwtToken;
