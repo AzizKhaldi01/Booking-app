@@ -10,12 +10,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import Skeleton from "react-loading-skeleton";
 import logo from "../img/logo airbnb 1.png";
 function Navbar() {
-  const { User , ResetFilter , setResetFilter } = useContext(Usercontext);
+  const { User , ResetFilter    } = useContext(Usercontext);
 
   return (
     <div className=" hidden md:flex  flex-col w-full">
       <div className=" w-full h-16  items-center  z-30 border-b-[1px]  border-solid bg-white  fixed top-0 right-0 flex flex-row justify-between  px-12 p-10  ">
-        <Link onClick={setResetFilter(!ResetFilter)} to="/">
+        <Link   to="/">
           <div className="  text-lg font-medium">
             <img className=" w-[35px] " src={logo} />
           </div>

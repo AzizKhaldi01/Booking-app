@@ -14,7 +14,7 @@ function Hosting({Popen} ) {
     const {
         User,
         ready,
-        setUser,
+         
         add,
         setAdd,
         setPlacedata,
@@ -100,6 +100,7 @@ function Hosting({Popen} ) {
       <div className=" "> </div>
     </div>
     <NewAccommodation setAdd={setAdd} add={add} />
+    
   </div>
   )
 }
