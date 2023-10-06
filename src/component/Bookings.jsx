@@ -37,7 +37,7 @@ function Bookings({  Popen}) {
     return navigate("/login");
   }
   return (
-    <div className= {` md:mt-6   mt-10 h-full w-full grid grid-cols-1 xl:grid-cols-2  ${  Popen ? 'px-12 ' :' px-5 '  }    p-4   gap-3 items-center `} >
+    <div className= {` md:mt-6   mt-10 h-full w-full grid grid-cols-1 xl:grid-cols-2  ${  Popen ? ' px-2 md:px-12 ' :' px-5 '  }    p-4   gap-3 items-center `} >
     
      <Topbar title={'Trips'}/>
       {!isLoading ? (

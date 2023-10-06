@@ -69,6 +69,7 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
 
   function addtoFilter(e) {
     const { name, checked } = e.target;
+  
     if (checked) {
       setPerks([...perks, name]);
     } else {
@@ -99,6 +100,8 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
 
   function handelfilter(e) {
     e?.preventDefault();
+    setPlaces([])
+    setIslowding(false)
     perks?.filter((perk) => perk !== "");
     perks?.filter((perk) => perk !== "null");
 
@@ -128,6 +131,7 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
       })
       .then((response) => {
         setPlaces(response.data.data);
+        setIslowding(true)
       });
     exitFilter();
   }
