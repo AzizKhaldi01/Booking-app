@@ -16,9 +16,7 @@ const Userprovider = ({children})=>{
  const [list , setList] = useState(false)
  const [isLoading , setIsLoading] = useState(false)
  const [Saved , setSaved] = useState(false)
-
-
-
+ const [FilterCheck , setFilterCheck] = useState(false)
  
 
  const [places, setPlaces] = useState([]);
@@ -62,10 +60,9 @@ const Userprovider = ({children})=>{
  
 
     return( 
-        <Usercontext.Provider  value={{ Saved , setSaved , isLoading , setIsLoading, list,setList, setPlaces,places, link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata , reload , setReload}}>
+        <Usercontext.Provider  value={{    setFilterCheck, FilterCheck ,Saved , setSaved , isLoading , setIsLoading, list,setList, setPlaces,places, link,  setLink, setUser, User ,ready ,setAdd,add ,placesdata,setPlacedata , reload , setReload}}>
 {children}
-
-        </Usercontext.Provider>
+ </Usercontext.Provider>
     )
 }
 export default Userprovider;
