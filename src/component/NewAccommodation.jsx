@@ -155,6 +155,8 @@ function NewAccommodation({ setAdd, add }) {
   async function savePlace(ev) {
     ev.preventDefault();
 
+
+   
     const placeData = {
       title,
       address,
@@ -247,14 +249,11 @@ function NewAccommodation({ setAdd, add }) {
     }
 
     const updatedPhotos = [...addedPhotos];
-
-    // Remove the item with the specified filename from its current position
+   
     const [movedPhoto] = updatedPhotos.splice(indexToMove, 1);
-
-    // Insert the removed item at the beginning of the array
+     
     updatedPhotos.unshift(movedPhoto);
-
-    // Update the state with the new order
+ 
     setAddedPhotos(updatedPhotos);
   }
 
