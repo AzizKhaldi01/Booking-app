@@ -7,6 +7,7 @@ import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import EastIcon from "@mui/icons-material/East";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import TripSkelaton from "../component/Skelatons/TripSkelaton";
+import Topbar from "../component/Topbar";
 function BookedPlaceDetails() {
   const { _id } = useParams();
   const [data, setData] = useState(null);
@@ -33,16 +34,16 @@ const handelGoback = ()=>{
     <div className=" mt-0   md:mt-24 w-full h-full flex flex-col    px-2  lg:px-14 ">
      
      
-      <div className="  w-full bg-white h-14 md:hidden flex  justify-center items-center sticky  top-0 z-20 text-lg font-medium  "> <span onClick={handelGoback}><KeyboardArrowLeftIcon   className=" cursor-pointer absolute top-4 left-2"/></span>  Bookings </div>
+  <Topbar title={'Trip Details'} />
     
     
     
      {loading ?   <TripSkelaton/> :    <div className=" gap-3 flex w-full  flex-col  md:flex-row ">
         <div className="">
-          <div className=" relative w-full  md:h-[50vh] h-[300px]  cursor-pointer    lg:h-[80vh] rounded-xl ">
+          <div className="  md:my-0 my-20 relative w-full  md:h-[50vh] h-[300px]  cursor-pointer    lg:h-[80vh] rounded-xl ">
             <img
               className=" w-full h-full rounded-3xl  object-cover object-center"
-              src={` http://localhost:4000/uploads/${data?.Place?.photos[1]}`}
+              src={` http://192.168.1.7:4000/uploads/${data?.Place?.photos[1]}`}
               alt=""
             />
 
@@ -78,7 +79,7 @@ const handelGoback = ()=>{
           </div>
         </div>
 
-        <div className=" mx-0  md:mx-4   p-0  md:p-2  py-2 flex flex-col w-full  md:w-[40%] h-full gap-3">
+        <div className=" mx-0  md:mx-4   p-0  pb-16   md:p-2  py-2 flex flex-col w-full  md:w-[40%] h-full gap-3">
           <div className=" p-4  flex flex-col    border-solid border-[1px] rounded-lg   w-full h-full  ">
            <h1 className=" text-xl">Date Details</h1>
            <div className=" w-full flex flex-col  md:flex-row justify-between   "> 

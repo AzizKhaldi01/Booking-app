@@ -122,7 +122,7 @@ function Home() {
   return (
     <div className=" h-full w-full    flex flex-col  ">
       <div
-        className={`  px-3  md:px-14 justify-center   h-[90px] md:h-[112px]   w-full    gap-5  bg-white    mt-0 md:mt-16 pt-5 md:pt-12   ${
+        className={`  px-3  md:px-10  justify-center     h-[80px] md:h-[112px]   w-full    gap-5  bg-white    mt-0 md:mt-16 pt-5 md:pt-12   ${
           scrolling ? "shadow-md" : ""
         }    sticky   top-0  md:top-12    ease-out   flex items-start z-20     `}
       >
@@ -177,7 +177,7 @@ function Home() {
         isloading={isloading}
       />
 
-      <div className="  px-3 md:px-11  w-full h-full duration-150    gap-1 md:gap-5   mt-10 grid   grid-cols-1 md:grid-cols-3    sm:grid-cols-2  lg:grid-cols-4     ">
+      <div className="  px-3 md:px-11  w-full h-full duration-150  md:pb-0w pb-24   gap-1 md:gap-5   mt-5  md:mt-10 grid   grid-cols-1 md:grid-cols-3    sm:grid-cols-2  lg:grid-cols-4     ">
         {!isloading && <Carteskelaton cards={8} />}
         {places?.map((place, index) => (
           <Places

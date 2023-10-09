@@ -42,7 +42,7 @@ function Account() {
       </span>
       <div className="flex   flex-row h-full justify-center   w-full item-center">
         <span
-          className={` h-[89vh]   sticky top-10 flex flex-col ${
+          className={` h-[89vh]   sticky top-10  hidden  md:flex flex-col ${
             Popen ? " w-28     " : "w-[32%]"
           }   sticky top-0     ${
             !User ? "  md:hidden " : "  hidden md:flex "
@@ -51,7 +51,7 @@ function Account() {
           {!Popen ? (
             <Profile setPopen={setPopen} Popen={Popen} />
           ) : (
-            <div className=" top-22 h-full sticky  w-full  flex flex-col items-center z-50  p-3   ">
+            <div className=" top-22 h-full sticky  w-full   md:flex flex-col items-center z-50  p-3   hidden  ">
               <div className=" h-[70%]   w-full pt-24 flex flex-col justify-between items-center    ">
                 <Link  to={"/account"}   className={btntheme('profile')} >
                   <PersonOutlineOutlinedIcon />

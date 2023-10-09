@@ -1,24 +1,27 @@
-import {   React, useEffect, useState } from "react";
+import {   React, useEffect, useState , useContext} from "react";
 import {  useNavigate } from "react-router-dom";
+import { Usercontext } from "../context/pagecontext";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import { Link } from "react-router-dom";
 import RemoveIcon from "@mui/icons-material/Remove";
 import EditGeusts from "../component/EditGeusts";
 import EditDate from "../component/EditDate";
 import BookingDetails from "../component/BookingDetails";
 import FormPay from "../component/FormPay";
 import paywith from '../img/paywith.webp'
+import Topbar from "../component/Topbar";
 
 
 
 function Booking() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [month, setMonth] = useState(false);
   const [open, setOpen] = useState(true);
   const [Dopen, setDopen] = useState(true);
   const [selectedRange, setSelectedRange] = useState([]);
   const [editGeust, setEditGeust] = useState([]);
+const {User} = useContext(Usercontext);
 
 
 
@@ -187,15 +190,19 @@ function Booking() {
   return (
     <div className="  md:pb-0 pb-20 md:bg-white bg-gray-100  relative text-gray-900  px-2 lg:px-20 flex   flex-col-reverse md:flex-row  h-full ">
       <div className="      pt-32 md:pt-40    w-full  md:w-[70%]  ">
-        <h1 className=" w-full    px-6    items-center  pb-0  md:pb-10  flex  right-0  justify-center  md:justify-start   md:relative  fixed top-0 md:bg-transparent  bg-white  md:h-0 h-20 md:z-0  z-50        text-lg  md:text-3xl">
+      
+        <h1 className=" w-full px-8  items-center  pb-0  md:pb-10 gap-2   hidden md:flex  right-0     flex-row    justify-start     md:relative         md:z-0  z-50        text-lg  md:text-3xl">
           <span
             className="  cursor-pointer"
             onClick={handleGoBack}
           >
-            <KeyboardArrowLeftIcon className="  md:relative z-10    absolute left-3  top-7   scale-100 md:scale-150  " />
+            <KeyboardArrowLeftIcon className="       scale-150  " />
           </span>
           Request to book
         </h1>
+
+         <Topbar title={'Request to book'}/>
+        
         <div className="    pt-2 md:pt-4  px-0 md:px-10 flex-col flex    w-full">
           <div
             className={` overflow-y-hidden    flex-grow   overflow-x-hidden o relative ${
@@ -286,8 +293,27 @@ function Booking() {
               </div>
             </div>
           </div>
-         
+         {
+!User ?   <div className=" w-full h-full  py-6   flex flex-col    items-center justify-center gap-1    text-gray-800       ">
+<div className=" w-[99%] h-full bg-white rounded-md  border-solid  md:border-[0px]  border-[1px] py-6  md:px-0   px-4">
+<h1 className="  text-4xl md:text-5xl font-medium">Reserve</h1>
+<p className="  text-xl md:text-2xl pt-5">Log in to Reserve This Place</p>
+<p className=" text-gray-500 pt-2 pb-3  text-xs md:text-sm">
+  You can Reserve  This Place once you’ve logged in.
+</p>
+<Link className=" pt-5" to={"/login"}>
+  <button className=" px-6 p-3 bg-main rounded-lg text-white  font-medium">
+    Login
+  </button>
+</Link>
+</div>
+
+</div>
+
+:
+
             <FormPay/> 
+         }
        
         </div>
       </div>

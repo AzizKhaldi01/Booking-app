@@ -70,6 +70,9 @@ function PlaceDetailes() {
   const navigate = useNavigate();
 
   const handleNext = () => {
+    
+
+
     setLaod(true);
     axios.get("/booking-check/" + _id).then((response) => {
       const { data } = response;
@@ -223,7 +226,7 @@ function PlaceDetailes() {
               / night
             </span>
           </div>
-          <div className="  fixed   md:hidden flex  right-0  w-full bottom-0  bg-white h-20 z-20 justify-between p-3 items-center border-solid border-t-[1px] text-xs text-white  border-gray-300 ">
+          <div className="  fixed   md:hidden flex  right-0  z-30 w-full bottom-0  bg-white h-20   justify-between p-3 items-center border-solid border-t-[1px] text-xs text-white  border-gray-300 ">
             <span className="  font-medium   text-gray-700 text-base    ">
               
               ${data?.price} / night
@@ -235,7 +238,8 @@ function PlaceDetailes() {
               Check Availability
             </button>
           </div>
-          <div className="          flex-row    justify-between  w-full xl:w-[70%]  text-sm items-center  md:relative   bottom-0 bg-white  right-0   flex ">
+
+          <div className=" flex-row justify-between  w-full xl:w-[70%]  text-sm items-center  md:relative   bottom-0 bg-white  right-0   flex ">
             <div className="  w-full   h-20  hidden md:flex flex-row justify-between  items-center border-[#6d9c9a] border-[1px] border-solid rounded-full  my-0 md:my-6  ">
               <p className=" font-semibold px-8">Check Availability</p>
               <span
@@ -248,13 +252,14 @@ function PlaceDetailes() {
 
             <div
               onClick={() => setAopen(!Aopen)}
-              className={` ${
-                Aopen ? "   md:opacity-0 opacity-30 z-0" : "  opacity-0 -z-10 "
-              } duration-200 fixed w-full h-full   bg-black     top-0 right-0 `}
+              className={`${
+                Aopen ? "   md:opacity-0 opacity-30 z-0" : "opacity-0 -z-10"
+              } duration-200 fixed w-full h-full  bg-black top-0 right-0`}
+              
             ></div>
 
             <div
-              className={`    fixed    md:absolute   w-full  md:max-w-[450px]  md:pt-0 border-solid  border-0 md:border-[1px]  pt-10   overflow-hidden   shadow-2xl  duration-150 bg-white rounded-t-xl  md:rounded-xl   ${
+              className={`   z-40  fixed    md:absolute   w-full  md:max-w-[450px]  md:pt-0 border-solid  border-0 md:border-[1px]  pt-10   overflow-hidden   shadow-2xl  duration-150 bg-white rounded-t-xl  md:rounded-xl   ${
                 Aopen
                   ? "  bottom-0 md:h-[270px]  opacity-100"
                   : " opacity-0  -bottom-[100%]  md:h-0"
@@ -271,7 +276,7 @@ function PlaceDetailes() {
 
               <div className=" text-base items-center justify-between px-3  md:hidden flex w-full h-10 bg-white  rounded-t-lg absolute top-0 right-0">
                 <span onClick={() => setAopen(!Aopen)}>
-                  <ClearIcon />{" "}
+                  <ClearIcon /> 
                 </span>
               </div>
               <div
@@ -336,8 +341,8 @@ function PlaceDetailes() {
                   </h1>
                 </div>
 
-                <div className=" w-full flex   gap-5 h-full     md:flex-col  flex-col-reverse  ">
-                  <div className={`  w-full flex items-center justify-center `}>
+                <div className=" w-full flex gap-5 h-full md:flex-col  flex-col-reverse  ">
+                  <div className={`w-full flex items-center justify-center`}>
                     {/* <button
                       onClick={handleNext}
                       className=" h-12 text-lg  font-medium text-white w-[95%]  bg-[#578280] rounded-lg"
@@ -346,11 +351,12 @@ function PlaceDetailes() {
                     </button> */}
 
                     <button
+
                       disabled={laod}
                       onClick={handleNext}
                       className={` ${
                         msg == "booked" ? "bg-gray-800" : "bg-main"
-                      }   md:text-lg hover:opacity-90 h-14  w-full   mx-3    relative  rounded-lg    text-white  `}
+                      }   md:text-lg hover:opacity-90 h-14  w-full   mx-3    mb-10  relative  rounded-lg    text-white  `}
                     >
                       {msg == "booked" ? "Already Booked" : "Reserve "}
                       <span
@@ -484,7 +490,7 @@ function PlaceDetailes() {
               {data?.photos?.map((photo) => (
                 <img
                   className="  rounded-lg p-2  w-full md:w-[60%]   "
-                  src={"http://localhost:4000/uploads/" + photo}
+                  src={"http://192.168.1.7:4000/uploads/" + photo}
                   alt=""
                 />
               ))}
@@ -516,7 +522,7 @@ function PlaceDetailes() {
         <img
           onClick={hendelmorephotos}
           className=" rounded-[4rem]  h-[75vh] object-cover w-full "
-          src={"http://localhost:4000/uploads/" + data?.photos[0]}
+          src={"http://192.168.1.7:4000/uploads/" + data?.photos[0]}
           alt=""
         />
         <div
@@ -546,7 +552,7 @@ function PlaceDetailes() {
         <div className=" relative">
           <img
             className=" h-[60vh] mb-8 rounded-[4rem] object-cover w-full "
-            src={"http://localhost:4000/uploads/" + data?.photos[3]}
+            src={"http://192.168.1.7:4000/uploads/" + data?.photos[3]}
             alt=""
           />
           <span className=" items-center flex justify-center absolute cursor-pointer border-[1px]  border-gray-600  text-xs gap-2 text-gray-700 border-solid bg-white rounded-lg h-8 bottom-5  right-7  p-2">
