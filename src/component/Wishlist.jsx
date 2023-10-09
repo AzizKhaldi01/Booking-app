@@ -40,7 +40,7 @@ function Wishlist({ Popen }) {
                 >
                   <img
                     className="  h-full  w-[60%] rounded-l-3xl object-cover  "
-                    src={` http://localhost:4000/uploads/${item?.Place.photos[0]}`}
+                    src={` http://192.168.1.7:4000/uploads/${item?.Place.photos[0]}`}
                     alt=""
                   />
 
@@ -48,7 +48,7 @@ function Wishlist({ Popen }) {
                     <div
                       className=" rounded-tr-3xl"
                       style={{
-                        backgroundImage: `url(${` http://localhost:4000/uploads/${item?.Place.photos[1]}`})`,
+                        backgroundImage: `url(${` http://192.168.1.7:4000/uploads/${item?.Place.photos[1]}`})`,
                         backgroundSize: "cover", // You can adjust this to 'contain' or other values as needed
                         backgroundRepeat: "no-repeat",
                         width: "100%",
@@ -59,7 +59,7 @@ function Wishlist({ Popen }) {
                     <div
                       className=" rounded-br-3xl"
                       style={{
-                        backgroundImage: `url(${` http://localhost:4000/uploads/${item?.Place.photos[0]}`})`,
+                        backgroundImage: `url(${` http://192.168.1.7:4000/uploads/${item?.Place.photos[0]}`})`,
                         backgroundSize: "cover", // You can adjust this to 'contain' or other values as needed
                         backgroundRepeat: "no-repeat",
                         width: "100%",

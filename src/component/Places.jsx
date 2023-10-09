@@ -71,7 +71,7 @@ export default function Places({ _id, photos, address, price, title }) {
             onClick={(e) => AddFavorite(e, _id)}
             className="  text-black  cursor-pointer  z-10 absolute flex flex-row w-full justify-between px-3 top-3 right-0"
           >
-            <p className=" text-gray-900  text-[14px]  gap-1  bg-white rounded-full bg-opacity-70 px-2 h-8 p-1 flex flex-row ">
+            <p className=" text-gray-900  text-[14px]  gap-1  bg-white rounded-full bg-opacity-70 px-2 h-8 p-1 flex  items-center justify-center flex-row ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -84,7 +84,7 @@ export default function Places({ _id, photos, address, price, title }) {
                   clip-rule="evenodd"
                 />
               </svg>
-              {address.split(",").slice(0, 2).join(",")}{" "}
+              {address.split(",").slice(0, 2).join(",")  } 
             </p>
 
             <span className=" p-1  rounded-[50%]  bg-white active:scale-90   bg-opacity-70 ">

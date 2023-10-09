@@ -17,7 +17,7 @@ const {User} = useContext(Usercontext);
   };
 
   return (
-    <div className="w-full md:hidden bg-white z-30 flex flex-row items-center justify-around h-20 border-solid border-[1px] fixed bottom-0 right-0">
+    <div className="w-full md:hidden bg-white z-30 flex flex-row items-center justify-around h-16 border-solid border-[1px] fixed bottom-0 right-0">
      { User ?   <> <Link
         to={"/"}
         className={`flex flex-col items-center justify-center text-xs ${
@@ -26,7 +26,7 @@ const {User} = useContext(Usercontext);
       >
         <HomeOutlinedIcon
           className={isActive("/") ? "text-main" : `text-gray-400`}
-          fontSize="large"
+          
         />{" "}
         Home
       </Link>
@@ -40,7 +40,7 @@ const {User} = useContext(Usercontext);
           className={
             isActive("/account/Wishlist") ? "text-main" : `text-gray-400`
           }
-          fontSize="large"
+          
         />{" "}
         Favorite
       </Link>
@@ -52,7 +52,7 @@ const {User} = useContext(Usercontext);
       >
         <LuggageOutlinedIcon
           className={isActive("/account/Trips") ? "text-main" : `text-gray-400`}
-          fontSize="large"
+         
         />{" "}
         Trips
       </Link>
@@ -63,8 +63,8 @@ const {User} = useContext(Usercontext);
         }`}
       >
         <PersonOutlineOutlinedIcon
-          className={isActive("/account") ? "text-main" : `text-gray-400`}
-          fontSize="large"
+          className={isActive("/account") ? "text-main " : `text-gray-400`}
+          
         />{" "}
         Profile
       </Link></> 
@@ -81,7 +81,7 @@ const {User} = useContext(Usercontext);
       >
         <SearchOutlinedIcon
           className={isActive("/") ? "text-main" : `text-gray-400`}
-          fontSize="large"
+         
         />{" "}
         Search
       </Link>
@@ -95,7 +95,7 @@ const {User} = useContext(Usercontext);
           className={
             isActive("/account/Wishlist") ? "text-main" : `text-gray-400`
           }
-          fontSize="large"
+        
         />{" "}
         Favorite
       </Link>
@@ -108,7 +108,7 @@ const {User} = useContext(Usercontext);
       >
         <PersonOutlineOutlinedIcon
           className={isActive("/login") ? "text-main" : `text-gray-400`}
-          fontSize="large"
+           
         />{" "}
         Log in
       </Link></>
