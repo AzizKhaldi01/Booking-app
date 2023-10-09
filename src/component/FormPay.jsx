@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import { BookingContext } from "../context/Bookingconext";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
- 
+ import { Usercontext } from "../context/pagecontext";
 import axios from "axios";
 import { CardElement    } from "@stripe/react-stripe-js";
 import './SVG.css'
@@ -24,7 +24,7 @@ function FormPay() {
   const [isLoading, setIsLoading] = useState(false);
   
  
- 
+ const {User} = useContext(Usercontext)
  
 
 
@@ -50,6 +50,11 @@ const navigate = useNavigate()
   // pm_1NhzWGGDCWqRoBjn4ibPyr2u
 
   async function handleSubmit(e) {
+
+
+if(!User){
+  navigate('/login')
+}
 
     e.preventDefault();
      

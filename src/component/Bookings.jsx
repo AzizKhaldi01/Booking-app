@@ -64,7 +64,7 @@ function Bookings({  Popen}) {
             
             <img
               className=" w-full  md:w-[32%] object-cover rounded-xl  md:h-full"
-              src={` http://localhost:4000/uploads/${item?.Place?.photos[1]} `}
+              src={` http://192.168.1.7:4000/uploads/${item?.Place?.photos[1]} `}
               alt=""
             />
 <div  className=" w-full flex flex-col h-full justify-between  ">

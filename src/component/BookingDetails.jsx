@@ -30,7 +30,7 @@ useEffect(()=>{
       <div className="  gap-2   flex w-full   h-36 justify-between   ">
         <img
           className=" h-[100px] object-cover rounded-lg w-[150px]"
-          src={` http://localhost:4000/uploads/${imgUrl}  `}
+          src={` http://192.168.1.7:4000/uploads/${imgUrl}  `}
           alt=""
         />
         <div className=" w-full flex flex-col  justify-between  text-left py-1   h-[100px]">

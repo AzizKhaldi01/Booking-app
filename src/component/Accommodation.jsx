@@ -36,7 +36,7 @@ function Accommodation({ title, photos, description, id, address }) {
     return navigate("/login");
   }
 
-  console.log("list  " + list);
+ 
   return (
     <>
       {list ? (
@@ -124,7 +124,7 @@ function Accommodation({ title, photos, description, id, address }) {
               <div className=" relative flex justify-center p-1  items-center  w-[80%] md:w-[100px]  h-full     rounded-xl   ">
                 <img
                   className="    object-cover rounded-md"
-                  src={`http://localhost:4000/uploads/${photos[0]}`}
+                  src={`http://192.168.1.7:4000/uploads/${photos[0]}`}
                   alt=""
                 />
               </div>

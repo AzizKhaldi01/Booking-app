@@ -42,7 +42,7 @@ const PhotoSlider = ({photos , nonav , hight ,onClick}) => {
     >
       {photos?.map((photo, idx) => (
         <SwiperSlide key={idx}>
-          <img   onClick={onClick}  src={` http://localhost:4000/uploads/${photo} `} alt={`Photo ${idx + 1}`} className= {` object-cover rounded-xl w-full   ${hight ? "h-[250px] " : " h-full"  }   `}  />
+          <img   onClick={onClick}  src={` http://192.168.1.7:4000/uploads/${photo} `} alt={`Photo ${idx + 1}`} className= {` object-cover rounded-xl w-full   ${hight ? "h-[250px] " : " h-full"  }   `}  />
        
         </SwiperSlide>
       ))}

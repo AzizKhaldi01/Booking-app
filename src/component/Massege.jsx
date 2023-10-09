@@ -20,7 +20,7 @@ function Massege({ msg, img, setMsg }) {
     >
       <img
         className=" w-[50px] h-[50px] rounded-md  object-cover "
-        src={`http://localhost:4000/uploads/${img}`}
+        src={`http://192.168.1.7:4000/uploads/${img}`}
         alt="img"
       />
       <div className=" flex items-center justify-between w-full">
