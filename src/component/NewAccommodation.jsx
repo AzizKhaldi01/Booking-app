@@ -10,12 +10,18 @@ import { useNavigate } from "react-router-dom";
 import Category from "./Category";
 import HousingMassge from "./HousingMassge";
 function NewAccommodation({ setAdd, add }) {
- 
-  const onSubmit = (e) =>{
-     
-    console.log('submited')
-  }
- const { values, handleBlur,errors, handleChange, handleSubmit , setValues } = useFormik({
+  const onSubmit = (e) => {
+    console.log("submited");
+  };
+  const {
+    values,
+    handleBlur,
+    errors,
+    touched,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik({
     initialValues: {
       title: "",
       address: "",
@@ -24,25 +30,26 @@ function NewAccommodation({ setAdd, add }) {
       checkIn: "",
       checkOut: "",
       maxGuests: "",
-      price : "",
+      price: "",
     },
     validationSchema: PlaceSchema,
     onSubmit,
   });
 
-console.log(errors)
+  console.log(errors);
   const navto = useNavigate();
 
   const { placesdata, link, setReload, reload } = useContext(Usercontext);
 
-   
   const [addedPhotos, setAddedPhotos] = useState([]);
- 
+
   const [perks, setPerks] = useState([]);
- 
+
   const [photolink, setPhotolink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
- 
+  const [UpLoading, setUpLoading] = useState(false);
+
+
   const [price, setPrice] = useState(100);
   const [file, setFile] = useState();
   const [msg, setMsg] = useState("");
@@ -51,22 +58,20 @@ console.log(errors)
 
   useEffect(() => {
     if (placesdata) {
-
-
       setValues({
         ...values,
         title: placesdata.title,
-        address: placesdata.address ,
-        description:placesdata.description,
+        address: placesdata.address,
+        description: placesdata.description,
         extraInfo: placesdata.extraInfo,
-        checkIn:placesdata.checkIn,
+        checkIn: placesdata.checkIn,
         checkOut: placesdata.checkOut,
         maxGuests: placesdata.maxGuests,
-     price : placesdata.price
+        price: placesdata.price,
       });
-     
+
       setAddedPhotos(placesdata.photos);
-      
+
       setPerks(placesdata.perks);
       setPrice(placesdata.price);
       setCategory(placesdata.category);
@@ -74,19 +79,18 @@ console.log(errors)
       setValues({
         ...values,
         title: "",
-        address: "" ,
+        address: "",
         description: "",
-        extraInfo:  "",
+        extraInfo: "",
         checkIn: "",
-        checkOut:  "",
-        maxGuests:  "",
-        price : "",
-     
+        checkOut: "",
+        maxGuests: "",
+        price: "",
       });
       setAddedPhotos([]);
-      
+
       setPerks([]);
-     
+
       setCategory([]);
     }
   }, [placesdata]);
@@ -121,14 +125,14 @@ console.log(errors)
 
   async function sendLinke(ev) {
     ev.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
     axios
       .post("/upload-by-url", {
         link: photolink,
       })
       .then((response) => {
         const { data: filename } = response;
-        setIsLoading(false)
+        setIsLoading(false);
         setAddedPhotos((prev) => {
           return [...prev, filename];
         });
@@ -136,7 +140,7 @@ console.log(errors)
       })
       .catch((error) => {
         if (error.response) {
-        setIsLoading(false)
+          setIsLoading(false);
 
           if (error.response.status === 400) {
             console.error("Client Error:", error.response.data);
@@ -153,6 +157,8 @@ console.log(errors)
       });
   }
   function uploadphoto(ev) {
+
+    setUpLoading(true)
     ev.preventDefault();
     const filesArray = ev.target.files;
 
@@ -168,6 +174,7 @@ console.log(errors)
       .then((response) => {
         // Assuming that the server returns the filename in the response data.
         const { filenames } = response.data;
+        setUpLoading(false)
 
         // Update the setAddedPhotos state with the new filename.
         setAddedPhotos((prev) => [...prev, ...filenames]);
@@ -178,18 +185,12 @@ console.log(errors)
     setAddedPhotos([...addedPhotos.filter((photo) => photo !== filename)]);
   }
 
-
-
- 
-
   async function savePlace(ev) {
     ev.preventDefault();
 
-    if(addedPhotos.length  <= 5   ){
-      console.log('add more then 5 pic')
+    if (addedPhotos.length <= 5) {
+      console.log("add more then 5 pic");
     }
-
- 
 
     console.log("submited");
 
@@ -315,13 +316,17 @@ console.log(errors)
           onSubmit={handleSubmit}
           className="      h-full overflow-auto    w-full    "
         >
-          <div className=" flex-grow w-full flex flex-col gap-3  p-7 ">
+          <div className=" flex-grow w-full flex flex-col gap-3  p-4  md:p-7 ">
             <h1>Title</h1>
             <p className=" text-gray-500 text-xs">
               Title for your place should be short and catchy as in advertisment
             </p>
             <input
-              className="  h-12  w-full rounded-lg px-3 bg-slate-100"
+              className={` ${
+                errors.title && touched.title
+                  ? " border-[#fc8181] text-red-500  border-[2px]"
+                  : ""
+              } h-12   w-full rounded-lg px-3 bg-slate-100 `}
               type="text"
               placeholder=" Title "
               value={values.title}
@@ -329,11 +334,16 @@ console.log(errors)
               onBlur={handleBlur}
               onChange={handleChange}
             />
-            {/* (e) => setTitle(e.target.value) */}
+                  {   errors.title && touched.title &&   <p className=" pt-1 px-1 text-xs text-red-400">  {errors.title} </p>}
+
             <h1>Address</h1>
             <p className=" text-gray-500 text-xs">Address to your place</p>
             <input
-              className="  h-12 w-full rounded-lg px-3 bg-slate-100"
+              className={` ${
+                errors.address && touched.address
+                  ? " border-[#fc8181] text-red-500  border-[2px]"
+                  : ""
+              }    h-12 w-full rounded-lg px-3 bg-slate-100 `}
               type="text"
               placeholder=" Address "
               value={values.address}
@@ -341,7 +351,8 @@ console.log(errors)
               onBlur={handleBlur}
               onChange={handleChange}
             />
-            {/* (e) => setAddress(e.target.value) */}
+         {   errors.address && touched.address &&   <p className=" pt-1 px-1 text-xs text-red-400">  {errors.address} </p>}
+
             <h1>Photos</h1>
             <p className=" text-gray-500 text-xs">More Photos More batter</p>
             <div className=" flex flex-row gap-2">
@@ -356,26 +367,41 @@ console.log(errors)
                 onClick={sendLinke}
                 className="   font-medium   relative justify-center flex flex-row items-center gap-2  w-[15%]  rounded-lg  text-xs md:text-sm bg-gray-200"
               >
-
-  <span className= {` ${   isLoading ? ' opacity-100 ' : ' opacity-0' } bg-greedian   absolute top-0 right-0 bg-gray-300 rounded-lg duration-200 h-full w-full flex items-center justify-center   `}>
- <span className=" h-full w-full scale-[1]  md:scale-[0.4] flex items-center justify-center">
- <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg"  xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
-<path fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
-<animateTransform 
- attributeName="transform" 
- attributeType="XML" 
- type="rotate"
- dur="1s" 
- from="0 50 50"
- to="360 50  50" 
- repeatCount="indefinite" />
-</path>
-</svg>
-</span>
-</span>
-
-
+                <span
+                  className={` ${
+                    isLoading ? " opacity-100 " : " opacity-0"
+                  } bg-greedian   absolute top-0 right-0 bg-gray-300 rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
+                >
+                  <span className=" h-full w-full scale-[1]  md:scale-[0.4] flex items-center justify-center">
+                    <svg
+                      version="1.1"
+                      id="L9"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      viewBox="0 0 100 100"
+                      enable-background="new 0 0 0 0"
+                      xml
+                      space="preserve"
+                    >
+                      <path
+                        fill="#fff"
+                        d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          attributeType="XML"
+                          type="rotate"
+                          dur="1s"
+                          from="0 50 50"
+                          to="360 50  50"
+                          repeatCount="indefinite"
+                        />
+                      </path>
+                    </svg>
+                  </span>
+                </span>
                 Add Photo
               </button>
             </div>
@@ -383,8 +409,8 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
               {addedPhotos?.length > 0 &&
                 addedPhotos.map((pic) => (
                   <div className=" relative gap-2">
-                    <div className=" flex  px-6 justify-between absolute bottom-2 w-full">
-                      <button onClick={() => deletphoto(pic)}>
+                    <div className=" flex  px-1  md:px-6 justify-between absolute bottom-2 w-full">
+                      <button className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] " onClick={() => deletphoto(pic)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -400,7 +426,9 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
                           />
                         </svg>
                       </button>
-                      <button onClick={() => moveToFirst(pic)}>
+                      <button className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] " onClick={() => moveToFirst(pic)}>
+                       
+                     
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill={`   ${
@@ -428,10 +456,44 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
                 ))}
 
               <label
-                className=" cursor-pointer p-4 py-6 rounded-xl border-2 border-solid flex justify-center items-center"
+                className=" cursor-pointer  relative p-4 py-6 rounded-xl border-2 border-solid flex justify-center items-center"
                 htmlFor="fileup"
               >
-                {" "}
+                <span
+                  className={` ${
+                       UpLoading ? " opacity-100 " : " opacity-0"
+                  } bg-greedian   absolute top-0 right-0 bg-white rounded-lg text-gray-800 duration-200 h-full w-full flex items-center justify-center   `}
+                >
+                  <span className=" h-full w-full scale-[1]  md:scale-[0.4] flex items-center justify-center">
+                    <svg
+                      version="1.1"
+                      id="L9"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      viewBox="0 0 100 100"
+                      enable-background="new 0 0 0 0"
+                      xml
+                      space="preserve"
+                    >
+                      <path
+                        fill="#808080"
+                        d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          attributeType="XML"
+                          type="rotate"
+                          dur="1s"
+                          from="0 50 50"
+                          to="360 50  50"
+                          repeatCount="indefinite"
+                        />
+                      </path>
+                    </svg>
+                  </span>
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -446,7 +508,8 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
                     d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                   />
                 </svg>
-                <input
+                <input 
+                disabled={UpLoading}
                   type="file"
                   className=" hidden z-20 "
                   onChange={uploadphoto}
@@ -454,6 +517,8 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
                   id="fileup"
                   multiple
                 />
+ 
+
               </label>
             </div>
 
@@ -464,9 +529,14 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
               id="description"
               onBlur={handleBlur}
               onChange={handleChange}
-              className=" border-2 border-solid rounded-xl w-full h-[100px]"
+              className={` ${
+                errors.description && touched.description
+                  ? " border-[#fc8181] text-red-300   border-[2px]"
+                  : ""
+              } border-2 border-solid rounded-xl px-3 w-full h-[100px] `}
             />
-            {/* (e) => setDescription(e.target.value) */}
+            {   errors.description && touched.description &&   <p className=" pt-1 px-1 text-xs text-red-400">  {errors.description} </p>}
+
             <h1>Perks</h1>
             <p className=" text-gray-500 text-xs">Select all your Perks</p>
 
@@ -485,61 +555,96 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
             <h1>Extra Info</h1>
             <p className=" text-gray-500 text-xs">house rouls, etc</p>
             <textarea
-              
               value={values.extraInfo}
               id="extraInfo"
               onChange={handleChange}
-              className="   border-solid border-2 px-2 rounded-xl w-full h-[100px]"
+              onBlur={handleBlur}
+              className={` ${
+                errors.extraInfo && touched.extraInfo
+                  ? " border-[#fc8181] text-red-500  border-[2px]"
+                  : ""
+              } border-solid border-2 px-2 rounded-xl w-full h-[100px]  `}
             />
-            {/* (e) => setExtraInfo(e.target.value) */}
+            {errors.extraInfo && touched.extraInfo && (
+              <p className=" pt-1 px-1 text-xs text-red-400">
+               
+                {errors.extraInfo} 
+              </p>
+            )}
+
             <div className=" "></div>
             <h1>Check in&out times</h1>
             <p className=" text-gray-500 text-xs">house rouls, etc</p>
             <div className=" grid  gap-4   grid-cols-2  md:grid-cols-4">
               <div>
-                <h3 className=" text-[9px] md:text-lg mt-3">Check in time</h3>
+                <h3 className=" text-sm md:text-lg mt-3">Check in time</h3>
                 <input
-                   
                   value={values.checkIn}
                   id="checkIn"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   type="text"
-                  className=" w-full h-12  border-solid border-2 rounded-lg"
+                  className={`  ${
+                    errors.checkIn && touched.checkIn
+                      ? " border-[#fc8181] text-red-500  border-[2px]"
+                      : ""
+                  } w-full h-12  border-solid border-2 rounded-lg `}
                 />
-                {/* (e) => setCheckIn(e.target.value) */}
+                {errors.checkIn && touched.checkIn && (
+                  <p className=" pt-1 px-1 text-xs text-red-400">
+                    {" "}
+                    {errors.checkIn}{" "}
+                  </p>
+                )}
               </div>
               <div>
-                <h3 className=" text-[9px] md:text-lg mt-3">Check out time</h3>
+                <h3 className=" text-sm md:text-lg mt-3">Check out time</h3>
                 <input
-                   
                   value={values.checkOut}
-                  id="checkOut" 
+                  id="checkOut"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   type="text"
-                  className=" w-full h-12  border-solid border-2 rounded-lg"
+                  className={` ${
+                    errors.checkOut && touched.checkOut
+                      ? " border-[#fc8181] text-red-500  border-[2px]"
+                      : ""
+                  } checkIn  w-full h-12  border-solid border-2 rounded-lg `}
                 />
-                {/* (e) => setCheckOut(e.target.value) */}
+                {errors.checkOut && touched.checkOut && (
+                  <p className=" pt-1 px-1 text-xs text-red-400">
+                    {" "}
+                    {errors.checkOut}{" "}
+                  </p>
+                )}
               </div>
               <div>
-                <h3 className=" text-[9px] md:text-lg mt-3">
+                <h3 className=" text-sm md:text-lg mt-3">
                   {" "}
-                  Max number of guests
+                  Max number guests
                 </h3>
                 <input
-                   id="maxGuests" 
-                   onBlur={handleBlur}
+                  id="maxGuests"
+                  onBlur={handleBlur}
                   value={values.maxGuests}
                   onChange={handleChange}
                   type="text"
-                  className=" w-full h-12  border-solid border-2 rounded-lg"
+                  className={`  ${
+                    errors.maxGuests && touched.maxGuests
+                      ? " border-[#fc8181] text-red-500  border-[2px]"
+                      : ""
+                  }  w-full h-12  border-solid border-2 rounded-lg `}
                 />
-                {/* (e) => setMaxGuests(e.target.value) */}
+                {errors.maxGuests && touched.maxGuests && (
+                  <p className=" pt-1 px-1 text-xs text-red-400">
+                    {" "}
+                    {errors.maxGuests}{" "}
+                  </p>
+                )}
               </div>
 
               <div>
-                <h3 className=" text-[9px] md:text-lg mt-3">
+                <h3 className=" text-sm md:text-lg mt-3">
                   {" "}
                   Price per night{" "}
                 </h3>
@@ -556,7 +661,6 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
 
             <div className=" w-full flex justify-center items-center">
               <button
-                 
                 className="w-[90%] h-12 bg-gray-300  rounded-lg"
                 type="submit"
               ></button>
@@ -576,30 +680,28 @@ viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
 
 export default NewAccommodation;
 
-
-
 // utton style={{
-//   background: 'rgb(87,130,128)', 
-//   background: 'linear-gradient(337deg, rgba(87,130,128,1) 31%, rgba(116,154,152,1) 79%, rgba(129,165,163,1) 85%, rgba(151,183,182,1) 100%, rgba(210,232,232,1) 100%)' 
+//   background: 'rgb(87,130,128)',
+//   background: 'linear-gradient(337deg, rgba(87,130,128,1) 31%, rgba(116,154,152,1) 79%, rgba(129,165,163,1) 85%, rgba(151,183,182,1) 100%, rgba(210,232,232,1) 100%)'
 // }} disabled={isLoading  }
 //   onClick={handleSubmit}
 //   className="     md:text-lg hover:opacity-90 h-14  w-full md:w-[27%]  relative  rounded-lg    text-white "
 // >
 
-// Request to book 
+// Request to book
 
 // <span className= {` ${   isLoading ? ' opacity-100 ' : ' opacity-0' } bg-greedian   absolute top-0 right-0 bg-main rounded-lg duration-200 h-full w-full flex items-center justify-center   `}>
 // <span className=" h-full w-full scale-[0.2]  md:scale-[0.4] flex items-center justify-center">
 // <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg"  xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 // viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
 // <path fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
-// <animateTransform 
-//  attributeName="transform" 
-//  attributeType="XML" 
+// <animateTransform
+//  attributeName="transform"
+//  attributeType="XML"
 //  type="rotate"
-//  dur="1s" 
+//  dur="1s"
 //  from="0 50 50"
-//  to="360 50  50" 
+//  to="360 50  50"
 //  repeatCount="indefinite" />
 // </path>
 // </svg>
@@ -607,16 +709,9 @@ export default NewAccommodation;
 
 // </span>
 
-
-
-//   <span className={`  ${ err =='successful' ? ' opacity-100' : ' opacity-0'}  duration-200 flex items-center  justify-center z-10 absolute rounded-lg top-0 right-0 h-full w-full bg-green-400    border-solid border-[1px] border-green-400 `} > 
-  
-
-
-
+//   <span className={`  ${ err =='successful' ? ' opacity-100' : ' opacity-0'}  duration-200 flex items-center  justify-center z-10 absolute rounded-lg top-0 right-0 h-full w-full bg-green-400    border-solid border-[1px] border-green-400 `} >
 
 //   <span className=" w4rAnimated_checkmark scale-[0.4] h-full w-full items-center flex justify-center ">
-
 
 //   { err =='successful' && <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
 // <circle class="path circle" fill="none" stroke="white" stroke-width="8" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
@@ -624,5 +719,5 @@ export default NewAccommodation;
 // </svg>}
 //     </span>
 //   </span>
- 
+
 // </button>
