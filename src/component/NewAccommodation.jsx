@@ -10,9 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Category from "./Category";
 import HousingMassge from "./HousingMassge";
 function NewAccommodation({ setAdd, add }) {
-  const onSubmit = (e) => {
-    console.log("submited");
-  };
+ 
   const {
     values,
     handleBlur,
@@ -36,7 +34,6 @@ function NewAccommodation({ setAdd, add }) {
     onSubmit,
   });
 
-  console.log(errors);
   const navto = useNavigate();
 
   const { placesdata, link, setReload, reload } = useContext(Usercontext);
@@ -48,7 +45,6 @@ function NewAccommodation({ setAdd, add }) {
   const [photolink, setPhotolink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [UpLoading, setUpLoading] = useState(false);
-
 
   const [price, setPrice] = useState(100);
   const [file, setFile] = useState();
@@ -157,12 +153,21 @@ function NewAccommodation({ setAdd, add }) {
       });
   }
   function uploadphoto(ev) {
-
-    setUpLoading(true)
+    setUpLoading(true);
     ev.preventDefault();
     const filesArray = ev.target.files;
+    const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+    for (let i = 0; i < filesArray.length; i++) {
+      const file = filesArray[i];
+      const fileSize = file.size; // Get the file size in bytes
 
-    // Update the state with the array of selected files
+      if (fileSize > maxSizeInBytes) {
+        setMsg('Maximum file size is 3MB"');
+        setUpLoading(false);
+        return;
+      }
+    }
+
     setFile(filesArray);
     const data = new FormData();
     // Append each file to the FormData object
@@ -173,106 +178,118 @@ function NewAccommodation({ setAdd, add }) {
       .post("/uploads", data)
       .then((response) => {
         // Assuming that the server returns the filename in the response data.
+        console.log(response);
         const { filenames } = response.data;
-        setUpLoading(false)
+        setUpLoading(false);
 
         // Update the setAddedPhotos state with the new filename.
         setAddedPhotos((prev) => [...prev, ...filenames]);
       })
-      .catch((err) => {});
+      .catch((error) => {
+        if (error.message === "File too large") {
+          // Handle the "File too large" error here
+          setUpLoading(false);
+
+          console.error("File is too large. Please upload a smaller file.");
+        } else {
+          setUpLoading(false);
+
+          // Handle other errors
+          console.error("An error occurred:", error);
+        }
+      });
   }
   function deletphoto(filename) {
     setAddedPhotos([...addedPhotos.filter((photo) => photo !== filename)]);
   }
 
-  async function savePlace(ev) {
-    ev.preventDefault();
+  async function onSubmit(ev) {
+   
 
-    if (addedPhotos.length <= 5) {
-      console.log("add more then 5 pic");
-    }
+ 
 
     console.log("submited");
 
-    // const placeData = {
-    //   title,
-    //   address,
-    //   addedPhotos,
-    //   price,
-    //   category,
-    //   description,
-    //   perks,
-    //   extraInfo,
-    //   checkIn,
-    //   checkOut,
-    //   maxGuests,
-    //   price,
-    // };
 
-    // if (link) {
-    //   // update
-    //   await axios.put("/places", { ...placeData, link }).then((response) => {
-    //     const { data } = response.message;
-    //     setMsg(data);
-    //   });
+    
+    const placeData = {
+      perks,
+      category,
+      addedPhotos,
+     ...values
+         };
 
-    //   navto("/account/accommodation/");
-    //   setAdd(!add);
-    //   setReload(!reload);
+    if (link) {
+      // update
+      await axios.put("/places", { ...placeData, link }).then((response) => {
+        const { data } = response.message;
+        setMsg(data);
+      });
 
-    //   setTitle("");
-    //   setAddress("");
-    //   setDescription("");
-    //   setMaxGuests("");
-    //   setCheckOut("");
-    //   setCheckIn("");
-    //   setAddedPhotos([]);
-    //   setExtraInfo("");
-    //   setPerks([]);
-    //   setPrice();
-    //   setCategory([]);
+      navto("/account/accommodation/");
+      setAdd(!add);
+      setReload(!reload);
 
-    // } else {
-    //   await axios
-    //     .post("/places", placeData)
-    //     .then((response) => {
-    //       const { data } = response;
-    //       setMsg(data.message);
-    //       setAdd(!add);
-    //       setReload(!reload);
-    //       navto("/account/housing/");
-    //
-    //       setReload(!reload);
+      setValues({
+        ...values,
+        title: "",
+        address: "",
+        description: "",
+        extraInfo: "",
+        checkIn: "",
+        checkOut: "",
+        maxGuests: "",
+        price: "",
+      });
 
-    //       setTitle("");
-    //       setAddress("");
-    //       setDescription("");
-    //       setMaxGuests("");
-    //       setCheckOut("");
-    //       setCheckIn("");
-    //       setAddedPhotos([]);
-    //       setExtraInfo("");
-    //       setPerks([]);
-    //       setPrice();
-    //       setCategory([]);
-    //     })
-    //     .catch((error) => {
-    //       if (error.response) {
-    //         if (error.response.status === 400) {
-    //           console.error("Client Error:", error.response.data);
-    //           setMsg(error.response.data);
-    //         } else if (error.response.status >= 500) {
-    //           console.error("Server Error:", error.response.data);
-    //         }
-    //       } else if (error.request) {
-    //         console.error("No Response Received:", error.request);
-    //       } else {
-    //         console.error("Request Setup Error:", error.message);
-    //       }
-    //     });
-    // }
+      setAddedPhotos([]);
+      setPerks([]);
+      setCategory([]);
+    } else {
+      await axios
+        .post("/places", placeData)
+        .then((response) => {
+          const { data } = response;
+          setMsg(data.message);
+          setAdd(!add);
+          setReload(!reload);
+          navto("/account/housing/");
 
-    // new place
+          setReload(!reload);
+
+          setValues({
+            ...values,
+            title: "",
+            address: "",
+            description: "",
+            extraInfo: "",
+            checkIn: "",
+            checkOut: "",
+            maxGuests: "",
+            price: "",
+          });
+
+          setAddedPhotos([]);
+          setPerks([]);
+          setCategory([]);
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.error("Client Error:", error.response.data);
+              setMsg(error.response.data);
+            } else if (error.response.status >= 500) {
+              console.error("Server Error:", error.response.data);
+            }
+          } else if (error.request) {
+            console.error("No Response Received:", error.request);
+          } else {
+            console.error("Request Setup Error:", error.message);
+          }
+        });
+    }
+
+ 
   }
 
   function moveToFirst(filename) {
@@ -334,7 +351,12 @@ function NewAccommodation({ setAdd, add }) {
               onBlur={handleBlur}
               onChange={handleChange}
             />
-                  {   errors.title && touched.title &&   <p className=" pt-1 px-1 text-xs text-red-400">  {errors.title} </p>}
+            {errors.title && touched.title && (
+              <p className=" pt-1 px-1 text-xs text-red-400">
+                {" "}
+                {errors.title}{" "}
+              </p>
+            )}
 
             <h1>Address</h1>
             <p className=" text-gray-500 text-xs">Address to your place</p>
@@ -351,7 +373,12 @@ function NewAccommodation({ setAdd, add }) {
               onBlur={handleBlur}
               onChange={handleChange}
             />
-         {   errors.address && touched.address &&   <p className=" pt-1 px-1 text-xs text-red-400">  {errors.address} </p>}
+            {errors.address && touched.address && (
+              <p className=" pt-1 px-1 text-xs text-red-400">
+                {" "}
+                {errors.address}{" "}
+              </p>
+            )}
 
             <h1>Photos</h1>
             <p className=" text-gray-500 text-xs">More Photos More batter</p>
@@ -410,7 +437,10 @@ function NewAccommodation({ setAdd, add }) {
                 addedPhotos.map((pic) => (
                   <div className=" relative gap-2">
                     <div className=" flex  px-1  md:px-6 justify-between absolute bottom-2 w-full">
-                      <button className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] " onClick={() => deletphoto(pic)}>
+                      <button
+                        className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] "
+                        onClick={() => deletphoto(pic)}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -426,9 +456,10 @@ function NewAccommodation({ setAdd, add }) {
                           />
                         </svg>
                       </button>
-                      <button className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] " onClick={() => moveToFirst(pic)}>
-                       
-                     
+                      <button
+                        className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] "
+                        onClick={() => moveToFirst(pic)}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill={`   ${
@@ -461,7 +492,7 @@ function NewAccommodation({ setAdd, add }) {
               >
                 <span
                   className={` ${
-                       UpLoading ? " opacity-100 " : " opacity-0"
+                    UpLoading ? " opacity-100 " : " opacity-0"
                   } bg-greedian   absolute top-0 right-0 bg-white rounded-lg text-gray-800 duration-200 h-full w-full flex items-center justify-center   `}
                 >
                   <span className=" h-full w-full scale-[1]  md:scale-[0.4] flex items-center justify-center">
@@ -508,8 +539,8 @@ function NewAccommodation({ setAdd, add }) {
                     d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                   />
                 </svg>
-                <input 
-                disabled={UpLoading}
+                <input
+                  disabled={UpLoading}
                   type="file"
                   className=" hidden z-20 "
                   onChange={uploadphoto}
@@ -517,8 +548,6 @@ function NewAccommodation({ setAdd, add }) {
                   id="fileup"
                   multiple
                 />
- 
-
               </label>
             </div>
 
@@ -535,7 +564,12 @@ function NewAccommodation({ setAdd, add }) {
                   : ""
               } border-2 border-solid rounded-xl px-3 w-full h-[100px] `}
             />
-            {   errors.description && touched.description &&   <p className=" pt-1 px-1 text-xs text-red-400">  {errors.description} </p>}
+            {errors.description && touched.description && (
+              <p className=" pt-1 px-1 text-xs text-red-400">
+                {" "}
+                {errors.description}{" "}
+              </p>
+            )}
 
             <h1>Perks</h1>
             <p className=" text-gray-500 text-xs">Select all your Perks</p>
@@ -567,8 +601,7 @@ function NewAccommodation({ setAdd, add }) {
             />
             {errors.extraInfo && touched.extraInfo && (
               <p className=" pt-1 px-1 text-xs text-red-400">
-               
-                {errors.extraInfo} 
+                {errors.extraInfo}
               </p>
             )}
 
@@ -619,10 +652,7 @@ function NewAccommodation({ setAdd, add }) {
                 )}
               </div>
               <div>
-                <h3 className=" text-sm md:text-lg mt-3">
-                  {" "}
-                  Max number guests
-                </h3>
+                <h3 className=" text-sm md:text-lg mt-3"> Max number guests</h3>
                 <input
                   id="maxGuests"
                   onBlur={handleBlur}
@@ -644,10 +674,7 @@ function NewAccommodation({ setAdd, add }) {
               </div>
 
               <div>
-                <h3 className=" text-sm md:text-lg mt-3">
-                  {" "}
-                  Price per night{" "}
-                </h3>
+                <h3 className=" text-sm md:text-lg mt-3"> Price per night </h3>
                 <input
                   value={values.price}
                   id="price"
@@ -660,15 +687,12 @@ function NewAccommodation({ setAdd, add }) {
             </div>
 
             <div className=" w-full flex justify-center items-center">
-              <button
-                className="w-[90%] h-12 bg-gray-300  rounded-lg"
-                type="submit"
-              ></button>
-              {/* <button   className="w-[90%] h-12 bg-gray-300  rounded-lg ">
+          
+              <button  type="submit"  className="w-[90%] h-12 bg-gray-300  rounded-lg ">
                 
                 {" "}
                 {link ? "Save the Changes" : "Save"}{" "}
-              </button> */}
+              </button>
             </div>
           </div>
         </form>
