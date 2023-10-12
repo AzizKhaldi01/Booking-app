@@ -5,13 +5,16 @@ import { Link, useParams } from "react-router-dom";
 import PhotoSlider from "./Imageslaider";
 import axios from "axios";
 import { useContext } from "react";
+
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { Usercontext } from "../context/pagecontext";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import HousingMassge from "./HousingMassge";
 
 function Accommodation({ title, photos, description, id, address }) {
   var { _id } = useParams();
+
 
   const { add, setAdd, setLink, setReload, reload, list, User, ready } =
     useContext(Usercontext);
@@ -19,6 +22,7 @@ function Accommodation({ title, photos, description, id, address }) {
   const navigate = useNavigate();
 
   const [deletee, setDelete] = useState(false);
+  const [msg, setmsg] = useState('');
 
   useEffect(() => {
     setLink(_id);
@@ -28,7 +32,7 @@ function Accommodation({ title, photos, description, id, address }) {
     e.preventDefault();
     await axios.delete(`/place-delete/${id}`);
     setReload(!reload);
-
+    setmsg('Place was Deleted')
     setDelete(!deletee);
   }
 
@@ -36,7 +40,6 @@ function Accommodation({ title, photos, description, id, address }) {
     return navigate("/login");
   }
 
- 
   return (
     <>
       {list ? (
@@ -118,7 +121,7 @@ function Accommodation({ title, photos, description, id, address }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, x: 30 }}
             transition={{ duration: 1 }}
-            className=" overflow-hidden relative  cursor-pointer gap-0 lg:gap-5 group w-[99%] flex-row justify-between   flex  h-full    rounded-xl   shadow-md   bg-slate-50"
+            className=" overflow-hidden relative  cursor-pointer gap-0 lg:gap-5 group w-[99%] flex-row justify-between   flex  h-[80px]    rounded-xl   shadow-md   bg-slate-50"
           >
             <div className=" flex w-full">
               <div className=" relative flex justify-center p-1  items-center  w-[80%] md:w-[100px]  h-full     rounded-xl   ">
@@ -193,6 +196,7 @@ function Accommodation({ title, photos, description, id, address }) {
           </div>
         </Link>
       )}
+       <HousingMassge msg={msg}  setMsg={setmsg} />
     </>
   );
 }
