@@ -4,6 +4,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 
 
+
+
 function PlaceDescription({data,extra,setExtra}) {
   return (
     <div> <p className=" md:flex hidden w-full  leading-6    text-gray-800  text-base md:text-[15px] py-3  ">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PhotoSlider from "../component/Imageslaider";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { motion } from "framer-motion";
 import BathtubOutlinedIcon from "@mui/icons-material/BathtubOutlined";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
 import { Link } from "react-router-dom";
 import Massege from "./Massege";
-export default function Places({ _id, photos, address, price, title }) {
+export default function Places({ _id, photos, address, price, title , Beds,Bedrooms,Bathrooms }) {
   const { User } = useContext(Usercontext);
   const [Favadded, setFavadded] = useState("");
   const [fav, setFav] = useState(true);
@@ -54,7 +54,7 @@ export default function Places({ _id, photos, address, price, title }) {
 
   return (
     <Link
-      to={`/placedetails/${_id}  `}
+      to={`/placedetails/${_id}  `}  target="_blank"
       className="  gap-2 items-center relative py-1  h-[400px] flex flex-col  border-solid border-[1px] rounded-2xl  w-full "
     >
       <motion.div
@@ -68,7 +68,7 @@ export default function Places({ _id, photos, address, price, title }) {
           className=" relative     mx-2  mt-1 flex justify-center   w-[95%]   h-[70%]  rounded-xl   "
         >
           <div
-            onClick={(e) => AddFavorite(e, _id)}
+            
             className="  text-black  cursor-pointer  z-10 absolute flex flex-row w-full justify-between px-3 top-3 right-0"
           >
             <p className=" text-gray-900  text-[14px]  gap-1  bg-white rounded-full bg-opacity-70 px-2 h-8 p-1 flex  items-center justify-center flex-row ">
@@ -87,7 +87,7 @@ export default function Places({ _id, photos, address, price, title }) {
               {address.split(",").slice(0, 2).join(",")  } 
             </p>
 
-            <span className=" p-1  rounded-[50%]  bg-white active:scale-90   bg-opacity-70 ">
+            <span onClick={(e) => AddFavorite(e, _id)} className=" p-1  rounded-[50%]  bg-white active:scale-90   bg-opacity-70 ">
               {fav ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -137,30 +137,17 @@ export default function Places({ _id, photos, address, price, title }) {
         <div className=" flex flex-row w-full justify-between text-gray-700 px-4 text-sm ">
           <span className=" justify-end items-end h-full  flex flex-row gap-1">
             <BedOutlinedIcon  className="  scale-95" />
-            <p>6 beds </p>
+            <p> {Beds} beds </p>
           </span>
 
           <span className=" justify-end items-end h-full  flex flex-row gap-1">
             <BathtubOutlinedIcon  className="  scale-95" />
-            <p>7 baths </p>
+            <p>  {Bathrooms} baths</p>
           </span>
           <span className=" justify-end items-end h-full  flex flex-row gap-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
-              />
-            </svg>
-
-            <p>22 km </p>
+             
+ <MeetingRoomIcon/>
+            <p> {Bedrooms} rooms</p>
           </span>
         </div>
       </motion.div>
