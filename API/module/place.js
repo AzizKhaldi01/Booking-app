@@ -11,12 +11,13 @@ const PlaceSchema = new Schema ({
     perks:[String],
     rating:Number,
      extraInfo:String,
- 
      category:[String],
- 
       checkOut:Number,
       price:Number,
      maxGuests:Number,
+     Bathrooms:Number,
+     Beds:Number,
+     Bedrooms:Number,
      
 
 })

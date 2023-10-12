@@ -28,7 +28,7 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: "http://192.168.1.7:3000",
   })
 );
 app.get("/test", (req, res) => {
@@ -159,12 +159,14 @@ const storage = multer.diskStorage({
     const newFileName = file.fieldname + "__" + Date.now() + desiredExtension;
     cb(null, newFileName);
   },
-});
+}); 
+
+ 
 
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // Limit file size to 10MB
+    fileSize: 3 * 1024 * 1024,  
   },
 });
 
@@ -179,15 +181,7 @@ app.post('/places', async (req, res) => {
   try {
     const cookies = req.cookies;
     const token = cookies.jwtToken;
-
-    // Verify the JWT token with your secret key
-    jwt.verify(token, 'your-secret-key', {}, async (err, userData) => {
-      if (err) {
-        throw err;
-      }
-
-      // Extract data from the request body
-      const {
+     const {
         title,
         address,
         addedPhotos,
@@ -198,24 +192,37 @@ app.post('/places', async (req, res) => {
         extraInfo,
         checkIn,
         checkOut,
-        maxGuests,
+        Guests ,
+        Bedrooms,
+        Bathrooms,
+        Beds
       } = req.body;
 
+ 
 
-      if(title && address &&   addedPhotos && description && price && category && perks && extraInfo && checkIn && checkOut && maxGuests){
+    // Verify the JWT token with your secret key
+    jwt.verify(token, 'your-secret-key', {}, async (err, userData) => {
+      if (err) {
+        throw err;
+      }
+ 
+      if(title && address &&   addedPhotos && description && price && category && perks && extraInfo && checkIn && checkOut && Guests){
          const placeDoc = await Place.create({
         owner: userData.id,
         price,
         category,
         title,
         address,
-        photos: addedPhotos,
+        photos:addedPhotos,
         description,
         perks,
         extraInfo,
         checkIn,
         checkOut,
-        maxGuests,
+        maxGuests:Guests,
+        Bedrooms,
+        Bathrooms,
+        Beds
       });
 
       // Respond with a JSON success message
@@ -223,17 +230,21 @@ app.post('/places', async (req, res) => {
       }else {
         res.status(400).json( 'Set All The Information' );
       }
-
-
-      // Create a new Place document
+ 
    
     });
+
+     
+
+
   } catch (error) {
-    // Handle errors in a more sophisticated way, e.g., logging and providing meaningful error responses
+   
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
 app.get("/user-places", async (req, res) => {
   const cookies = req.cookies;
   const token = cookies.jwtToken;
@@ -255,28 +266,39 @@ app.get("/places/:id", async (req, res) => {
   res.json(await Place.findById(id));
 });
 
-app.put("/places", (req, res) => {
-  const cookies = req.cookies.jwtToken;
 
-  const {
-    price,
-    category,
-    title,
-    address,
-    addedPhotos,
-    description,
-    perks,
-    extraInfo,
-    checkIn,
-    checkOut,
-    maxGuests,
-    link,
-  } = req.body;
+app.put("/places", async (req, res) => {
+  try {
+    const cookies = req.cookies.jwtToken;
 
-  jwt.verify(cookies, "your-secret-key", {}, async (err, userData) => {
-    if (err) throw err;
+    if (!cookies) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
-    const placeDoc = await Place.findById(link);
+    const userData = jwt.verify(cookies,  "your-secret-key");
+
+    const {
+      title,
+      address,
+      addedPhotos,
+      description,
+      price,
+      category,
+      perks,
+      extraInfo,
+      checkIn,
+      link,
+      checkOut,
+      Guests,
+      Bedrooms,
+      Bathrooms,
+      Beds,
+    } = req.body;
+
+ 
+ 
+     
+ const placeDoc = await Place.findById(link);
 
     if (placeDoc.owner.toString() === userData.id) {
       placeDoc.set({
@@ -289,13 +311,28 @@ app.put("/places", (req, res) => {
         perks,
         extraInfo,
         checkIn,
+        Bedrooms,
+        Bathrooms,
+        Beds,
         checkOut,
-        maxGuests,
+        maxGuests: Guests,
       });
+
       await placeDoc.save();
+      res.status(200).json({ message: "Place updated successfully" });
+    } else {
+      res.status(403).json({ error: "Forbidden" });
     }
-  });
+      
+    
+ 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
+ 
 
  
 
@@ -376,11 +413,11 @@ app.post("/booking-add", async (req, res) => {
 
 app.post("/submit-payment", async (req, res) => {
   const { paymentMethodId, placeid, days, checkOut, checkIn } = req.body;
-  const { jwtToken } = req.cookies;
-
-  const place = await Place.findById(placeid);
-
+ 
+    const { jwtToken } = req.cookies;
+    const place = await Place.findById(placeid);
   try {
+
     const amount = Math.round(
       (place.price * days + (place.price * days) / 12) * 100
     );
@@ -603,20 +640,7 @@ app.get('/UrlFilter/:fillter'  , async (req, res) => {
 } )
 
 
-// app.get('/all-places'  , async (req, res) => { 
-//   const {fillter} =  req.body
-
-//   const result = {};
-//   result.category = { $in: fillter };
-//   try {
-//    const filteredItems = await Place.find(result);
-//    res.json(filteredItems);
-//  } catch (error) {
-//    console.error("Error fetching items:", error);
-//    res.status(500).json({ error: "Internal Server Error" });
-//  }
-
-// } )
+ 
 
 
 app.get("/all-places", async (req, res) => {
@@ -638,6 +662,6 @@ app.get("/all-places", async (req, res) => {
 //    console.log("data");
 // });
 
-app.listen(4000, "0.0.0.0", () => {
+app.listen(4000, "192.168.1.7", () => {
   console.log(`Server is running on http://0.0.0.0:${4000}`);
 });
