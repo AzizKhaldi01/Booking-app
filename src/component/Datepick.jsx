@@ -10,7 +10,7 @@ function Datepick({daysStayed,Aopen ,formattedCheckInDate ,handleCheckInChange ,
         </span>
       )}
       <input
-        className={`h-14 cursor-pointer  w-full  px-2 border-[2px] border-solid rounded-lg   ${
+        className={`h-14 cursor-pointer  w-full  bg-white px-2 border-[2px] border-solid rounded-lg   ${
           !Aopen ? "hidden" : "flex"
         }`}
         type="date"
@@ -27,7 +27,7 @@ function Datepick({daysStayed,Aopen ,formattedCheckInDate ,handleCheckInChange ,
         </span>
       )}
       <input
-        className={`h-14  cursor-pointer px-2   w-full  border-[2px] border-solid rounded-lg     ${
+        className={`h-14  cursor-pointer px-2  bg-white  w-full  border-[2px] border-solid rounded-lg     ${
           !Aopen ? "hidden" : "flex"
         }`}
         type="date"
