@@ -4,17 +4,19 @@ import { useContext, useEffect } from "react";
 import { Usercontext } from "../context/pagecontext";
 import Perks from "./perks";
 import { PlaceSchema } from "../Validation/AddPlaceValidation";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import Category from "./Category";
 import HousingMassge from "./HousingMassge";
 function NewAccommodation({ setAdd, add }) {
- 
   const {
     values,
     handleBlur,
     errors,
+    setTouched,
     touched,
     handleChange,
     handleSubmit,
@@ -27,31 +29,30 @@ function NewAccommodation({ setAdd, add }) {
       extraInfo: "",
       checkIn: "",
       checkOut: "",
-      maxGuests: "",
-      price: "",
+
+      price: "100",
     },
     validationSchema: PlaceSchema,
     onSubmit,
   });
-
   const navto = useNavigate();
-
   const { placesdata, link, setReload, reload } = useContext(Usercontext);
-
   const [addedPhotos, setAddedPhotos] = useState([]);
-
   const [perks, setPerks] = useState([]);
-
   const [photolink, setPhotolink] = useState("");
+  const [Placeinfo, setPlaceinfo] = useState({
+    Guests: 1,
+    Bedrooms: 0,
+    Beds: 1,
+    Bathrooms: 1,
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [PlaceSaving, setPlaceSaving] = useState(false);
   const [UpLoading, setUpLoading] = useState(false);
-
-  const [price, setPrice] = useState(100);
-  const [file, setFile] = useState();
   const [msg, setMsg] = useState("");
+  const [category, setCategory] = useState();
 
-  const [category, setCategory] = useState([]);
-
+ 
   useEffect(() => {
     if (placesdata) {
       setValues({
@@ -62,14 +63,19 @@ function NewAccommodation({ setAdd, add }) {
         extraInfo: placesdata.extraInfo,
         checkIn: placesdata.checkIn,
         checkOut: placesdata.checkOut,
-        maxGuests: placesdata.maxGuests,
         price: placesdata.price,
       });
-
+      setPlaceinfo({
+        ...Placeinfo,
+        Guests: placesdata.maxGuests,
+        Bedrooms: placesdata.Bedrooms,
+        Beds: placesdata.Beds,
+        Bathrooms: placesdata.Bathrooms,
+      });
       setAddedPhotos(placesdata.photos);
 
       setPerks(placesdata.perks);
-      setPrice(placesdata.price);
+
       setCategory(placesdata.category);
     } else {
       setValues({
@@ -80,11 +86,15 @@ function NewAccommodation({ setAdd, add }) {
         extraInfo: "",
         checkIn: "",
         checkOut: "",
-        maxGuests: "",
-        price: "",
+        price: "100",
       });
       setAddedPhotos([]);
-
+      setPlaceinfo({
+        Bedrooms: 0,
+        Guests: 1,
+        Beds: 1,
+        Bathrooms: 1,
+      });
       setPerks([]);
 
       setCategory([]);
@@ -92,32 +102,12 @@ function NewAccommodation({ setAdd, add }) {
   }, [placesdata]);
 
   const handleCatyChange = (option) => {
-    // Check if the option already exists in the category array
-    if (!category.includes(option)) {
-      // If it doesn't exist, add it to the category array
-      setCategory([...category, option]);
-    }
-    // If it already exists, do nothing or handle it as you wish.
+    setCategory(option);
   };
 
   const deletecategory = (caty) => {
-    setCategory(category.filter((value) => value !== caty));
+    setCategory();
   };
-  const options = [
-    "Hotel",
-    "Cabins",
-    "Islands",
-    "Boats",
-    "Farms",
-    "Luxe",
-    "Beach",
-    "Amazing pools",
-    "villa ",
-    "cave",
-    "House",
-    "Bungalow",
-    "ApartmentIcon",
-  ];
 
   async function sendLinke(ev) {
     ev.preventDefault();
@@ -156,10 +146,10 @@ function NewAccommodation({ setAdd, add }) {
     setUpLoading(true);
     ev.preventDefault();
     const filesArray = ev.target.files;
-    const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+    const maxSizeInBytes = 3 * 1024 * 1024; 
     for (let i = 0; i < filesArray.length; i++) {
       const file = filesArray[i];
-      const fileSize = file.size; // Get the file size in bytes
+      const fileSize = file.size;  
 
       if (fileSize > maxSizeInBytes) {
         setMsg('Maximum file size is 3MB"');
@@ -168,7 +158,6 @@ function NewAccommodation({ setAdd, add }) {
       }
     }
 
-    setFile(filesArray);
     const data = new FormData();
     // Append each file to the FormData object
     for (let i = 0; i < filesArray?.length; i++) {
@@ -203,48 +192,54 @@ function NewAccommodation({ setAdd, add }) {
     setAddedPhotos([...addedPhotos.filter((photo) => photo !== filename)]);
   }
 
+  useEffect(() => {
+    console.log("Guests:", Placeinfo.Guests);
+    console.log("Bedrooms:", Placeinfo.Bedrooms);
+    console.log("Beds:", Placeinfo.Beds);
+    console.log("Bathrooms:", Placeinfo.Bathrooms);
+  }, [Placeinfo]);
+
   async function onSubmit(ev) {
-   
-
- 
-
-    console.log("submited");
-
-
-    
+    setPlaceSaving(true);
     const placeData = {
       perks,
       category,
       addedPhotos,
-     ...values
-         };
+      Guests: Placeinfo.Guests,
+      Bathrooms: Placeinfo.Bathrooms,
+      Bedrooms: Placeinfo.Bedrooms,
+      Beds: Placeinfo.Beds,
+      ...values,
+    };
 
     if (link) {
       // update
-      await axios.put("/places", { ...placeData, link }).then((response) => {
-        const { data } = response.message;
-        setMsg(data);
-      });
-
-      navto("/account/accommodation/");
-      setAdd(!add);
-      setReload(!reload);
-
-      setValues({
-        ...values,
-        title: "",
-        address: "",
-        description: "",
-        extraInfo: "",
-        checkIn: "",
-        checkOut: "",
-        maxGuests: "",
-        price: "",
-      });
-
-      setAddedPhotos([]);
-      setPerks([]);
-      setCategory([]);
+      await axios
+        .put("/places", { ...placeData, link })
+        .then((response) => {
+          const { data } = response;
+          setPlaceSaving(false);
+          setMsg(data.message);
+          navto("/account/housing/");
+          setAdd(!add);
+          setReload(!reload);
+          setValues({
+            ...values,
+            title: "",
+            address: "",
+            description: "",
+            extraInfo: "",
+            checkIn: "",
+            checkOut: "",
+            price: "100",
+          });
+          setAddedPhotos([]);
+          setPerks([]);
+          setCategory([]);
+        })
+        .catch((err) => {
+          setPlaceSaving(false);
+        });
     } else {
       await axios
         .post("/places", placeData)
@@ -254,9 +249,7 @@ function NewAccommodation({ setAdd, add }) {
           setAdd(!add);
           setReload(!reload);
           navto("/account/housing/");
-
           setReload(!reload);
-
           setValues({
             ...values,
             title: "",
@@ -265,10 +258,8 @@ function NewAccommodation({ setAdd, add }) {
             extraInfo: "",
             checkIn: "",
             checkOut: "",
-            maxGuests: "",
-            price: "",
+            price: "100",
           });
-
           setAddedPhotos([]);
           setPerks([]);
           setCategory([]);
@@ -288,9 +279,26 @@ function NewAccommodation({ setAdd, add }) {
           }
         });
     }
-
- 
   }
+
+  const placebasics = [
+    {
+      text: "Guests",
+      value: Placeinfo.Guests,
+    },
+    {
+      text: "Bedrooms",
+      value: Placeinfo.Bedrooms,
+    },
+    {
+      text: "Beds",
+      value: Placeinfo.Beds,
+    },
+    {
+      text: "Bathrooms",
+      value: Placeinfo.Bathrooms,
+    },
+  ];
 
   function moveToFirst(filename) {
     const indexToMove = addedPhotos.findIndex((photo) => photo === filename);
@@ -307,6 +315,33 @@ function NewAccommodation({ setAdd, add }) {
     updatedPhotos.unshift(movedPhoto);
 
     setAddedPhotos(updatedPhotos);
+  }
+
+  function dec(e, text) {
+    e.preventDefault();
+
+    if (text == "Bedrooms") {
+      var minvalue = 0;
+    } else {
+      var minvalue = 1;
+    }
+
+    setPlaceinfo((prevPlacInfo) => ({
+      ...prevPlacInfo,
+
+      [text]:
+        prevPlacInfo[text] > minvalue
+          ? prevPlacInfo[text] - 1
+          : prevPlacInfo[text],
+    }));
+  }
+
+  function inc(e, text) {
+    e.preventDefault();
+    setPlaceinfo((prevPlacInfo) => ({
+      ...prevPlacInfo,
+      [text]: prevPlacInfo[text] + 1,
+    }));
   }
 
   return (
@@ -333,9 +368,9 @@ function NewAccommodation({ setAdd, add }) {
           onSubmit={handleSubmit}
           className="      h-full overflow-auto    w-full    "
         >
-          <div className=" flex-grow w-full flex flex-col gap-3  p-4  md:p-7 ">
-            <h1>Title</h1>
-            <p className=" text-gray-500 text-xs">
+          <div className=" flex-grow w-full flex flex-col   p-4  md:p-7 ">
+            <h1 className="">Title</h1>
+            <p className=" text-gray-500 text-xs  pb-1">
               Title for your place should be short and catchy as in advertisment
             </p>
             <input
@@ -358,8 +393,8 @@ function NewAccommodation({ setAdd, add }) {
               </p>
             )}
 
-            <h1>Address</h1>
-            <p className=" text-gray-500 text-xs">Address to your place</p>
+            <h1 className=" pt-5">Address</h1>
+            <p className=" text-gray-500 text-xs pb-1">Address to your place</p>
             <input
               className={` ${
                 errors.address && touched.address
@@ -380,8 +415,10 @@ function NewAccommodation({ setAdd, add }) {
               </p>
             )}
 
-            <h1>Photos</h1>
-            <p className=" text-gray-500 text-xs">More Photos More batter</p>
+            <h1 className=" pt-5">Photos</h1>
+            <p className=" text-gray-500 text-xs pb-1">
+              More Photos More batter
+            </p>
             <div className=" flex flex-row gap-2">
               <input
                 value={photolink}
@@ -392,12 +429,12 @@ function NewAccommodation({ setAdd, add }) {
               />
               <button
                 onClick={sendLinke}
-                className="   font-medium   relative justify-center flex flex-row items-center gap-2  w-[15%]  rounded-lg  text-xs md:text-sm bg-gray-200"
+                className="   font-medium text-white    relative justify-center flex flex-row items-center gap-2  w-[15%]  rounded-lg  text-xs md:text-sm bg-main"
               >
                 <span
                   className={` ${
                     isLoading ? " opacity-100 " : " opacity-0"
-                  } bg-greedian   absolute top-0 right-0 bg-gray-300 rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
+                  } bg-greedian   absolute top-0 right-0 bg-main   rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
                 >
                   <span className=" h-full w-full scale-[1]  md:scale-[0.4] flex items-center justify-center">
                     <svg
@@ -551,8 +588,10 @@ function NewAccommodation({ setAdd, add }) {
               </label>
             </div>
 
-            <h1>Descriptoin</h1>
-            <p className=" text-gray-500 text-xs">Descripton of the place</p>
+            <h1 className=" pt-5">Descriptoin</h1>
+            <p className=" text-gray-500 text-xs pb-1">
+              Descripton of the place
+            </p>
             <textarea
               value={values.description}
               id="description"
@@ -570,9 +609,46 @@ function NewAccommodation({ setAdd, add }) {
                 {errors.description}{" "}
               </p>
             )}
+            <div className=" w-full  h-full  ">
+              <h1 className=" pt-5">Share some basics about your place</h1>
+              <p className=" text-gray-500 text-xs">
+                You'll add more details later, such as bed types.
+              </p>
 
-            <h1>Perks</h1>
-            <p className=" text-gray-500 text-xs">Select all your Perks</p>
+              <div className="   gap-6 grid  grid-cols-1 md:grid-cols-2 h-full     pt-3  ">
+                {placebasics.map((place) => (
+                  <div className=" flex flex-row w-full justify-between items-center pr-4 border-b-[1px] border-solid py-3">
+                    <div className="  w-full   text-lg font-light  ">
+                      {place.text}
+                    </div>
+                    <div className=" gap-2 flex  items-center     ">
+                      <button
+                        onClick={(e) => dec(e, place.text)}
+                        className={`    rounded-[50%] h-9  active:scale-95   hover:opacity-100 opacity-70 w-9 text-[#578280]  border-[1px] border-[#578280] `}
+                      >
+                        <RemoveIcon fontSize="" />
+                      </button>
+                      <input
+                        value={place.value}
+                        className=" rounded-lg h-10 bg-white text-sm font-semibold items-center text-center w-10   "
+                        id="adults"
+                      />
+                      <button
+                        onClick={(e) => inc(e, place.text)}
+                        className={`    rounded-[50%] h-9   hover:opacity-100 opacity-70   w-9 active:scale-95 hover:bg-   text-[#578280]   border-[1px]   border-[#578280] `}
+                      >
+                        <AddIcon fontSize="" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <h1 className=" pt-5">Perks</h1>
+            <p className=" text-gray-500 text-xs  pb-1">
+              Select all your Perks
+            </p>
 
             <div className="   gap-3 w-full   grid  grid-cols-2  md:grid-cols-4 lg:grid-cols-6 justify-between ">
               <Perks selected={perks} onChange={setPerks} />
@@ -581,13 +657,12 @@ function NewAccommodation({ setAdd, add }) {
             <Category
               deletecategory={deletecategory}
               handleChange={handleCatyChange}
-              options={options}
               setSelectedValue={setCategory}
               selectedValue={category}
             />
 
-            <h1>Extra Info</h1>
-            <p className=" text-gray-500 text-xs">house rouls, etc</p>
+            <h1 className=" pt-5">Extra Info</h1>
+            <p className=" text-gray-500 text-xs pb-1">house rouls, etc</p>
             <textarea
               value={values.extraInfo}
               id="extraInfo"
@@ -606,7 +681,7 @@ function NewAccommodation({ setAdd, add }) {
             )}
 
             <div className=" "></div>
-            <h1>Check in&out times</h1>
+            <h1 className=" pt-5">Check in&out times</h1>
             <p className=" text-gray-500 text-xs">house rouls, etc</p>
             <div className=" grid  gap-4   grid-cols-2  md:grid-cols-4">
               <div>
@@ -616,12 +691,12 @@ function NewAccommodation({ setAdd, add }) {
                   id="checkIn"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="text"
+                  type="number"
                   className={`  ${
                     errors.checkIn && touched.checkIn
                       ? " border-[#fc8181] text-red-500  border-[2px]"
                       : ""
-                  } w-full h-12  border-solid border-2 rounded-lg `}
+                  } w-full h-12  border-solid border-2 rounded-lg  px-2`}
                 />
                 {errors.checkIn && touched.checkIn && (
                   <p className=" pt-1 px-1 text-xs text-red-400">
@@ -637,12 +712,12 @@ function NewAccommodation({ setAdd, add }) {
                   id="checkOut"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="text"
+                  type="number"
                   className={` ${
                     errors.checkOut && touched.checkOut
                       ? " border-[#fc8181] text-red-500  border-[2px]"
                       : ""
-                  } checkIn  w-full h-12  border-solid border-2 rounded-lg `}
+                  } checkIn  w-full h-12  border-solid border-2 rounded-lg  px-2`}
                 />
                 {errors.checkOut && touched.checkOut && (
                   <p className=" pt-1 px-1 text-xs text-red-400">
@@ -651,46 +726,71 @@ function NewAccommodation({ setAdd, add }) {
                   </p>
                 )}
               </div>
-              <div>
-                <h3 className=" text-sm md:text-lg mt-3"> Max number guests</h3>
-                <input
-                  id="maxGuests"
-                  onBlur={handleBlur}
-                  value={values.maxGuests}
-                  onChange={handleChange}
-                  type="text"
-                  className={`  ${
-                    errors.maxGuests && touched.maxGuests
-                      ? " border-[#fc8181] text-red-500  border-[2px]"
-                      : ""
-                  }  w-full h-12  border-solid border-2 rounded-lg `}
-                />
-                {errors.maxGuests && touched.maxGuests && (
-                  <p className=" pt-1 px-1 text-xs text-red-400">
-                    {" "}
-                    {errors.maxGuests}{" "}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <h3 className=" text-sm md:text-lg mt-3"> Price per night </h3>
-                <input
-                  value={values.price}
-                  id="price"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="number"
-                  className=" w-full h-12  border-solid border-2 rounded-lg"
-                />
-              </div>
             </div>
-
-            <div className=" w-full flex justify-center items-center">
-          
-              <button  type="submit"  className="w-[90%] h-12 bg-gray-300  rounded-lg ">
-                
+            <div className=" pb-3">
+              <h1 className=" pt-5">Set Your Price</h1>
+              <h3 className=" pb-1  text-xs text-gray-500 ">
                 {" "}
+                You can change it anytime.
+              </h3>
+              <input
+                value={values.price}
+                id="price"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type="number"
+                className={`  ${
+                  errors.price && touched.price
+                    ? " border-[#fc8181] text-red-500  border-[2px]"
+                    : ""
+                }    h-12  border-solid border-2 rounded-lg      text-xl  w-full  md:w-[20%] px-2`}
+              />
+              {errors.price && touched.price && (
+                <p className=" pt-1 px-1 text-xs text-red-400">
+                  {errors.price}
+                </p>
+              )}
+            </div>
+            <div className=" w-full flex justify-start items-center">
+              <button
+                type="submit"
+                className=" w-full relative md:w-[30%] h-14 bg-main text-white text-lg  rounded-lg "
+              >
+                <span
+                  className={` ${
+                    PlaceSaving ? " opacity-100 " : " opacity-0"
+                  } bg-greedian   absolute top-0 right-0 bg-main   rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
+                >
+                  <span className=" h-full w-full scale-[0.2]  md:scale-[0.2] flex items-center justify-center">
+                    <svg
+                      version="1.1"
+                      id="L9"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      viewBox="0 0 100 100"
+                      enable-background="new 0 0 0 0"
+                      xml
+                      space="preserve"
+                    >
+                      <path
+                        fill="#fff"
+                        d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          attributeType="XML"
+                          type="rotate"
+                          dur="1s"
+                          from="0 50 50"
+                          to="360 50  50"
+                          repeatCount="indefinite"
+                        />
+                      </path>
+                    </svg>
+                  </span>
+                </span>{" "}
                 {link ? "Save the Changes" : "Save"}{" "}
               </button>
             </div>
@@ -703,45 +803,3 @@ function NewAccommodation({ setAdd, add }) {
 }
 
 export default NewAccommodation;
-
-// utton style={{
-//   background: 'rgb(87,130,128)',
-//   background: 'linear-gradient(337deg, rgba(87,130,128,1) 31%, rgba(116,154,152,1) 79%, rgba(129,165,163,1) 85%, rgba(151,183,182,1) 100%, rgba(210,232,232,1) 100%)'
-// }} disabled={isLoading  }
-//   onClick={handleSubmit}
-//   className="     md:text-lg hover:opacity-90 h-14  w-full md:w-[27%]  relative  rounded-lg    text-white "
-// >
-
-// Request to book
-
-// <span className= {` ${   isLoading ? ' opacity-100 ' : ' opacity-0' } bg-greedian   absolute top-0 right-0 bg-main rounded-lg duration-200 h-full w-full flex items-center justify-center   `}>
-// <span className=" h-full w-full scale-[0.2]  md:scale-[0.4] flex items-center justify-center">
-// <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg"  xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-// viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml space="preserve">
-// <path fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
-// <animateTransform
-//  attributeName="transform"
-//  attributeType="XML"
-//  type="rotate"
-//  dur="1s"
-//  from="0 50 50"
-//  to="360 50  50"
-//  repeatCount="indefinite" />
-// </path>
-// </svg>
-// </span>
-
-// </span>
-
-//   <span className={`  ${ err =='successful' ? ' opacity-100' : ' opacity-0'}  duration-200 flex items-center  justify-center z-10 absolute rounded-lg top-0 right-0 h-full w-full bg-green-400    border-solid border-[1px] border-green-400 `} >
-
-//   <span className=" w4rAnimated_checkmark scale-[0.4] h-full w-full items-center flex justify-center ">
-
-//   { err =='successful' && <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-// <circle class="path circle" fill="none" stroke="white" stroke-width="8" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
-// <polyline class="path check" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
-// </svg>}
-//     </span>
-//   </span>
-
-// </button>

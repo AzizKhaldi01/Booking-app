@@ -54,7 +54,7 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
 
   return (
     <Link
-      to={`/placedetails/${_id}  `}  target="_blank"
+      to={`/placedetails/${_id} `}   
       className="  gap-2 items-center relative py-1  h-[400px] flex flex-col  border-solid border-[1px] rounded-2xl  w-full "
     >
       <motion.div
