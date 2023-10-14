@@ -15,7 +15,7 @@ function EditDate({
   return (
     <div
       className={` duration-300  ${
-        !Dopen ? "bottom-0" : "bottom-100  "
+        !Dopen ? "top-[50%]" : "top-[-100%] "
       }  flex  z-50 fixed h-full w-full relateve `}
     >
       <div
