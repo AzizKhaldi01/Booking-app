@@ -185,6 +185,9 @@ function Home() {
             setFav={setFav}
             _id={place._id}
             title={place.title}
+            Beds={place.Beds}
+            Bedrooms={place.Bedrooms}
+            Bathrooms={place.Bathrooms}
             address={place.address}
             photos={place.photos}
             price={place.price}
