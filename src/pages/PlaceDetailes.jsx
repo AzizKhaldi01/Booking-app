@@ -71,10 +71,9 @@ function PlaceDetailes() {
   const {
     setData,
     data,
-    handleCheckOutChange,
-    handleCheckInChange,
-    formattedCheckOutDate,
-    formattedCheckInDate,
+ 
+    range,
+        setRange,
     dicrementGuests,
     incrementGuests,
     Gdata,
@@ -299,7 +298,7 @@ function PlaceDetailes() {
                 <CalendarMonthIcon />
               </Link>
 
-              <div className="    flex-row justify-between   w-[68%]  text-sm items-center  md:relative   bottom-0 bg-white  right-0   flex ">
+              <div className="    flex-row     w-[68%]  text-sm items-center  md:relative   bottom-0 bg-white  right-0   flex ">
                 <div className="  w-full   h-20  hidden md:flex flex-row justify-between  items-center border-[#6d9c9a] border-[1px] border-solid rounded-full  my-0 md:my-6  ">
                   <p className=" font-semibold px-8">Check Availability</p>
                   <span
@@ -324,14 +323,17 @@ function PlaceDetailes() {
                       : " opacity-0  -bottom-[100%]  md:h-0"
                   }   z-20     h-[70vh]   md:top-20  left-0   `}
                 >
+
+            
                   <Datepick
                     daysStayed={daysStayed}
                     Aopen={Aopen}
-                    handleCheckInChange={handleCheckInChange}
-                    handleCheckOutChange={handleCheckOutChange}
-                    formattedCheckOutDate={formattedCheckOutDate}
-                    formattedCheckInDate={formattedCheckInDate}
+                    range={range}
+                    setRange={setRange}
+                     
                   />
+                 
+                
 
                   <div className=" text-base items-center justify-between px-3  md:hidden flex w-full h-10 bg-white  rounded-t-lg absolute top-0 right-0">
                     <span onClick={() => setAopen(!Aopen)}>
@@ -374,7 +376,7 @@ function PlaceDetailes() {
                     <div className=" w-full     hidden  md:flex items-center justify-center">
                       <h1
                         onClick={() => setGopen(!Gopen)}
-                        className=" border-2 justify-between mt-1 rounded-lg cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
+                        className=" border-[1px] border-t-0 justify-between      rounded-b-xl cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
                       >
                         {" "}
                         <span className="     flex flex-row gap-3">
@@ -400,7 +402,9 @@ function PlaceDetailes() {
                       </h1>
                     </div>
 
-                    <div className=" w-full flex gap-5 h-full md:flex-col  flex-col-reverse  ">
+                    
+
+                    <div className=" w-full flex gap-5  h-20 md:h-full md:flex-col       md:relative    absolute  bottom-0  items-center justify-end bg-white  flex-row-reverse  ">
                       <div
                         className={`w-full flex items-center justify-center`}
                       >
@@ -496,6 +500,8 @@ function PlaceDetailes() {
 
                         <span>{}</span>
                       </div>
+
+                      <div></div>
                     </div>
                     {Gopen && (
                       <div
