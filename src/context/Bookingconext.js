@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { addDays } from 'date-fns'
 import { createContext, useEffect, useState } from "react";
 import { differenceInDays, format } from "date-fns";
 
@@ -11,7 +11,14 @@ const Bookingprovider = ({ children }) => {
   const [data, setData] = useState({});
   const [days, setDays] = useState();
   const [err , setErr] = useState('')
-
+  const [range, setRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),  
+      key: 'selection'
+    }
+  ])
+ 
 
 
   const [Guest, setGuest] = useState({
@@ -26,7 +33,7 @@ const getdays = localStorage.getItem('daysStayed')
 setDays(getdays)
 
   },[])
-  const daysStayed = differenceInDays(checkOutDate, checkInDate);
+  const daysStayed = differenceInDays(range[0]?.endDate  ,  range[0]?.startDate);
 
   const handleCheckOutChange = (event) => {
     const newDate = new Date(event.target.value);
@@ -47,8 +54,7 @@ setDays(getdays)
     
   };
 
-  const formattedCheckOutDate = format(checkOutDate, "yyyy-MM-dd");
-  const formattedCheckInDate = format(checkInDate, "yyyy-MM-dd");
+ 
 
   function dicrementGuests(e, title) {
     e.preventDefault();
@@ -123,10 +129,9 @@ setDays(getdays)
        
         err,
         data,
-        handleCheckOutChange,
-        handleCheckInChange,
-        formattedCheckOutDate,
-        formattedCheckInDate,
+        range,
+        setRange,
+         
         dicrementGuests,
         incrementGuests,
         Gdata,
