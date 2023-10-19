@@ -188,7 +188,8 @@ function NewAccommodation({ setAdd, add }) {
         }
       });
   }
-  function deletphoto(filename) {
+  function deletphoto(filename , e) {
+    e.preventDefault();
     setAddedPhotos([...addedPhotos.filter((photo) => photo !== filename)]);
   }
 
@@ -476,7 +477,7 @@ function NewAccommodation({ setAdd, add }) {
                     <div className=" flex  px-1  md:px-6 justify-between absolute bottom-2 w-full">
                       <button
                         className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] "
-                        onClick={() => deletphoto(pic)}
+                        onClick={(e) => deletphoto(pic)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -495,7 +496,7 @@ function NewAccommodation({ setAdd, add }) {
                       </button>
                       <button
                         className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] "
-                        onClick={() => moveToFirst(pic)}
+                        onClick={(e) => moveToFirst(pic)  }
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -606,7 +607,7 @@ function NewAccommodation({ setAdd, add }) {
             {errors.description && touched.description && (
               <p className=" pt-1 px-1 text-xs text-red-400">
                 {" "}
-                {errors.description}{" "}
+                {errors.description} 
               </p>
             )}
             <div className=" w-full  h-full  ">
@@ -618,7 +619,7 @@ function NewAccommodation({ setAdd, add }) {
               <div className="   gap-6 grid  grid-cols-1 md:grid-cols-2 h-full     pt-3  ">
                 {placebasics.map((place) => (
                   <div className=" flex flex-row w-full justify-between items-center pr-4 border-b-[1px] border-solid py-3">
-                    <div className="  w-full   text-lg font-light  ">
+                    <div className=" w-full text-lg font-light ">
                       {place.text}
                     </div>
                     <div className=" gap-2 flex  items-center     ">

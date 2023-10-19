@@ -16,7 +16,7 @@ function Gestes({
     Geust?.Children + Geust?.Adults >= maxGuests;
 
   return (
-    <div className=" flex flex-row w-full     ">
+    <div className=" flex flex-row w-full      ">
 
       
       <div className=" flex flex-col w-[80%] ">

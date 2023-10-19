@@ -36,7 +36,7 @@ function PlaceDescription({data,extra,setExtra}) {
     )}
   </p>
 
-  <p className=" md:hidden flex w-full  leading-6    text-gray-800  text-base md:text-[15px] py-3  ">
+  <p className=" md:hidden flex w-full  leading-6    text-gray-800  text-sm md:text-[15px] py-3  ">
     {data.description.length >= 200 ? (
       <p>
         {" "}
