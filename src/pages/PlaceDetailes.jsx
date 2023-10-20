@@ -6,7 +6,7 @@ import BorderAllIcon from "@mui/icons-material/BorderAll";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ExtraInfo from "../component/ExtraInfo";
 import userimage from "../img/user.webp";
- 
+
 import CloseIcon from "@mui/icons-material/Close";
 import PerksD from "../component/PerksD";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
@@ -71,19 +71,18 @@ function PlaceDetailes() {
   const {
     setData,
     data,
- 
+
     range,
-        setRange,
+    setRange,
     dicrementGuests,
     incrementGuests,
     Gdata,
     daysStayed,
     Guest,
     setGuest,
-    checkOutDate,
-    checkInDate,
+ 
 
-    setCheckOutDate,
+     
   } = useContext(BookingContext);
 
   const Pdata = data;
@@ -105,8 +104,8 @@ function PlaceDetailes() {
         setMsg("notbooked");
         setLaod(false);
         localStorage.setItem("guest", JSON.stringify(Guest));
-        localStorage.setItem("checkInDate", checkInDate.toISOString());
-        localStorage.setItem("checkOutDate", checkOutDate.toISOString());
+        localStorage.setItem("checkInDate", range[0].startDate.toISOString());
+        localStorage.setItem("checkOutDate", range[0].endDate.toISOString());
         localStorage.setItem("daysStayed", daysStayed.toString());
         localStorage.setItem("price", Pdata.price.toString());
         localStorage.setItem("maxgeustes", Pdata.maxGuests);
@@ -154,12 +153,7 @@ function PlaceDetailes() {
     });
   }, [fav]);
 
-  useEffect(() => {
-    const nextDay = new Date(checkInDate);
-    nextDay.setDate(nextDay.getDate() + 7);
-    setCheckOutDate(nextDay);
-  }, [checkInDate]);
-
+ 
   useEffect(() => {
     setGuest({
       Adults: 1,
@@ -263,157 +257,147 @@ function PlaceDetailes() {
               <span className=" w-full md:flex hidden">
                 <GrayLine />
               </span>
-             
-             <div className=" w-full flex  flex-row-reverse  items-center justify-between">
-              <div className="  hidden  md:flex flex-row gap-1 my-4 text-3xl   items-end  font-semibold">
-                ${data?.price}
-                <span className=" font-normal text-gray-700 text-base">
-                  /night
-                </span>
-              </div>
-              <div className="  px-4  fixed   md:hidden flex  right-0  z-30 w-full bottom-0  bg-white h-20   justify-between p-3 items-center border-solid border-t-[1px] text-xs text-white  border-gray-300 ">
-                
-         
-                <span className="  font-medium   text-gray-700 text-xl    ">
-                  ${data?.price}{" "}
-                  <span className=" text-xs text-gray-500">night</span>
-                </span>
-                <button
-                  onClick={() => setAopen(!Aopen)}
-                  className=" bg-main p-2 text-xs  h-full rounded-md "
-                >
-                  Check Availability
-                </button>
-              </div>
 
-              <Link
-                to="Availability"
-                smooth={true}
-                duration={800}
-                onClick={scrollToSection}
-                className={`    ${
-                  scrolling ? " hidden  md:flex " : " hidden"
-                } bg-[#578280]  bottom-6 left-5 z-40  fixed cursor-pointer rounded-full flex items-center justify-center text-white      h-14 w-14  `}
-              >
-                <CalendarMonthIcon />
-              </Link>
-
-              <div className="    flex-row     w-[68%]  text-sm items-center  md:relative   bottom-0 bg-white  right-0   flex ">
-                <div className="  w-full   h-20  hidden md:flex flex-row justify-between  items-center border-[#6d9c9a] border-[1px] border-solid rounded-full  my-0 md:my-6  ">
-                  <p className=" font-semibold px-8">Check Availability</p>
-                  <span
-                    onClick={() => setAopen(!Aopen)}
-                    className="bg-[#578280] cursor-pointer rounded-full flex items-center justify-center text-white      h-20 w-20  "
-                  >
-                    <CalendarMonthIcon />
+              <div className=" w-full flex  flex-row-reverse  items-center justify-between">
+                <div className="  hidden  md:flex flex-row gap-1 my-4 text-3xl   items-end  font-semibold">
+                  ${data?.price}
+                  <span className=" font-normal text-gray-700 text-base">
+                    /night
                   </span>
                 </div>
+                <div className="  px-4  fixed   md:hidden flex  right-0  z-30 w-full bottom-0  bg-white h-20   justify-between p-3 items-center border-solid border-t-[1px] text-xs text-white  border-gray-300 ">
+                  <span className="  font-medium   text-gray-700 text-xl    ">
+                    ${data?.price}{" "}
+                    <span className=" text-xs text-gray-500">night</span>
+                  </span>
+                  <button
+                    onClick={() => setAopen(!Aopen)}
+                    className=" bg-main p-2 text-xs  h-full rounded-md "
+                  >
+                    Check Availability
+                  </button>
+                </div>
 
-                <div
-                  onClick={() => setAopen(!Aopen)}
-                  className={`${
-                    Aopen ? "   md:opacity-0 opacity-30 z-0" : "opacity-0 -z-10"
-                  } duration-200 fixed w-full h-full  bg-black top-0 right-0`}
-                ></div>
-
-                <div
-                  className={`   z-40  fixed    md:absolute   w-full  md:max-w-[450px]  md:pt-0 border-solid  justify-between flex flex-col   border-0 md:border-[1px]  pt-14       shadow-2xl  duration-150 bg-white rounded-t-xl  md:rounded-xl   ${
-                    Aopen
-                      ? "  bottom-0 md:h-[250px]  opacity-100"
-                      : " opacity-0  -bottom-[100%]  md:h-0"
-                  }   z-20     h-[70vh]   md:top-20  left-0   `}
+                <Link
+                  to="Availability"
+                  smooth={true}
+                  duration={800}
+                  onClick={scrollToSection}
+                  className={`    ${
+                    scrolling ? " hidden  md:flex " : " hidden"
+                  } bg-[#578280]  bottom-6 left-5 z-40  fixed cursor-pointer rounded-full flex items-center justify-center text-white      h-14 w-14  `}
                 >
+                  <CalendarMonthIcon />
+                </Link>
 
-            
-                  <Datepick
-                    daysStayed={daysStayed}
-                    Aopen={Aopen}
-                    range={range}
-                    setRange={setRange}
-                     
-                  />
-                 
-                
-
-                  <div className=" text-base items-center justify-between px-3  md:hidden flex w-full h-10 bg-white  rounded-t-lg absolute top-0 right-0">
-                    <span onClick={() => setAopen(!Aopen)}>
-                      <ClearIcon />
+                <div className="    flex-row     w-[68%]  text-sm items-center  md:relative   bottom-0 bg-white  right-0   flex ">
+                  <div className="  w-full   h-20  hidden md:flex flex-row justify-between  items-center border-[#6d9c9a] border-[1px] border-solid rounded-full  my-0 md:my-6  ">
+                    <p className=" font-semibold px-8">Check Availability</p>
+                    <span
+                      onClick={() => setAopen(!Aopen)}
+                      className="bg-[#578280] cursor-pointer rounded-full flex items-center justify-center text-white      h-20 w-20  "
+                    >
+                      <CalendarMonthIcon />
                     </span>
                   </div>
+
                   <div
-                    className={` ${
-                      !Aopen ? "hidden" : "flex"
-                    }  flex  relative  max-w-full  flex-col  `}
+                    onClick={() => setAopen(!Aopen)}
+                    className={`${
+                      Aopen
+                        ? "   md:opacity-0 opacity-30 z-0"
+                        : "opacity-0 -z-10"
+                    } duration-200 fixed w-full h-full  bg-black top-0 right-0`}
+                  ></div>
+
+                  <div
+                    className={` z-40  fixed md:absolute w-full md:max-w-[450px]       md:pt-0 border-solid   justify-between  md:justify-start flex flex-col   border-0 md:border-[1px]  pt-14 shadow-2xl  duration-150 bg-white rounded-t-xl  md:rounded-xl   ${
+                      Aopen
+                        ? " bottom-0 md:h-[210px] opacity-100"
+                        : " opacity-0 bottom-[-100%] md:h-0"
+                    }   z-20 h-[530px] md:top-20   left-0 `}
                   >
-                    <div className=" w-full  flex items-center justify-center overflow-hidden">
-                      <div className="  w-[95%] h-[1px]  md:hidden flex  bg-gray-200 my-2 "></div>
-                    </div>
+                    <Datepick
+                      daysStayed={daysStayed}
+                      Aopen={Aopen}
+                      range={range}
+                      setRange={setRange}
+                    />
 
-                    <div className=" px-3 md:hidden  flex  py-2   flex-col w-full h-full gap-3">
-                      <span className="   text-2xl font-medium   flex flex-row gap-3">
-                        Guests
+                    <div className=" text-base items-center justify-between px-3  md:hidden flex w-full h-10 bg-white  rounded-t-lg absolute top-0 right-0">
+                      <span onClick={() => setAopen(!Aopen)}>
+                        <ClearIcon />
                       </span>
-
-                      <div className=" w-full  flex-col items-center   scale-125 px-10 my-6 justify-center ">
-                        {Gdata?.map((item) => (
-                          <Gestes
-                            onClick={incrementGuests}
-                            dicrementGuests={dicrementGuests}
-                            Geust={item.value}
-                            title={item.title}
-                            name={item.title}
-                            desc={item.desc}
-                            maxGuests={data?.maxGuests}
-                          />
-                        ))}
+                    </div>
+                    <div
+                      className={` ${
+                        !Aopen ? "hidden" : "flex"
+                      }  flex  relative  max-w-full  flex-col  `}
+                    >
+                      <div className=" w-full  flex items-center justify-center overflow-hidden">
+                        <div className="  w-[95%] h-[1px]  md:hidden flex  bg-gray-200 my-2 "></div>
                       </div>
-                    </div>
 
-                    <div className=" w-full  flex items-center justify-center">
-                      <div className="  w-[95%] h-[1px]  md:hidden flex  bg-gray-200 mb-3 "></div>
-                    </div>
-
-                    <div className=" w-full     hidden  md:flex items-center justify-center">
-                      <h1
-                        onClick={() => setGopen(!Gopen)}
-                        className=" border-[1px] border-t-0 justify-between      rounded-b-xl cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
-                      >
-                        {" "}
-                        <span className="     flex flex-row gap-3">
-                          {Guest.Adults + Guest.Children} Geusts{" "}
-                          {Guest.Infants < 1
-                            ? ""
-                            : " ," +
-                              (Guest.Infants == 1
-                                ? Guest.Infants + " infant"
-                                : Guest.Infants + " infants")}{" "}
-                          {Guest.Pets < 1
-                            ? ""
-                            : " ," +
-                              (Guest.Pets == 1
-                                ? Guest.Pets + " Pet"
-                                : Guest.Pets + " Pets")}
+                      <div className=" px-3 md:hidden  flex  py-2  pb-14    flex-col w-full h-full gap-2">
+                        <span className="   text-2xl font-medium   flex flex-row  ">
+                          Guests
                         </span>
-                        <KeyboardArrowDownIcon
-                          className={`  duration-150 transition-all ${
-                            !Gopen ? "rotate-180" : " rotate-0"
-                          }    `}
-                        />
-                      </h1>
-                    </div>
 
-                    
+                        <div className=" w-full  flex-col items-center flex       h-full gap-4  scale-120 px-2 my-6 justify-center ">
+                          {Gdata?.map((item) => (
+                            <Gestes
+                              onClick={incrementGuests}
+                              dicrementGuests={dicrementGuests}
+                              Geust={item.value}
+                              title={item.title}
+                              name={item.title}
+                              desc={item.desc}
+                              maxGuests={data?.maxGuests}
+                            />
+                          ))}
+                        </div>
+                      </div>
 
-                    <div className=" w-full flex gap-5  h-20 md:h-full md:flex-col       md:relative    absolute  bottom-0  items-center justify-end bg-white  flex-row-reverse  ">
-                      <div
-                        className={`w-full flex items-center justify-center`}
-                      >
+                      <div className=" w-full  flex items-center justify-center">
+                        <div className="  w-[95%] h-[1px]  md:hidden flex  bg-gray-200 mb-3 "></div>
+                      </div>
+
+                      <div className=" w-full     hidden  md:flex items-center justify-center">
+                        <h1
+                          onClick={() => setGopen(!Gopen)}
+                          className=" border-[1px] border-t-0 justify-between      rounded-b-xl cursor-pointer mb-5  w-[95%] px-4 flex flex-row items-center  h-16  gap-2  text-sm      md:text-[15px]    font-normal      "
+                        >
+                          {" "}
+                          <span className="     flex flex-row gap-3">
+                            {Guest.Adults + Guest.Children} Geusts{" "}
+                            {Guest.Infants < 1
+                              ? ""
+                              : " ," +
+                                (Guest.Infants == 1
+                                  ? Guest.Infants + " infant"
+                                  : Guest.Infants + " infants")}{" "}
+                            {Guest.Pets < 1
+                              ? ""
+                              : " ," +
+                                (Guest.Pets == 1
+                                  ? Guest.Pets + " Pet"
+                                  : Guest.Pets + " Pets")}
+                          </span>
+                          <KeyboardArrowDownIcon
+                            className={`  duration-150 transition-all ${
+                              !Gopen ? "rotate-180" : " rotate-0"
+                            }    `}
+                          />
+                        </h1>
+                      </div>
+
+                      <div className=" w-full flex gap-0  h-20 md:h-full       text-gray-800      p-2  px-4   md:relative    absolute    bottom-0 border-solid  md:border-t-0  border-t-[1px]  items-center justify-start bg-white  flex-row-reverse  ">
                         <button
                           disabled={laod}
                           onClick={handleNext}
                           className={` ${
                             msg == "booked" ? "bg-gray-800" : "bg-main"
-                          }   md:text-lg hover:opacity-90 h-14  w-full   mx-3    mb-10  relative  rounded-lg    text-white  `}
+                          }   text-sm md:text-lg hover:opacity-90  p-2 md:h-[90%] h-[80%] md:w-[90%] w-[55%]  relative  rounded-lg    text-white  `}
                         >
                           {msg == "booked" ? "Already Booked" : "Reserve "}
                           <span
@@ -487,51 +471,62 @@ function PlaceDetailes() {
                             </span>
                           </span>
                         </button>
-                      </div>
 
-                      <div className=" w-full flex   pb-2 flex-col   items-center    text-xl       px-4">
-                        <div className=" flex w-full justify-between items-center">
-                          <span className="text-base ">
-                            ${data?.price} x {daysStayed <= 0 ? 0 : daysStayed}{" "}
-                            nights
+                        <div className=" w-full flex      flex-col      items-start       text-sm   md:text-xl        ">
+                          <span className="text-lg">
+                            {daysStayed <= 0
+                              ? 0
+                              : "$" + data?.price * daysStayed}
                           </span>
-                          {daysStayed <= 0 ? 0 : "$" + data?.price * daysStayed}
+                          <div className=" text-sm md:text-base flex flex-row   h-full  w-full justify-between items-center">
+                            <span className=" text-sm   text-gray-700 ">
+                              ${data?.price} x{" "}
+                              {daysStayed <= 0 ? 0 : daysStayed} nights
+                            </span>
+                          </div>
                         </div>
 
-                        <span>{}</span>
+                        <div></div>
                       </div>
-
-                      <div></div>
+                      {Gopen && (
+                        <div
+                          className={`  gap-4      w-full  top-12  shadow-xl   ${
+                            Gopen ? "h-[240px] opacity-100" : "h-0 opacity-0"
+                          } duration-150 rounded-3xl bg-white border-solid border-[1px] h-full pb-16 z-20 pt-2 my-3   absolute gap-5 flex flex-col max-w-full px-4 `}
+                        >
+                          {Gdata?.map((item) => (
+                            <Gestes
+                              onClick={incrementGuests} // Fix the function name here
+                              dicrementGuests={dicrementGuests}
+                              Geust={item.value} // Change this to item.value
+                              title={item.title}
+                              name={item.title}
+                              desc={item.desc}
+                              maxGuests={data?.maxGuests}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    {Gopen && (
-                      <div
-                        className={`  gap-4      w-full  top-12  shadow-xl   ${
-                          Gopen ? "h-[100px] opacity-100" : "h-0 opacity-0"
-                        } duration-150 rounded-3xl bg-white border-solid border-[1px] h-full pb-16 z-20 pt-2 my-3   absolute gap-5 flex flex-col max-w-full px-4 `}
-                      >
-                        {Gdata?.map((item) => (
-                          <Gestes
-                            onClick={incrementGuests} // Fix the function name here
-                            dicrementGuests={dicrementGuests}
-                            Geust={item.value} // Change this to item.value
-                            title={item.title}
-                            name={item.title}
-                            desc={item.desc}
-                            maxGuests={data?.maxGuests}
-                          />
-                        ))}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
-              </div>
-              <GrayLine />
-
+             
+             <GrayLine />  
+             
 
               <div className=" pb-2 flex flex-row items-center w-full justify-between ">
-                <h1 className=" text-lg  md:text-xl  font-normal">This Place hosted by {  User?._id == data?.owner?._id  ? 'you' :  data?.owner?.firstname}    </h1>
-              <img className=" w-[60px] rounded-[50%]  bg-slate-100  p-1 cursor-pointer " src={userimage} alt="" />
+                <h1 className=" text-lg  md:text-xl  font-normal">
+                  This Place hosted by{" "}
+                  {User?._id == data?.owner?._id
+                    ? "you"
+                    : data?.owner?.firstname}{" "}
+                </h1>
+                <img
+                  className=" w-[60px] rounded-[50%]  bg-slate-100  p-1 cursor-pointer "
+                  src={userimage}
+                  alt=""
+                />
               </div>
               <div className=" py-3 flex flex-row gap-2  md:gap-4">
                 <span className=" border-[1px] border-solid rounded-xl w-full   gap-3  h-20 p-2 flex flex-row items-center justify-center ">
@@ -557,7 +552,9 @@ function PlaceDetailes() {
               </div>
               <GrayLine />
               <div className=" flex flex-col gap-1">
-                <h1 className=" text-2xl  font-normal ">About this place</h1>
+                <h1 className="  text-xl md:text-2xl  font-normal ">
+                  About this place
+                </h1>
                 <PlaceDescription
                   extra={extra}
                   setExtra={setExtra}
@@ -598,7 +595,7 @@ function PlaceDetailes() {
               <ExtraInfo setExtra={setExtra} extra={extra} data={data} />
 
               <div className=" pt-3 flex flex-col gap-5">
-                <h1 className=" text-2xl  font-normal ">
+                <h1 className=" text-xl md:text-2xl  font-normal ">
                   What this place offers
                 </h1>
                 <div className="     flex-row gap-8 grid grid-cols-2   text-xs items-start justify-start w-full">
@@ -609,7 +606,9 @@ function PlaceDetailes() {
               </div>
               <GrayLine />
               <div className=" w-full flex flex-col py-3 ">
-                <h1 className="text-2xl  font-normal">Where you'll sleep</h1>
+                <h1 className="text-xl md:text-2xl  font-normal">
+                  Where you'll sleep
+                </h1>
                 <span className=" mt-3 gap-1 flex flex-col p-4   h-36 w-[50%] border-[1px] border-solid rounded-lg  ">
                   <BedOutlinedIcon fontSize="large" />
                   <h1 className=" text-lg font-medium pt-2">Bedroom</h1>

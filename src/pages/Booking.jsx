@@ -11,7 +11,7 @@ import BookingDetails from "../component/BookingDetails";
 import FormPay from "../component/FormPay";
 import paywith from "../img/paywith.webp";
 import Topbar from "../component/Topbar";
-
+import { addDays } from 'date-fns'
 function Booking() {
   const [isOpen, setIsOpen] = useState(true);
   const [month, setMonth] = useState(false);
@@ -20,7 +20,13 @@ function Booking() {
   const [selectedRange, setSelectedRange] = useState([]);
   const [editGeust, setEditGeust] = useState([]);
   const { User } = useContext(Usercontext);
-
+  const [range, setRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),  
+      key: 'selection'
+    }
+  ])
   const navigate = useNavigate();
 
   const maxgeustes = localStorage.getItem("maxgeustes");
@@ -58,12 +64,11 @@ function Booking() {
   };
 
   function Savedate() {
-    const checkInDateUTC = new Date(selectedRange[0]);
-    const checkOutDateUTC = new Date(selectedRange[1]);
+ 
 
     // Save ISO 8601 formatted dates to localStorage
-    localStorage.setItem("checkInDate", checkInDateUTC);
-    localStorage.setItem("checkOutDate", checkOutDateUTC);
+    localStorage.setItem("checkInDate", range[0].startDate);
+    localStorage.setItem("checkOutDate", range[0].endDate);
 
     setDopen(!Dopen);
   }
@@ -136,9 +141,14 @@ function Booking() {
       const checkInDate = new Date(checkInDateStr);
       const checkOutDate = new Date(checkOutDateStr);
 
-      setSelectedRange([checkInDate, checkOutDate]);
+      setRange([
+        {
+          startDate: checkInDate,
+          endDate: checkOutDate,
+          key: 'selection'
+        }
+      ]);
     }
-
     if (storedGuest) {
       setEditGeust(JSON.parse(storedGuest));
       // setGuest(JSON.parse(storedGuest));
@@ -299,10 +309,12 @@ function Booking() {
         </div>
       </div>
 
-      <BookingDetails selectedRange={selectedRange} />
+      <BookingDetails range={range} />
 
       <EditDate
         setDopen={setDopen}
+        setRange={setRange}
+        range={range}
         Dopen={Dopen}
         handelCancel={handelCancel}
         Savedate={Savedate}
