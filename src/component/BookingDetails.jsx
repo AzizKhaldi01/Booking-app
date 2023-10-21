@@ -3,22 +3,22 @@ import { differenceInDays } from "date-fns";
  
 import { BookingContext } from '../context/Bookingconext';
 import StarIcon from "@mui/icons-material/Star";
-function BookingDetails({selectedRange }) {
+function BookingDetails({range }) {
 
   const { setDays , days }= useContext(BookingContext)
       const price = localStorage.getItem("price");
     let title = localStorage.getItem("title");
     let address = localStorage.getItem("address");
-    const daysStayed = differenceInDays(selectedRange[1], selectedRange[0]);
-
+  
+    const daysStayed = differenceInDays(range[0]?.endDate  ,  range[0]?.startDate);
 useEffect(()=>{
 
   localStorage.setItem('daysStayed',  daysStayed.toString() );
   const days = localStorage.getItem('daysStayed')
   setDays(days)
-  
+      
 
-}  , [selectedRange] )
+}  , [range] )
 
     const fees = (price * daysStayed) / 12
     let imgUrl = localStorage.getItem("imageUrl");

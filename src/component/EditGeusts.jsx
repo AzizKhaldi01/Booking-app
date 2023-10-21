@@ -16,10 +16,10 @@ function EditGeusts({open , setOpen , handelsetdata , handelCancel ,Gdata , maxg
     ></div>
 
     <div
-      style={{
-        transform: "translate(-50%, -50%)",
-      }}
-      className={`  duration-300    left-[50%] flex fixed   h-[60%] w-[90%]  md:w-[30%]  pt-3   flex-col item-center   bg-white rounded-xl `}
+       
+      className={`  duration-300  ${
+        open ? "  md:top-[-100%] bottom-[-100%] " : "  bottom-0 md:top-[50%] "
+      }   duration-300    transform  md:translate-x-[-50%]  md:translate-y-[-50%]   left-0   md:left-[50%]    flex fixed    h-[360px] w-full  md:w-[30%]  pt-3   flex-col item-center   bg-white rounded-xl `}
     >
       <div className=" h-16 w-full absolute top-0   flex flex-col justify-between items-start px-3 pt-5   right-0">
         <span
@@ -32,7 +32,7 @@ function EditGeusts({open , setOpen , handelsetdata , handelCancel ,Gdata , maxg
           Gests
         </h1>
       </div>
-      <div className="  items-center h-16 w-full flex flex-row justify-between px-5 absolute bottom-0  z-    right-0">
+      <div className="   border-solid border-t-[1px] items-center h-16 w-full flex flex-row justify-between px-5 absolute bottom-0  z-    right-0">
        
       <button onClick={ handelCancel} className=" border-[1px] border-solid  px-8 rounded-lg p-2">
           Cancel
