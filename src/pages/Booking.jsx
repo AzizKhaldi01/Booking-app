@@ -19,7 +19,7 @@ function Booking() {
   const [Dopen, setDopen] = useState(true);
   const [selectedRange, setSelectedRange] = useState([]);
   const [editGeust, setEditGeust] = useState([]);
-  const { User } = useContext(Usercontext);
+  const { User ,LoginOpen, setLoginOpen } = useContext(Usercontext);
   const [range, setRange] = useState([
     {
       startDate: new Date(),
@@ -42,6 +42,13 @@ function Booking() {
   const Checkout = new Date(storedCheckOutDate);
   const today = Checkout.getDate();
   const tomonth = Checkout.getMonth();
+
+
+
+function handelLogin (){
+  return  setLoginOpen(!LoginOpen)
+}
+
 
   function dicrementGuests(e, title) {
     e.preventDefault();
@@ -296,11 +303,11 @@ function Booking() {
                 <p className=" text-gray-500 pt-2 pb-3  text-xs md:text-sm">
                   You can Reserve This Place once you’ve logged in.
                 </p>
-                <Link className=" pt-5" to={"/login"}>
-                  <button className=" px-6 p-3 bg-main rounded-lg text-white  font-medium">
+                
+                  <button onClick={handelLogin} className=" px-6 p-3 bg-main rounded-lg text-white  font-medium">
                     Login
                   </button>
-                </Link>
+               
               </div>
             </div>
           ) : (

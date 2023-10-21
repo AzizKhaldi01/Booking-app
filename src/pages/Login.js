@@ -1,69 +1,149 @@
-import React from 'react'
-import GoogleIcon from '@mui/icons-material/Google';
-import { useEffect , useState } from 'react';
-import { Link , Navigate } from 'react-router-dom';
-import { Usercontext } from '../context/pagecontext';
-import { useContext } from 'react';
-import axios from 'axios';
-function Login() {
-const { setUser} = useContext(Usercontext)
+import React from "react";
+import GoogleIcon from "@mui/icons-material/Google";
+import { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 
- const [password , setPassword]=useState('')
-    const [email , setEmail]=useState('')
-     
-    const [redirect, setRedirect] = useState('');
+import { Link, Navigate } from "react-router-dom";
+import { Usercontext } from "../context/pagecontext";
+import { useContext } from "react";
+import google from "../img/google.png";
+import axios from "axios";
+import HousingMassge from "../component/HousingMassge";
+function Login({ setIsLogin, IsLogin, setLoginOpen,LoginOpen,    isLoading,setisLoading }) {
+  const { setUser } = useContext(Usercontext);
 
-    const loginUser = async (e) => {
-      e.preventDefault();
-      try {
-        const {data} = await axios.post('/login', {email,password,} );
-        setUser(data)
-        alert('Login Success! You can log in now.');
-        setRedirect(true)
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState({ text: "", color: "" });
+ 
+
+  const loginUser = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post("/login", { email, password });
+      setUser(data);
+      setMsg(  {text: 'Login Success! You can log in now'   , color:'text-main border-main bg-green-100'} );
+
       
-      
-      } catch (e) {
-        alert('Login Failed');
-      }
-    };
-    
+    } catch (e) {
+      setMsg(  {text: 'Login Failed'   , color:'text-red-500 border-red-500 bg-red-200'} );
+        
+    }
+  };
 
+ 
 
-if (redirect){
-  return  <Navigate to={'/'} />
-}
-
-
-
-   
   return (
-    <div className=' h-full w-full flex justify-center items-center '>
+    <>
+    <form
+      onSubmit={loginUser}
+      className=" flex flex-col w-full h-full items-center justify-center gap-2  "
+    >
+      <div className=" absolute top-0 w-full   border-solid border-b-[1px] flex items-center h-16 rounded-t-xl justify-center right-0 bg-white  text-4xl  ">
+        <span
+          onClick={() => setLoginOpen(!LoginOpen)}
+          className=" absolute top-2 left-4 cursor-pointer"
+        >
+          {" "}
+          <CloseIcon />{" "}
+        </span>
+        <h className=" text-xl">Login</h>
+      </div>
+
+      <div className="   gap-5 flex flex-col    w-full px-3 md:w-[90%]  ">
+        <input
+          value={email}
+          id="email"
+          onChange={(ev) => setEmail(ev.target.value)}
+          className={`    h-12  w-full   px-3  rounded-xl  border-solid border-[1px]   `}
+          placeholder="Email"
+          type="Email"
+        />
+        <input
+          value={password}
+          id="email"
+          onChange={(ev) => setPassword(ev.target.value)}
+          className={`   h-12  w-full   px-3  rounded-xl  border-solid border-[1px]   `}
+          placeholder="Password"
+          type="password"
+        /> 
+         <button
+                  type="submit"
+                  onClick={() => setisLoading(true)}
+                  className=" relative h-12    w-full rounded-lg bg-main   text-white     bg-lightColor "
+                >
+                  {" "}
+                  Login{" "}
+                  <span
+                    className={` ${
+                      !isLoading ? " opacity-100 " : " opacity-0"
+                    } bg-greedian   absolute top-0 right-0 bg-main rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
+                  >
+                    <span className=" h-full w-full scale-[0.2]  md:scale-[0.18] flex items-center justify-center">
+                      <svg
+                        version="1.1"
+                        id="L9"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 100 100"
+                        enable-background="new 0 0 0 0"
+                        xml
+                        space="preserve"
+                      >
+                        <path
+                          fill="#fff"
+                          d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+                        >
+                          <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            type="rotate"
+                            dur="1s"
+                            from="0 50 50"
+                            to="360 50  50"
+                            repeatCount="indefinite"
+                          />
+                        </path>
+                      </svg>
+                    </span>
+                  </span>
+                </button>
+      </div>
+     
         
-        <div className=' items-center flex flex-col  h-[90vh] mb-44  w-full  md:w-[60%]   p-1 md:p-6  m-5 md:m-10 '>
-       
-        <form  onSubmit={loginUser} className=' flex flex-col w-full h-full items-center justify-center gap-2  '>
-        <div className=' text-4xl pb-10'>Login   </div>
       
-         <input     onChange={ ev => setEmail(ev.target.value)}  value={email}  className='  bg-[#fdfbf6] h-12  w-full  md:w-[50%] px-3 rounded-sm border-none  hover:border-b border-[1px] border-green-400 ' placeholder='Email' type='Email'/>
-
-         <input   onChange={ ev => setPassword(ev.target.value)}  value={password}  className='  bg-[#fdfbf6] h-12  w-full  mt-3  md:w-[50%] px-3 rounded-sm border-none  hover:border-b border-[1px] border-green-400 ' placeholder='Password' type='Password'/> 
 
        
-      <div className=' flex gap-2 w-full   md:w-[50%]  flex-col'>
+      
+      <span className="  md:w-[85%] px-3 md:px-0   w-full flex flex-row  justify-center items-center gap-1  opacity-50">
+        <span className=" w-full bg-gray-700 h-[1px] "> </span>
+        or
+        <span className=" w-full bg-gray-700 h-[1px] "> </span>
+      </span>
 
-        
-          <button  className=' h-10  w-full rounded-lg   font-semibold bg-lightColor '> Login </button> 
-          <button  className=' h-10  w-full  rounded-lg  flex flex-row items-center text-white   justify-center gap-3  font-semibold  bg-darckColor '> <GoogleIcon/> Login With Google </button> 
-          </div>
-          
-          <div className=' text-sm items-center justify-center mt-2  gap-2 flex-row flex  w-full   md:w-[50%]'>
-       <div className=' text-gray-400 '>Don't have an acount yet?    </div> 
-        <Link to='/Registre' ><div className=' font-semibold underline cursor-pointer' >Register now   </div>  </Link>
-        </div> 
-        </form>
-        </div>
-    </div>
-  )
+      <div className=" md:w-[90%]  px-3 w-full flex flex-col gap-4">
+        <button
+          onClick={(e) => {
+            setIsLogin(!IsLogin);
+            e.preventDefault();
+          }}
+          className=" w-full h-12 text-main  border-solid border-main border-[1px]  rounded-lg"
+        >
+          Register
+        </button>
+        <button className=" w-full h-12 border-solid border-[1px] text-gray-800   rounded-lg flex flex-row gap-2 justify-center items-center">
+          <img className=" w-[20px] " src={google} />
+          Login With Google
+        </button>
+      </div>
+     
+    </form>
+ <HousingMassge msg={msg}   setMsg={setMsg} />
+</>
+
+  );
 }
 
-export default Login
+export default Login;

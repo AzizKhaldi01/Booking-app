@@ -112,21 +112,7 @@ function Account() {
         </span>
 
         <div className="  flex flex-row  md:flex-col w-full h-full justify-center items-center">
-          {/* <nav className="    w-[95%]  hidden    z-20    top-4   md:top-24   justify-center    items-center   md:flex  h-14             text-base md:text-lg    ">
-              <div className=" px-2 text-sm  md:px-5 flex flex-row items-center justify-between   w-[96%]     py-2  bg-white shadow-lg  rounded-full   ">
-                <Link className={btntheme("Wishlist")} to={"/account/Wishlist"}>
-                  {" "}
-                  <FavoriteIcon /> Wishlist
-                </Link>
-                <Link className={btntheme("Trips")} to={"/account/Trips"}>
-                  {" "}
-                  <LuggageIcon /> Trips
-                </Link>
-                <Link className={btntheme("housing")} to={"/account/housing"}>
-                  <HomeIcon /> Housing
-                </Link>
-              </div>
-            </nav> */}
+       
           {subpages === undefined && <AccountDitalis />}
 
           {subpages === "Wishlist" && <Wishlist Popen={Popen} />}

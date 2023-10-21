@@ -174,8 +174,8 @@ function PlaceDetailes() {
   useEffect(() => {
     const userLikedItems = JSON.parse(localStorage.getItem("fav"));
     console.log("aa11 " + userLikedItems);
-    setFav(userLikedItems.includes(_id));
-  }, []);
+    setFav(userLikedItems?.includes(_id));
+  }, [User]);
 
   function hendelmorephotos() {
     setMorephotos(!morephotos);

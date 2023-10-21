@@ -26,7 +26,7 @@ function Home() {
   const [scrolling, setScrolling] = useState(false);
   const [type, setType] = useState("");
   const navigate = useNavigate();
-  const {ResetFilter } = useContext(Usercontext)
+  const { User ,LoginOpen } = useContext(Usercontext)
 
   function exitFilter() {
     setFilter(false);
@@ -38,7 +38,7 @@ function Home() {
       const placId = data.map((item) => item?.Place);
       localStorage.setItem("favPlaces", JSON.stringify(placId));
     });
-  }, [fav]);
+  }, [fav , User ,LoginOpen ]);
 
   function FilterType(text) {
     setType(text);
