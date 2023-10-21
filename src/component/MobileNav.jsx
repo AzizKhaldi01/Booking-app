@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { Usercontext } from "../context/pagecontext";
 
 function MobileNav() {
-const {User} = useContext(Usercontext);
+const {User ,setLoginOpen , LoginOpen } = useContext(Usercontext);
 
   const location = useLocation();
   const isActive = (path) => {
@@ -100,8 +100,8 @@ const {User} = useContext(Usercontext);
         Favorite
       </Link>
        
-      <Link
-        to={"/login"}
+      <div
+       onClick={ ()=> setLoginOpen(!LoginOpen)}
         className={`flex flex-col items-center justify-center text-xs ${
           isActive("/login") ? "text-black" : "text-gray-400"
         }`}
@@ -111,7 +111,7 @@ const {User} = useContext(Usercontext);
            
         />{" "}
         Log in
-      </Link></>
+      </div></>
       }
     </div>
   );

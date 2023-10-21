@@ -12,7 +12,7 @@ import { Usercontext } from "../context/pagecontext";
 import { Link } from "react-router-dom";
 import Massege from "./Massege";
 export default function Places({ _id, photos, address, price, title , Beds,Bedrooms,Bathrooms }) {
-  const { User } = useContext(Usercontext);
+  const { User , LoginOpen, setLoginOpen } = useContext(Usercontext);
   const [Favadded, setFavadded] = useState("");
   const [fav, setFav] = useState(true);
 
@@ -29,8 +29,7 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
   function AddFavorite(e, _id) {
     e.preventDefault();
     if (!User) {
-      e.preventDefault();
-      navigate("/login");
+    return  setLoginOpen(!LoginOpen)
     }
 
     axios.post("/add-favorite", { placeID: _id }).then((response) => {
@@ -50,7 +49,8 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
     const userLikedItems = JSON.parse(localStorage.getItem("favPlaces"));
     console.log("aa11 " + userLikedItems);
     setFav(userLikedItems.includes(_id));
-  }, []);
+     
+  }, [User ,LoginOpen ]);
 
   return (
     <Link

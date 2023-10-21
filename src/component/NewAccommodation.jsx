@@ -49,7 +49,7 @@ function NewAccommodation({ setAdd, add }) {
   const [isLoading, setIsLoading] = useState(false);
   const [PlaceSaving, setPlaceSaving] = useState(false);
   const [UpLoading, setUpLoading] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState({ text: "", color: "" });
   const [category, setCategory] = useState();
 
  
@@ -131,7 +131,7 @@ function NewAccommodation({ setAdd, add }) {
           if (error.response.status === 400) {
             console.error("Client Error:", error.response.data);
             setPhotolink("");
-            setMsg(error.response.data);
+            setMsg(  {text: error.response.data  , color:'text-red-500 border-red-500 bg-red-200'} );
           } else if (error.response.status >= 500) {
             console.error("Server Error:", error.response.data);
           }
@@ -152,7 +152,9 @@ function NewAccommodation({ setAdd, add }) {
       const fileSize = file.size;  
 
       if (fileSize > maxSizeInBytes) {
-        setMsg('Maximum file size is 3MB"');
+        setMsg(  {text:'Maximum file size is 3MB'    , color:'text-red-500 border-red-500 bg-red-200'} );
+       
+        
         setUpLoading(false);
         return;
       }
@@ -193,12 +195,7 @@ function NewAccommodation({ setAdd, add }) {
     setAddedPhotos([...addedPhotos.filter((photo) => photo !== filename)]);
   }
 
-  useEffect(() => {
-    console.log("Guests:", Placeinfo.Guests);
-    console.log("Bedrooms:", Placeinfo.Bedrooms);
-    console.log("Beds:", Placeinfo.Beds);
-    console.log("Bathrooms:", Placeinfo.Bathrooms);
-  }, [Placeinfo]);
+ 
 
   async function onSubmit(ev) {
     setPlaceSaving(true);
@@ -220,7 +217,9 @@ function NewAccommodation({ setAdd, add }) {
         .then((response) => {
           const { data } = response;
           setPlaceSaving(false);
-          setMsg(data.message);
+          setMsg(  {text: data.message  , color:'text-main border-main bg-green-100'} );
+
+          
           navto("/account/housing/");
           setAdd(!add);
           setReload(!reload);
@@ -246,7 +245,9 @@ function NewAccommodation({ setAdd, add }) {
         .post("/places", placeData)
         .then((response) => {
           const { data } = response;
-          setMsg(data.message);
+          setMsg(  {text: data.message  , color:'text-main border-main bg-green-100'} );
+         
+           
           setAdd(!add);
           setReload(!reload);
           navto("/account/housing/");
@@ -269,7 +270,9 @@ function NewAccommodation({ setAdd, add }) {
           if (error.response) {
             if (error.response.status === 400) {
               console.error("Client Error:", error.response.data);
-              setMsg(error.response.data);
+               
+          setMsg(  {text: error.response.data  , color:'text-red-500 border-red-500 bg-red-200'} );
+
             } else if (error.response.status >= 500) {
               console.error("Server Error:", error.response.data);
             }

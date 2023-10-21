@@ -24,9 +24,8 @@ function Navbar() {
           <SearchIcon />
         </div>
         <div className="  flex flex-row  justify-center items-center  gap-2 ">
-          <Link to={User ? "/account" : "/login"}>
-            <PersonIcon />{" "}
-          </Link>
+           <PersonIcon />{" "}
+         
           <LanguageIcon className=" cursor-pointer" />
           {!!User && (
             <div className=" "> {User.firstname || <Skeleton count={5} />} </div>

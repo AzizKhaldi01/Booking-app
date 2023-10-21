@@ -9,7 +9,7 @@ function Wishlist({ Popen }) {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
 
-  const { User, ready } = useContext(Usercontext);
+  const { User, ready , LoginOpen, setLoginOpen  } = useContext(Usercontext);
 
   useEffect(() => {
     axios.get("/get-favorite").then((response) => {
@@ -17,7 +17,7 @@ function Wishlist({ Popen }) {
       setData(data);
       setLoading(false);
     });
-  }, []);
+  }, [User]);
 
 
 
@@ -79,11 +79,11 @@ function Wishlist({ Popen }) {
           <p className=" text-gray-500 pt-2 text-sm">
             You can create, view, or edit wishlists once you’ve logged in.
           </p>
-          <Link className=" pt-3" to={"/login"}>
-            <button className=" px-6 p-3 bg-main rounded-lg text-white  font-medium">
+          
+            <button onClick={ ()=>  setLoginOpen(!LoginOpen)} className=" px-6 p-3 bg-main rounded-lg text-white  font-medium">
               Login
             </button>
-          </Link>
+        
         </div>
       )}
     </>

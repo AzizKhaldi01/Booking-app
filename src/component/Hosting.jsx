@@ -1,6 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useContext  } from 'react';
+import { useState , useEffect , react } from 'react';
+import axios from 'axios';
 import { Usercontext } from '../context/pagecontext';
 import WindowIcon from "@mui/icons-material/Window";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
@@ -19,13 +21,26 @@ function Hosting({Popen} ) {
         setAdd,
         setPlacedata,
         setLink,
-        isLoading,
+        
     
         list,
         setList,
-        places,
+  
       } = useContext(Usercontext);
     const navigate = useNavigate();
+
+    const [isLoading , setIsLoading] = useState(false)
+
+    const [places, setPlaces] = useState([]);
+
+    useEffect(() => {
+      axios.get("/user-places").then(({ data }) => {
+       const reversedData = data?.reverse();
+        setPlaces(data);
+        setIsLoading(true)
+      });
+    }, [  ]);
+    
 
     if (ready && !User) {
         return navigate("/login");
