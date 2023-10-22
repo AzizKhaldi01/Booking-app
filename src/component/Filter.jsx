@@ -3,13 +3,19 @@ import Slider from "@mui/material/Slider";
 import CloseIcon from "@mui/icons-material/Close";
 import Amenities from "../component/Amenities";
 import Propertytype from "../component/Propertytype";
+import SwiperCore, { Navigation, Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 import { useState, useContext } from "react";
 import queryString from "query-string";
+import GrayLine from "./GrayLine";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import BungalowOutlinedIcon from "@mui/icons-material/BungalowOutlined";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useNavigate } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
@@ -18,7 +24,7 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
   const [priceRange, setPriceRange] = useState([40, 1000]);
-  const { setFilterCheck, FilterCheck   } = useContext(Usercontext);
+  const { setFilterCheck, FilterCheck } = useContext(Usercontext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,7 +75,7 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
 
   function addtoFilter(e) {
     const { name, checked } = e.target;
-  
+
     if (checked) {
       setPerks([...perks, name]);
     } else {
@@ -100,8 +106,8 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
 
   function handelfilter(e) {
     e?.preventDefault();
-    setPlaces([])
-    setIslowding(false)
+    setPlaces([]);
+    setIslowding(false);
     perks?.filter((perk) => perk !== "");
     perks?.filter((perk) => perk !== "null");
 
@@ -131,7 +137,7 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
       })
       .then((response) => {
         setPlaces(response.data.data);
-        setIslowding(true)
+        setIslowding(true);
       });
     exitFilter();
   }
@@ -145,6 +151,22 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
 
   const handlePriceChange = (e, newValue) => {
     setPriceRange(newValue);
+  };
+
+  const breakpoints = {
+    // when window width is >= 320px
+    320: {
+      slidesPerView: 5,
+    },
+    // when window width is >= 480px
+    480: {
+      slidesPerView: 6,
+    },
+    // when window width is >= 768px
+    768: {
+      slidesPerView: 9,
+    },
+    // when window width is >= 1024px
   };
 
   useEffect(() => {
@@ -212,113 +234,150 @@ function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
     "Pool",
   ];
 
+  const Number = ["Any", 1, 2, 3, 4, 5, 6, 7, +8];
+  const RoomsAndBeds = ["Bedrooms", "Bathrooms", "Beds"];
+
   return (
     <div
-      className={` duration-300 ${
-        filtr ? "  z-50 " : "  -z-10 "
-      }  text-gray-800 duration-300    flex   fixed h-full w-full relateve `}
+      className={` duration-300 text-gray-800  ${
+        filtr ? "top-[50%]" : " top-[-100%] "
+      }  flex  z-[120] fixed h-full w-full relateve `}
     >
       <div
         onClick={exitFilter}
-        className={` flex  fixed h-full w-full  duration-300   ${
-          filtr ? " opacity-50   " : "opacity-0  "
-        }  right-0 bg-black`}
+        className={`  flex  fixed h-full w-full absulet ${
+          !filtr ? " opacity-50 top-0  " : "opacity-0  top-[-100%]   "
+        }  right-0 bg-black `}
       ></div>
 
       <div
-        className={`  ${
+        className={` ${
           filtr
-            ? " opacity-100  z-50  top-[100%] "
-            : " top-[-100%]   -z-10 opacity-0 "
-        }     duration-300   flex-grow   text-[12px] h-[90vh] w-[100%] lg:w-[60%] bg-white rounded-lg fixed   top-[55%]  md:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}
+            ? "  md:top-[-100%] bottom-[-100%] "
+            : "  bottom-0 md:top-[50%] "
+        }   duration-300     transform pt-2  pb-3   md:translate-x-[-50%] md:translate-y-[-50%]  h-[95%]  md:h-[90%]  left-0   md:left-[50%] flex fixed lg:w-[66%]  xl:w-[60%]   w-full  md:w-[90%]     flex-col item-center  justify-center md:rounded-b-xl   rounded-b-none   bg-white rounded-xl `}
       >
-        <div className=" flex text-lg flex-row border-b-[1px]  border-solid items-center justify-center  z-10 bg-white h-16 w-full absolute top-0 rounded-t-xl ">
+        <div className=" absolute top-0 w-full   z-20 border-solid border-b-[1px] flex items-center h-16 rounded-t-xl justify-center right-0 bg-white  text-4xl  ">
           <span
             onClick={exitFilter}
-            className="  cursor-pointer top-1 left-1 absolute"
+            className=" absolute top-2 left-4 cursor-pointer"
           >
-            <CloseIcon />
+            {" "}
+            <CloseIcon />{" "}
           </span>
-          Filters
+          <h className=" text-xl">Filter</h>
         </div>
-        <div className="bg-whte h-20 w-full absolute border-t-[1px]  border-solid  bg-white z-10 bottom-0  px-8 flex flex-row justify-between ">
+
+        <div className="  border-solid border-t-[1px]  md:rounded-b-xl   items-center h-20 w-full flex flex-row justify-between px-3  md:px-7 absolute bottom-0  z-10  bg-white   right-0">
           <button
             onClick={ClearFilter}
-            className=" my-3 px-6 py-2 rounded-xl bg-slate-200 "
+            className=" border-[1px] border-solid  px-8 rounded-lg p-3"
           >
             Clear
           </button>
           <button
+            className="  relative text-white bg-[#578280]  px-8 rounded-lg p-3"
             onClick={handelfilter}
-            className=" my-3 px-6 py-2 rounded-xl  border-solid border-[1px] "
           >
             Show
           </button>
         </div>
 
-        <div className="overflow-auto   flex-grow h-full w-full">
-          <div className=" items-center gap-14 overflow-auto  flex-grow     p-2 py-28 flex flex-col  w-full ">
-            <div className="  w-full  gap-8 flex flex-col   ">
-              <h className=" px-7 text-left text-2xl  font-medium  ">
-                Price range
-              </h>
+        <div className="overflow-auto px-3  md:px-7 flex-grow h-full w-full flex-col flex gap-3 pt-20  ">
+          <div className="  w-full  gap-8 flex flex-col   ">
+            <h className="  text-2xl  ">Price range</h>
 
-              <div className=" w-full items-center    flex flex-col ">
-                <div className=" w-[60%] ">
-                  <Slider
-                    style={{ color: "black" }} // Change this color to your desired color
-                    value={priceRange}
-                    onChange={handlePriceChange}
-                    valueLabelDisplay="auto"
-                    min={0}
-                    max={2000}
-                    aria-labelledby="price-range-slider"
-                  />
-                </div>
+            <div className=" w-full items-center    gap-4 flex flex-col ">
+              <div className=" w-[80%] ">
+                <Slider
+                  style={{ color: "black" }} // Change this color to your desired color
+                  value={priceRange}
+                  onChange={handlePriceChange}
+                  valueLabelDisplay="auto"
+                  min={0}
+                  max={2000}
+                  aria-labelledby="price-range-slider"
+                />
+              </div>
 
-                <div className=" flex   w-[60%]  gap-3  justify-between ">
+              <div className=" flex  items-center    w-[80%]  gap-3  justify-between ">
+                <label className=" w-full  relative ">
+                  <AttachMoneyIcon className=" scale-95 absolute top-4 left-0" />
                   <input
                     onChange={(e) => {
                       const newValue = parseInt(e.target.value);
                       setPriceRange([newValue, priceRange[1]]);
                     }}
                     value={priceRange[0]}
-                    className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]  "
+                    className=" border-[1px] px-5   text-[18px] border-gray-300  border-solid rounded-lg   h-[3.6rem] w-full  "
                     type="number"
                   />
+                </label>
+
+                <label className=" w-full  relative ">
+                  <AttachMoneyIcon className=" scale-95 absolute top-4 left-0" />
                   <input
                     onChange={(e) => {
                       const newValue = parseInt(e.target.value);
                       setPriceRange([priceRange[0], newValue]);
                     }}
                     value={priceRange[1]}
-                    className=" border-[1px]   text-[16px] border-gray-300  border-solid rounded-lg px-2 h-12 w-[50%]   "
+                    className=" border-[1px]   text-[18px] border-gray-300  border-solid rounded-lg px-5 h-[3.6rem] w-full   "
                     type="number"
                   />
-                </div>
+                </label>
               </div>
-            </div>
-
-            <div className=" gap-8  px-7 flex w-full flex-col ">
-              <h className=" text-2xl">Property type</h>
-              <div className="     gap-6 items-center   grid grid-cols-2  md:grid-cols-4">
-                {Propertytypes.map((item) => (
-                  <Propertytype
-                    onClick={() => handleItemClick(item)}
-                    isSelected={category?.includes(item.title)}
-                    key={item.index}
-                    icon={item.icon}
-                    title={item.title}
-                  />
-                ))}
-              </div>
+              <span className="   py-5 w-full">
+                <GrayLine />
+              </span>
             </div>
           </div>
 
-          <div className=" w-full    pb-20   flex flex-col gap-9">
-            <h1 className=" px-7 text-2xl font-medium">Amenities</h1>
+          <div className=" w-full flex flex-col gap-5  ">
+            <h1 className=" text-2xl">Rooms and beds</h1>
+            {RoomsAndBeds.map((i) => (
+              <div className=" flex flex-col w-full  gap-2">
+                <h1 className=" px-1">{i} </h1>
 
-            <div style={{}} className="  grid-cols-2   grid   px-7 w-full  ">
+                <Swiper breakpoints={breakpoints} slidesPerView={8}>
+                  {Number.map((item) => (
+                    <SwiperSlide key={item.indexOf}>
+                      <span className=" hover:border-gray-500 cursor-pointer  h-10   w-16 flex justify-center items-center rounded-full border-solid border-[1px] border-gray-300 ">
+                        {item == 8 ? "+ 8" : item}
+                      </span>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <div className=" w-full flex flex-row   overflow-auto  scroll-m-0   gap-5 "></div>
+              </div>
+            ))}
+          </div>
+          <span className="   py-5 w-full">
+            <GrayLine />
+          </span>
+          <div className=" gap-8    flex w-full flex-col ">
+            <h className=" text-2xl">Property type</h>
+            <div className="     gap-6 items-center   grid grid-cols-2  md:grid-cols-4">
+              {Propertytypes.map((item) => (
+                <Propertytype
+                  onClick={() => handleItemClick(item)}
+                  isSelected={category?.includes(item.title)}
+                  key={item.index}
+                  icon={item.icon}
+                  title={item.title}
+                />
+              ))}
+            </div>
+          </div>
+          <span className="  py-5 w-full">
+            <GrayLine />
+          </span>
+
+          <div className=" w-full    pb-20   flex flex-col gap-9">
+            <h1 className="   text-2xl font-medium">Amenities</h1>
+
+            <div style={{}} className="  grid-cols-2   grid     w-full  ">
               {perksfilter.map((item) => (
                 <Amenities
                   name={item}
