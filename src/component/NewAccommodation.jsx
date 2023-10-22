@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useContext, useEffect } from "react";
 import { Usercontext } from "../context/pagecontext";
 import Perks from "./perks";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { PlaceSchema } from "../Validation/AddPlaceValidation";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -52,7 +54,6 @@ function NewAccommodation({ setAdd, add }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   const [category, setCategory] = useState();
 
- 
   useEffect(() => {
     if (placesdata) {
       setValues({
@@ -131,7 +132,10 @@ function NewAccommodation({ setAdd, add }) {
           if (error.response.status === 400) {
             console.error("Client Error:", error.response.data);
             setPhotolink("");
-            setMsg(  {text: error.response.data  , color:'text-red-500 border-red-500 bg-red-200'} );
+            setMsg({
+              text: error.response.data,
+              color: "text-red-500 border-red-500 bg-red-200",
+            });
           } else if (error.response.status >= 500) {
             console.error("Server Error:", error.response.data);
           }
@@ -146,15 +150,17 @@ function NewAccommodation({ setAdd, add }) {
     setUpLoading(true);
     ev.preventDefault();
     const filesArray = ev.target.files;
-    const maxSizeInBytes = 3 * 1024 * 1024; 
+    const maxSizeInBytes = 3 * 1024 * 1024;
     for (let i = 0; i < filesArray.length; i++) {
       const file = filesArray[i];
-      const fileSize = file.size;  
+      const fileSize = file.size;
 
       if (fileSize > maxSizeInBytes) {
-        setMsg(  {text:'Maximum file size is 3MB'    , color:'text-red-500 border-red-500 bg-red-200'} );
-       
-        
+        setMsg({
+          text: "Maximum file size is 3MB",
+          color: "text-red-500 border-red-500 bg-red-200",
+        });
+
         setUpLoading(false);
         return;
       }
@@ -190,12 +196,10 @@ function NewAccommodation({ setAdd, add }) {
         }
       });
   }
-  function deletphoto(filename , e) {
+  function deletphoto(filename, e) {
     e.preventDefault();
     setAddedPhotos([...addedPhotos.filter((photo) => photo !== filename)]);
   }
-
- 
 
   async function onSubmit(ev) {
     setPlaceSaving(true);
@@ -217,9 +221,11 @@ function NewAccommodation({ setAdd, add }) {
         .then((response) => {
           const { data } = response;
           setPlaceSaving(false);
-          setMsg(  {text: data.message  , color:'text-main border-main bg-green-100'} );
+          setMsg({
+            text: data.message,
+            color: "text-main border-main bg-green-100",
+          });
 
-          
           navto("/account/housing/");
           setAdd(!add);
           setReload(!reload);
@@ -245,9 +251,11 @@ function NewAccommodation({ setAdd, add }) {
         .post("/places", placeData)
         .then((response) => {
           const { data } = response;
-          setMsg(  {text: data.message  , color:'text-main border-main bg-green-100'} );
-         
-           
+          setMsg({
+            text: data.message,
+            color: "text-main border-main bg-green-100",
+          });
+
           setAdd(!add);
           setReload(!reload);
           navto("/account/housing/");
@@ -270,9 +278,11 @@ function NewAccommodation({ setAdd, add }) {
           if (error.response) {
             if (error.response.status === 400) {
               console.error("Client Error:", error.response.data);
-               
-          setMsg(  {text: error.response.data  , color:'text-red-500 border-red-500 bg-red-200'} );
 
+              setMsg({
+                text: error.response.data,
+                color: "text-red-500 border-red-500 bg-red-200",
+              });
             } else if (error.response.status >= 500) {
               console.error("Server Error:", error.response.data);
             }
@@ -351,26 +361,37 @@ function NewAccommodation({ setAdd, add }) {
   return (
     <div
       className={` duration-300  ${
-        !add ? "top-[50%]" : "top-[-100%] "
-      }  flex  z-50 fixed h-full w-full relateve `}
+        !add ? "top-[50%]" : " top-[-100%] "
+      }  flex  z-[120] fixed h-full w-full relateve `}
     >
       <div
         onClick={() => setAdd(!add)}
-        className={` flex fixed h-full w-full   absulet ${
-          !add ? " opacity-50 top-0 " : "opacity-0  top-[-100%] "
+        className={`  flex  fixed h-full w-full absulet ${
+          !add ? " opacity-50 top-0  " : "opacity-0  top-[-100%]   "
         }  right-0 bg-black `}
       ></div>
 
-      <div></div>
       <div
-        style={{
-          transform: "translate(-50%, -50%)",
-        }}
-        className={`  duration-300  left-[50%] flex fixed    px-1 py-4   h-[90%] w-[95%]  pt-3   flex-col item-center md:w-[80%] bg-white rounded-xl `}
+        className={` ${
+          add ? "  md:top-[-100%] bottom-[-100%] " : "  bottom-0 md:top-[50%] "
+        }   duration-300     transform pt-16  pb-3   md:translate-x-[-50%] md:translate-y-[-50%]  h-[95%]  md:h-[90%]  left-0   md:left-[50%] flex fixed lg:w-[66%]  xl:w-[60%]   w-full  md:w-[90%]     flex-col item-center  justify-center md:rounded-b-xl   rounded-b-none   bg-white rounded-xl `}
       >
+        <div className=" absolute top-0 w-full   border-solid border-b-[1px] flex items-center h-16 rounded-t-xl justify-center right-0 bg-white  text-4xl  ">
+          <span
+            onClick={() => setAdd(!add)}
+            className=" absolute top-2 left-4 cursor-pointer"
+          >
+            {" "}
+            <CloseIcon />{" "}
+          </span>
+          <h className=" text-xl">Add Place</h>
+        </div>
+
+    
+
         <form
           onSubmit={handleSubmit}
-          className="      h-full overflow-auto    w-full    "
+          className="   pb-10    h-full overflow-auto    w-full    "
         >
           <div className=" flex-grow w-full flex flex-col   p-4  md:p-7 ">
             <h1 className="">Title</h1>
@@ -499,7 +520,7 @@ function NewAccommodation({ setAdd, add }) {
                       </button>
                       <button
                         className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] "
-                        onClick={(e) => moveToFirst(pic)  }
+                        onClick={(e) => moveToFirst(pic)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -610,7 +631,7 @@ function NewAccommodation({ setAdd, add }) {
             {errors.description && touched.description && (
               <p className=" pt-1 px-1 text-xs text-red-400">
                 {" "}
-                {errors.description} 
+                {errors.description}
               </p>
             )}
             <div className=" w-full  h-full  ">
@@ -755,12 +776,22 @@ function NewAccommodation({ setAdd, add }) {
                 </p>
               )}
             </div>
-            <div className=" w-full flex justify-start items-center">
-              <button
-                type="submit"
-                className=" w-full relative md:w-[30%] h-14 bg-main text-white text-lg  rounded-lg "
-              >
-                <span
+             
+          </div>
+
+          <div className="  border-solid border-t-[1px]  md:rounded-b-xl   items-center h-16 w-full flex flex-row justify-between px-7 absolute bottom-0  z-10  bg-white   right-0">
+          <button
+            onClick={(e) => {setAdd(!add) ; e.preventDefault();  }}
+            className=" border-[1px] border-solid  px-8 rounded-lg p-2"
+          >
+            Cancel
+          </button>
+          <button
+            className="  relative text-white bg-[#578280]  px-8 rounded-lg p-2"
+             type="submit"
+          >
+             {link ? "Save the Changes" : "Save"}{" "}
+             <span
                   className={` ${
                     PlaceSaving ? " opacity-100 " : " opacity-0"
                   } bg-greedian   absolute top-0 right-0 bg-main   rounded-lg duration-200 h-full w-full flex items-center justify-center   `}
@@ -795,10 +826,8 @@ function NewAccommodation({ setAdd, add }) {
                     </svg>
                   </span>
                 </span>{" "}
-                {link ? "Save the Changes" : "Save"}{" "}
-              </button>
-            </div>
-          </div>
+          </button>
+        </div>
         </form>
       </div>
       <HousingMassge msg={msg} setMsg={setMsg} />
