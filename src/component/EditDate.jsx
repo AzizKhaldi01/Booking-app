@@ -1,11 +1,12 @@
 import {React , useState } from "react";
 
- 
- 
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css fil
 import { useMediaQuery } from 'react-responsive'
 import { DateRange } from 'react-date-range'
+
+
+
 function EditDate({
   setDopen,
   Dopen,
@@ -13,10 +14,6 @@ function EditDate({
   range,
   setRange,
 }) {
-
-  
-  
-
   const isMobileView = useMediaQuery({ maxWidth: 768 });
   return (
     <div

@@ -24,7 +24,7 @@ function FormPay() {
   const elements = useElements();
 
   const id = localStorage.getItem("id");
-  const price = localStorage.getItem("price");
+  
 
   const navigate = useNavigate();
   useEffect(() => {
