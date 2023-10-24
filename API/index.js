@@ -89,8 +89,10 @@ app.get("/profile", async (req, res) => {
         if (err) {
           res.status(401).json({ error: "Invalid or expired JWT token" });
         } else {
-          const { firstname  , lastname, email, _id } = await User.findById(userdata.id);
-          res.json({firstname , lastname , email, _id });
+          const { firstname, lastname, email, _id } = await User.findById(
+            userdata.id
+          );
+          res.json({ firstname, lastname, email, _id });
         }
       });
     } else {
@@ -103,23 +105,34 @@ app.get("/profile", async (req, res) => {
 
 //
 app.post("/Registre", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { firstname, lastname, email, password } = req.body;
 
   try {
     // Check if the Password field exists
-    if (!password) {
-      return res.status(400).json({ message: "Password is required." });
+    if (!password || !email || !lastname || !firstname) {
+      return res.status(400).json({ message: "Missing Informations" });
+    }
+
+    const user = await User.findOne({ email });
+
+console.log('email ' +  user)
+
+    if (user) {
+      return res
+        .status(400)
+        .json({ message: "This Email Is Already Used , Try Another Email" });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     const userDoc = await User.create({
-      name,
+      firstname,
+      lastname,
       email,
       password: hashedPassword,
     });
 
-    res.json(userDoc);
+    res.status(200).json(userDoc);
   } catch (e) {
     res.status(422).json(e);
   }
@@ -159,14 +172,12 @@ const storage = multer.diskStorage({
     const newFileName = file.fieldname + "__" + Date.now() + desiredExtension;
     cb(null, newFileName);
   },
-}); 
-
- 
+});
 
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 3 * 1024 * 1024,  
+    fileSize: 3 * 1024 * 1024,
   },
 });
 
@@ -177,73 +188,75 @@ app.post("/uploads", upload.array("files", 3), (req, res) => {
   res.json({ filenames: renamedFiles });
 });
 
-app.post('/places', async (req, res) => {
+app.post("/places", async (req, res) => {
   try {
     const cookies = req.cookies;
     const token = cookies.jwtToken;
-     const {
-        title,
-        address,
-        addedPhotos,
-        description,
-        price,
-        category,
-        perks,
-        extraInfo,
-        checkIn,
-        checkOut,
-        Guests ,
-        Bedrooms,
-        Bathrooms,
-        Beds
-      } = req.body;
-
- 
+    const {
+      title,
+      address,
+      addedPhotos,
+      description,
+      price,
+      category,
+      perks,
+      extraInfo,
+      checkIn,
+      checkOut,
+      Guests,
+      Bedrooms,
+      Bathrooms,
+      Beds,
+    } = req.body;
 
     // Verify the JWT token with your secret key
-    jwt.verify(token, 'your-secret-key', {}, async (err, userData) => {
+    jwt.verify(token, "your-secret-key", {}, async (err, userData) => {
       if (err) {
         throw err;
       }
- 
-      if(title && address &&   addedPhotos && description && price && category && perks && extraInfo && checkIn && checkOut && Guests){
-         const placeDoc = await Place.create({
-        owner: userData.id,
-        price,
-        category,
-        title,
-        address,
-        photos:addedPhotos,
-        description,
-        perks,
-        extraInfo,
-        checkIn,
-        checkOut,
-        maxGuests:Guests,
-        Bedrooms,
-        Bathrooms,
-        Beds
-      });
 
-      // Respond with a JSON success message
-      res.json({ message: 'Place created successfully' });
-      }else {
-        res.status(400).json( 'Set All The Information' );
+      if (
+        title &&
+        address &&
+        addedPhotos &&
+        description &&
+        price &&
+        category &&
+        perks &&
+        extraInfo &&
+        checkIn &&
+        checkOut &&
+        Guests
+      ) {
+        const placeDoc = await Place.create({
+          owner: userData.id,
+          price,
+          category,
+          title,
+          address,
+          photos: addedPhotos,
+          description,
+          perks,
+          extraInfo,
+          checkIn,
+          checkOut,
+          maxGuests: Guests,
+          Bedrooms,
+          Bathrooms,
+          Beds,
+        });
+
+        // Respond with a JSON success message
+        res.json({ message: "Place created successfully" });
+      } else {
+        res.status(400).json("Set All The Information");
       }
- 
-   
     });
-
-     
-
-
   } catch (error) {
-   
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 app.get("/user-places", async (req, res) => {
   const cookies = req.cookies;
@@ -266,7 +279,6 @@ app.get("/places/:id", async (req, res) => {
   res.json(await Place.findById(id));
 });
 
-
 app.put("/places", async (req, res) => {
   try {
     const cookies = req.cookies.jwtToken;
@@ -275,7 +287,7 @@ app.put("/places", async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const userData = jwt.verify(cookies,  "your-secret-key");
+    const userData = jwt.verify(cookies, "your-secret-key");
 
     const {
       title,
@@ -295,10 +307,7 @@ app.put("/places", async (req, res) => {
       Beds,
     } = req.body;
 
- 
- 
-     
- const placeDoc = await Place.findById(link);
+    const placeDoc = await Place.findById(link);
 
     if (placeDoc.owner.toString() === userData.id) {
       placeDoc.set({
@@ -323,31 +332,22 @@ app.put("/places", async (req, res) => {
     } else {
       res.status(403).json({ error: "Forbidden" });
     }
-      
-    
- 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
- 
-
- 
-
 app.get("/place-details/:_id", async (req, res) => {
   const { _id } = req.params;
- 
-try{
-   const place = await Place.findById(_id);
- 
-  res.json(place);
-}catch{
-  res.json('')
-}
- 
- 
+
+  try {
+    const place = await Place.findById(_id).populate("owner", "firstname");
+
+    res.json(place);
+  } catch {
+    res.json("");
+  }
 });
 
 app.delete("/place-delete/:id", async (req, res) => {
@@ -358,18 +358,16 @@ app.delete("/place-delete/:id", async (req, res) => {
 });
 
 app.get("/filter", async (req, res) => {
-  const { perks, category, minPrice, maxPrice , type } = req.query;
+  const { perks, category, minPrice, maxPrice, type } = req.query;
 
- 
-   console.log(req.query);
-   console.log('filter');
+  console.log(req.query);
+  console.log("filter");
 
-  
   const filter = {};
-  if (perks || perks?.length < 0  ) {
+  if (perks || perks?.length < 0) {
     filter.perks = { $all: perks };
   }
-  if (category || category?.length < 0  ) {
+  if (category || category?.length < 0) {
     filter.category = { $in: category };
   }
   if (minPrice && maxPrice) {
@@ -384,10 +382,9 @@ app.get("/filter", async (req, res) => {
     filter.category = { $in: [type] };
   }
 
- 
   // Count the total number of filtered items
   const totalItems = await Place.countDocuments(filter);
- 
+
   // Apply pagination using Mongoose's skip and limit methods
 
   try {
@@ -397,13 +394,7 @@ app.get("/filter", async (req, res) => {
     console.error("Error fetching items:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
- 
- 
-
- 
 });
-
-
 
 app.post("/booking-add", async (req, res) => {
   const { checkInDate, checkOutDate, Guest, daysStayed, _id, price } = req.body;
@@ -413,11 +404,10 @@ app.post("/booking-add", async (req, res) => {
 
 app.post("/submit-payment", async (req, res) => {
   const { paymentMethodId, placeid, days, checkOut, checkIn } = req.body;
- 
-    const { jwtToken } = req.cookies;
-    const place = await Place.findById(placeid);
-  try {
 
+  const { jwtToken } = req.cookies;
+  const place = await Place.findById(placeid);
+  try {
     const amount = Math.round(
       (place.price * days + (place.price * days) / 12) * 100
     );
@@ -531,9 +521,8 @@ app.get("/get-favorite", async (req, res) => {
 });
 
 app.get("/get-favorite-placeID", async (req, res) => {
- 
   const { jwtToken } = req.cookies;
- 
+
   if (jwtToken) {
     jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
       if (err) throw err;
@@ -577,43 +566,35 @@ app.post("/updateprofile", async (req, res) => {
 
   jwt.verify(jwtToken, "your-secret-key", {}, async (err, userData) => {
     if (err) throw err;
-    const {id} = userData;
+    const { id } = userData;
     if (Email && FirstName && LastName) {
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-       
-      if (emailPattern.test(Email)       ) {
 
-        const maxLength = FirstName.length <= 35 && LastName.length <= 35 && Email.length <= 40  ; 
+      if (emailPattern.test(Email)) {
+        const maxLength =
+          FirstName.length <= 35 && LastName.length <= 35 && Email.length <= 40;
 
- console.log(maxLength)
+        console.log(maxLength);
 
-if( maxLength){
+        if (maxLength) {
+          const UserDoc = await User.findById(userData.id);
 
+          const emailExist = await User.findOne({ email: Email });
 
-        const UserDoc = await User.findById(userData.id);
-        
- 
-
-        const emailExist = await User.findOne({ email: Email});
- 
-        if ( emailExist == null || Email  == UserDoc.email    ) {
-         
-
-          UserDoc.set({
-            email:Email,
-            firstname:FirstName,
-            lastname:LastName,
-          });
-          await UserDoc.save(); 
-          res.status(200).json({ message: "saved" });
+          if (emailExist == null || Email == UserDoc.email) {
+            UserDoc.set({
+              email: Email,
+              firstname: FirstName,
+              lastname: LastName,
+            });
+            await UserDoc.save();
+            res.status(200).json({ message: "saved" });
+          } else {
+            res.json({ message: "emailexist" });
+          }
         } else {
-          res.json({ message: "emailexist" });
+          res.json({ message: "maxChar" });
         }
-     }else{
-      res.json({ message: "maxChar" });
-     }
-     
-     
       } else {
         res.json({ message: "Invalid email format" });
       }
@@ -623,39 +604,31 @@ if( maxLength){
   });
 });
 
+app.get("/UrlFilter/:fillter", async (req, res) => {
+  const { fillter } = req.params;
 
-app.get('/UrlFilter/:fillter'  , async (req, res) => { 
-   const {fillter} =  req.params
-
-   const result = {};
-   result.category = { $in: fillter };
-   try {
+  const result = {};
+  result.category = { $in: fillter };
+  try {
     const filteredItems = await Place.find(result);
     res.json(filteredItems);
   } catch (error) {
     console.error("Error fetching items:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
- 
-} )
-
-
- 
-
+});
 
 app.get("/all-places", async (req, res) => {
-  const filt = req.body.filtercheck;  
-  console.log('filt  ' +  filt)
+  const filt = req.body.filtercheck;
+  console.log("filt  " + filt);
 
- 
-  const data = await Place.find()
-   res.json(data);
-   console.log("data");
+  const data = await Place.find();
+  res.json(data);
+  console.log("data");
 });
- 
+
 // app.get("/all-places"  , async (req, res) =>{
 
-    
 //    console.log('params  ' +  req.body)
 //   // const data = await Place.find()
 //   //  res.json(data);
