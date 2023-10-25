@@ -357,9 +357,13 @@ app.delete("/place-delete/:id", async (req, res) => {
   res.json(await Place.findByIdAndDelete(id));
 });
 
-app.get("/filter", async (req, res) => {
-  const { perks, category, minPrice, maxPrice, type } = req.query;
 
+ 
+
+app.get("/filter", async (req, res) => {
+  const { perks, category, minPrice, maxPrice, type ,Bathrooms,Bedrooms,Beds  } = req.query;
+
+ 
   console.log(req.query);
   console.log("filter");
 
@@ -367,6 +371,25 @@ app.get("/filter", async (req, res) => {
   if (perks || perks?.length < 0) {
     filter.perks = { $all: perks };
   }
+  if (Bathrooms  || Bathrooms != NaN ) {
+    filter.$or = [
+      { Bathrooms: { $eq: Bathrooms } },
+      { Bathrooms: { $gte: Bathrooms } }
+    ];
+  }
+  if (Bedrooms || Bedrooms != NaN) {
+    filter.$or = [
+      { Bathrooms: { $eq: Bathrooms } },
+      { Bathrooms: { $gte: Bathrooms } }
+    ];
+  }
+  if (Beds || Beds != NaN) {
+    filter.$or = [
+      { Bathrooms: { $eq: Bathrooms } },
+      { Bathrooms: { $gte: Bathrooms } }
+    ];
+  }
+
   if (category || category?.length < 0) {
     filter.category = { $in: category };
   }
