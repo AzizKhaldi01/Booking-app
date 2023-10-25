@@ -69,9 +69,9 @@ setRoomsAndBeds(jsonroomsAndBedsParam)
         try {
           const response = await axios.get("/filter", {
             params: {
-              Bathrooms: jsonroomsAndBedsParam[0].range,
-              Bedrooms: jsonroomsAndBedsParam[1].range,
-              Beds: jsonroomsAndBedsParam[2].range,
+              Bathrooms: parseInt(jsonroomsAndBedsParam[0].range, 10) ,
+              Bedrooms:parseInt( jsonroomsAndBedsParam[1].range, 10),
+              Beds:parseInt(jsonroomsAndBedsParam[2].range, 10) ,
               type: typeParam,
               minPrice: parsedPriceRange ? parsedPriceRange[0] : null,
               maxPrice: parsedPriceRange ? parsedPriceRange[1] : null,
