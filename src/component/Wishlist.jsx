@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
 import Favskelaton from "./Skelatons/Favskelaton";
+import Topbar from "./Topbar";
 
 import axios from "axios";
 function Wishlist({ Popen }) {
@@ -24,7 +25,9 @@ function Wishlist({ Popen }) {
   return (
     <>
       {User && ready ? (
+        
         <div className="  flex flex-col  md:pb-2 pb-20 pt-16 w-full h-full  justify-center px-3  md:px-12">
+          <Topbar  title={"My Wishlist"} />
           <div
             className={` w-full   grid md:grid-cols-2 grid-cols-1 gap-3  ${
               !Popen ? " lg:grid-cols-3" : "lg:grid-cols-4"

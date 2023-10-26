@@ -9,7 +9,7 @@ import FirstPageOutlinedIcon from '@mui/icons-material/FirstPageOutlined';
 import collapse from '../img/collapse.svg'
 import axios from "axios";
 import Topbar from "./Topbar";
-function Profile({setPopen ,Popen}) {
+function Profile({setPopen ,Popen , setisAccountD }) {
   const { User, setUser  } = useContext(Usercontext);
 
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ function Profile({setPopen ,Popen}) {
 
   return (
     <div className="    w-full relative  flex flex-col ">
-      <Topbar title={"My Profile"} />
+      <Topbar  title={"My Profile"} />
 
      
 
@@ -79,8 +79,8 @@ function Profile({setPopen ,Popen}) {
         </div>
 
         <div className=" w-full  flex   pb-4 flex-col gap-4 px-4 mt-0  ">
-          <Link to={'/account'} className="  md:h-14 h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
-            <span className=" flex flex-row  gap-2 items-center  text-gray-700 ">
+          <Link onClick={ ()=> setisAccountD(true) } to={'/account'} className="  md:h-14 h-16 w-full rounded-md bg-gray-100  font-medium flex flex-row items-center justify-between px-4 relative">
+            <span  className=" flex flex-row  gap-2 items-center  text-gray-700 ">
               <span className="   ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
