@@ -5,7 +5,7 @@ function Favskelaton({cards}) {
   return (
 
     Array.from({ length: cards }, (_, index) => (
-        <div key={index} className="gap-2 h-[230px] w-full flex   p-2    flex-row">
+        <div key={index} className="gap-2 h-[200px] w-full flex   p-2    flex-row">
           <div className="rounded-l-xl    h-full w-[60%] 1">
             <Skeleton borderRadius={"1rem"} height={"100%"} />
           </div>

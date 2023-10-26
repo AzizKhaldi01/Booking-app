@@ -6,7 +6,7 @@ import userimage from "../img/user.webp";
 import axios from "axios";
 import AccountMassge from "./AccountMassge";
 
-function AccountDitalis() {
+function AccountDitalis(  {setisAccountD}) {
   const { User, ready, Saved, setSaved } = useContext(Usercontext);
 
   const [FirstName, setFirtsName] = useState(null);
@@ -86,12 +86,12 @@ function AccountDitalis() {
   return (
     <form
       onSubmit={handelUpdateProfile}
-      className=" relative hidden  md:flex flex-col mt-16  w-full h-7  gap-10  px-3  md:px-10 mb-20 "
+      className={`   relative    flex-col mt-16  w-full h-7  gap-10  px-3  md:px-10 mb-20 `} 
     >
-      <div className=" flex flex-row items-center pr-5 gap-4 justify-between w-full">
-        <div className=" flex flex-row gap-5 items-center ">
+      <div className=" flex flex-row items-center pr-0  md:pr-5 gap-4 justify-between w-full">
+        <div className=" flex flex-row gap-3  md:gap-5 items-center py-5 ">
           <img
-            className=" p-2    w-[100px]   bg-gray-100  rounded-[50%] "
+            className=" p-2    w-[80px]  md:w-[100px]   bg-gray-100  rounded-[50%] "
             src={userimage}
           />
           <span className=" flex flex-col gap-2">
@@ -103,6 +103,27 @@ function AccountDitalis() {
             </p>
           </span>
         </div>
+
+
+        <div className=  {`      sm:hidden text-gray-700 flex text-base  z-50  h-16 items-center justify-center  fixed bg-white top-0  right-0  w-full `}>
+        <span className=" cursor-pointer  absolute top-5 left-3" onClick={(e)=>  {e.preventDefault(); setisAccountD(false)   } }>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+        </span>
+        Account information 
+      </div>
 
         {Update ? (
           <div className=" flex flex-row items-center gap-2">
@@ -157,7 +178,7 @@ function AccountDitalis() {
         ) : (
           <button
             onClick={handelupdate}
-            className=" bg-main p-2 px-3 rounded text-white"
+            className=" bg-main p-2  md:text-base text-sm md:p-2  px-2 md:px-3 rounded text-white"
           >
             Update Profile
           </button>
@@ -251,9 +272,10 @@ function AccountDitalis() {
         </span>
       </div>
 
-      <div className=" flex flex-row w-full  justify-between pb-7 font-medium px-2">
+      <div className=" flex flex-row w-full  justify-between pb-7 font-medium pt-5 px-2">
         <span>Change Password</span>
         <button
+        onClick={ (e)=>{e.preventDefault();} }
           disabled={!Update}
           className={`  text-gray-600  p-2 px-3 rounded  ${
             Update ? " border-solid border-[1px] border-main  text-main " : ""

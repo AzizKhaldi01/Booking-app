@@ -19,27 +19,28 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useNavigate } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
-function Filter({ filtr, setPlaces, exitFilter, setIslowding, type }) {
- 
+function Filter({
+  filtr,
+  setPlaces,
+  exitFilter,
+  setIslowding,
+  type,
+  setUrlFilter,
+}) {
   const [category, setCategory] = useState([]);
   const [perks, setPerks] = useState([]);
-  const [priceRange, setPriceRange] = useState([40, 1000]);
+  const [priceRange, setPriceRange] = useState([40, 2000]);
   const { setFilterCheck, FilterCheck } = useContext(Usercontext);
- 
-  const [roomsAndBeds, setRoomsAndBeds] = useState(
-    [
-      { label: "Bedrooms", range:  "Any"  },
-      { label: "Bathrooms", range:  "Any"  },
-      { label: "Beds", range:  "Any"  },
-    ]
-  );
- 
-const numbers = ['Any' , 1,2,3,4,5,6,7,8  ]
+
+  const [roomsAndBeds, setRoomsAndBeds] = useState([
+    { label: "Bedrooms", range: "Any" },
+    { label: "Bathrooms", range: "Any" },
+    { label: "Beds", range: "Any" },
+  ]);
+
+  const numbers = ["Any", 1, 2, 3, 4, 5, 6, 7, 8];
 
   const navigate = useNavigate();
-
-    
- 
 
   useEffect(() => {
     async function fetchData() {
@@ -48,30 +49,39 @@ const numbers = ['Any' , 1,2,3,4,5,6,7,8  ]
       const categoryParam = queryParams?.get("category");
       const priceRangeParam = queryParams?.get("priceRange");
       const typeParam = queryParams?.get("type");
-    const roomsAndBedsParam = queryParams?.get("roomsAndBeds");
+      const roomsAndBedsParam = queryParams?.get("roomsAndBeds");
 
-      const  jsonroomsAndBedsParam = JSON.parse(roomsAndBedsParam)
-      
-  
+      const jsonroomsAndBedsParam = JSON.parse(roomsAndBedsParam);
+
       const parsedPriceRange = priceRangeParam
         ? priceRangeParam.split(",")?.map((str) => parseInt(str, 10))
         : null;
 
       console.log("Parsed Price Range:", parsedPriceRange);
 
-      if (parsedPriceRange || categoryParam || perksParam   || roomsAndBedsParam  ) {
+      if (
+        parsedPriceRange ||
+        categoryParam ||
+        perksParam ||
+        roomsAndBedsParam ||
+        typeParam ||
+        priceRangeParam
+      ) {
         setPriceRange(parsedPriceRange);
-        const categoryParamNew = categoryParam ? categoryParam.split(",")  : null;
+        const categoryParamNew = categoryParam
+          ? categoryParam.split(",")
+          : null;
+
         setCategory(categoryParamNew);
         const perksParamNew = perksParam ? perksParam.split(",") : null;
         setPerks(perksParamNew);
-setRoomsAndBeds(jsonroomsAndBedsParam)
+        setRoomsAndBeds(jsonroomsAndBedsParam);
         try {
           const response = await axios.get("/filter", {
             params: {
-              Bathrooms: parseInt(jsonroomsAndBedsParam[0].range, 10) ,
-              Bedrooms:parseInt( jsonroomsAndBedsParam[1].range, 10),
-              Beds:parseInt(jsonroomsAndBedsParam[2].range, 10) ,
+              Bathrooms: jsonroomsAndBedsParam[0].range,
+              Bedrooms: jsonroomsAndBedsParam[1].range,
+              Beds: jsonroomsAndBedsParam[2].range,
               type: typeParam,
               minPrice: parsedPriceRange ? parsedPriceRange[0] : null,
               maxPrice: parsedPriceRange ? parsedPriceRange[1] : null,
@@ -79,8 +89,15 @@ setRoomsAndBeds(jsonroomsAndBedsParam)
               perks: perksParamNew,
             },
           });
-          setPlaces(response.data.data);
-          setIslowding(true);
+          if (response.data.data.length > 0) {
+            setPlaces(response.data.data);
+            setIslowding(true);
+            return;
+          } else {
+            setUrlFilter(true);
+            setIslowding(true);
+
+          }
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -104,7 +121,13 @@ setRoomsAndBeds(jsonroomsAndBedsParam)
 
   function ClearFilter() {
     setCategory([]);
+    setPriceRange([40, 2000]);
     setPerks([]);
+    setRoomsAndBeds([
+      { label: "Bedrooms", range: "Any" },
+      { label: "Bathrooms", range: "Any" },
+      { label: "Beds", range: "Any" },
+    ]);
   }
 
   const handleNumberClick = (number, label) => {
@@ -117,24 +140,22 @@ setRoomsAndBeds(jsonroomsAndBedsParam)
       });
     });
   };
-
-
-console.log('roooooom  ' + roomsAndBeds[0].range  )
+ 
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const perksParam = queryParams?.get("perks");
     const roomsAndBedsParam = queryParams?.get("roomsAndBeds");
-   
-    
 
     const categoryParam = queryParams?.get("category");
     const priceRangeParam = queryParams?.get("priceRange");
-    if (priceRangeParam || categoryParam || perksParam || roomsAndBedsParam ) {
+    if (priceRangeParam || categoryParam || perksParam || roomsAndBedsParam) {
       setFilterCheck(false);
+
       localStorage.setItem("FilterCheck", FilterCheck);
     } else {
       setFilterCheck(true);
+
       localStorage.setItem("FilterCheck", FilterCheck);
     }
   }, [FilterCheck, window.location.search]);
@@ -149,9 +170,10 @@ console.log('roooooom  ' + roomsAndBeds[0].range  )
     perks?.filter((perk) => perk !== "null");
 
     category?.filter((caty) => caty !== "");
+    category?.filter((caty) => caty !== "null");
 
     const queryParams = new URLSearchParams(window.location.search);
-  const  JsonroomsAndBeds = JSON.stringify(roomsAndBeds)
+    const JsonroomsAndBeds = JSON.stringify(roomsAndBeds);
     queryParams.set("category", category);
     queryParams.set("priceRange", priceRange);
     queryParams.set("roomsAndBeds", JsonroomsAndBeds);
@@ -177,8 +199,14 @@ console.log('roooooom  ' + roomsAndBeds[0].range  )
         },
       })
       .then((response) => {
-        setPlaces(response.data.data);
-        setIslowding(true);
+        if (response.data.data.length > 0) {
+          setPlaces(response.data.data);
+          setIslowding(true);
+        } else {
+          setIslowding(true);
+
+          setUrlFilter(true);
+        }
       });
     exitFilter();
   }
@@ -195,19 +223,17 @@ console.log('roooooom  ' + roomsAndBeds[0].range  )
   };
 
   const breakpoints = {
-     
     320: {
       slidesPerView: 5,
     },
-     
+
     480: {
       slidesPerView: 6,
     },
-    
+
     768: {
       slidesPerView: 9,
     },
-    
   };
 
   useEffect(() => {
@@ -276,8 +302,6 @@ console.log('roooooom  ' + roomsAndBeds[0].range  )
     "Pool",
   ];
 
-
-
   return (
     <div
       className={` duration-300 text-gray-800  ${
@@ -329,7 +353,7 @@ console.log('roooooom  ' + roomsAndBeds[0].range  )
             <h className="  text-2xl  ">Price range</h>
 
             <div className=" w-full items-center    gap-4 flex flex-col ">
-              <div className=" w-[80%] ">
+              <div className=" w-[90%]  md:w-[80%] ">
                 <Slider
                   style={{ color: "black" }} // Change this color to your desired color
                   value={priceRange}
@@ -341,7 +365,7 @@ console.log('roooooom  ' + roomsAndBeds[0].range  )
                 />
               </div>
 
-              <div className=" flex  items-center    w-[80%]  gap-3  justify-between ">
+              <div className=" flex  items-center    w-[95%]  md:w-[80%]  gap-3  justify-between ">
                 <label className=" w-full  relative ">
                   <AttachMoneyIcon className=" scale-95 absolute top-4 left-0" />
                   <input
@@ -382,7 +406,14 @@ console.log('roooooom  ' + roomsAndBeds[0].range  )
                 <Swiper breakpoints={breakpoints} slidesPerView={8}>
                   {numbers.map((item) => (
                     <SwiperSlide key={item.indexOf}>
-                     <span onClick={ ()=> handleNumberClick(item ,i.label )} className= {` ${i.range ==  item   ?  ' bg-gray-800 text-white ' : ' bg-white  text-black  '  } hover:border-gray-500 cursor-pointer  h-10   w-16 flex justify-center items-center rounded-full border-solid border-[1px] border-gray-300`}  >
+                      <span
+                        onClick={() => handleNumberClick(item, i.label)}
+                        className={` ${
+                          i.range == item
+                            ? " bg-gray-800 text-white "
+                            : " bg-white  text-black  "
+                        } hover:border-gray-500 cursor-pointer  h-10   w-16 flex justify-center items-center rounded-full border-solid border-[1px] border-gray-300`}
+                      >
                         {item == 8 ? "+ 8" : item}
                       </span>
                     </SwiperSlide>
