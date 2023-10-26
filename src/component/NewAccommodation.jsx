@@ -520,7 +520,7 @@ function NewAccommodation({ setAdd, add }) {
                       </button>
                       <button
                         className="    p-1 bg-white bg-opacity-50 text-gray-900 rounded-[50%] "
-                        onClick={(e) => moveToFirst(pic)}
+                        onClick={(e) => {moveToFirst(pic) ; e.preventDefault(); }}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
