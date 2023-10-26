@@ -361,29 +361,29 @@ app.delete("/place-delete/:id", async (req, res) => {
  
 
 app.get("/filter", async (req, res) => {
-  const { perks, category, minPrice, maxPrice, type ,Bathrooms,Bedrooms,Beds  } = req.query;
+  const { perks, category, minPrice, maxPrice, type,Bathrooms ,Bedrooms,Beds  } = req.query;
 
  
   console.log(req.query);
-  console.log("filter");
+  console.log( 'Bathrooms ' +  Bathrooms);
 
   const filter = {};
   if (perks || perks?.length < 0) {
     filter.perks = { $all: perks };
   }
-  if (Bathrooms  || Bathrooms != NaN ) {
+  if (  Bathrooms != 'Any' ) {
     filter.$or = [
       { Bathrooms: { $eq: Bathrooms } },
       { Bathrooms: { $gte: Bathrooms } }
     ];
   }
-  if (Bedrooms || Bedrooms != NaN) {
+  if (  Bedrooms != 'Any') {
     filter.$or = [
       { Bathrooms: { $eq: Bathrooms } },
       { Bathrooms: { $gte: Bathrooms } }
     ];
   }
-  if (Beds || Beds != NaN) {
+  if (   Beds != 'Any') {
     filter.$or = [
       { Bathrooms: { $eq: Bathrooms } },
       { Bathrooms: { $gte: Bathrooms } }
