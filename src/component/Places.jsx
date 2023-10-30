@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PhotoSlider from "../component/Imageslaider";
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import { motion } from "framer-motion";
 import BathtubOutlinedIcon from "@mui/icons-material/BathtubOutlined";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
@@ -11,13 +11,20 @@ import { useNavigate } from "react-router-dom";
 import { Usercontext } from "../context/pagecontext";
 import { Link } from "react-router-dom";
 import Massege from "./Massege";
-export default function Places({ _id, photos, address, price, title , Beds,Bedrooms,Bathrooms }) {
-  const { User , LoginOpen, setLoginOpen } = useContext(Usercontext);
+export default function Places({
+  _id,
+  photos,
+  address,
+  price,
+  title,
+  Beds,
+  Bedrooms,
+  Bathrooms,
+}) {
+  const { User, LoginOpen, setLoginOpen } = useContext(Usercontext);
   const [Favadded, setFavadded] = useState("");
   const [fav, setFav] = useState(true);
-
-  const navigate = useNavigate();
-
+ 
   const item = {
     hidden: { opacity: 0 },
     visible: {
@@ -29,7 +36,7 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
   function AddFavorite(e, _id) {
     e.preventDefault();
     if (!User) {
-    return  setLoginOpen(!LoginOpen)
+      return setLoginOpen(!LoginOpen);
     }
 
     axios.post("/add-favorite", { placeID: _id }).then((response) => {
@@ -47,14 +54,12 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
 
   useEffect(() => {
     const userLikedItems = JSON.parse(localStorage.getItem("favPlaces"));
-    console.log("aa11 " + userLikedItems);
-    setFav(userLikedItems.includes(_id));
-     
-  }, [User ,LoginOpen ]);
+    setFav(userLikedItems?.includes(_id));
+  }, [User, LoginOpen]);
 
   return (
     <Link
-      to={`/placedetails/${_id} `}   
+      to={`/placedetails/${_id}`}
       className="  gap-2 items-center relative py-1  h-[400px] flex flex-col  border-solid border-[1px] rounded-2xl  w-full "
     >
       <motion.div
@@ -67,10 +72,7 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
           transition={{ duration: 1 }}
           className=" relative     mx-2  mt-1 flex justify-center   w-[95%]   h-[70%]  rounded-xl   "
         >
-          <div
-            
-            className="  text-black  cursor-pointer  z-10 absolute flex flex-row w-full justify-between px-3 top-3 right-0"
-          >
+          <div className="  text-black  cursor-pointer  z-10 absolute flex flex-row w-full justify-between px-3 top-3 right-0">
             <p className=" text-gray-900  text-[14px]  gap-1  bg-white rounded-full bg-opacity-70 px-2 h-8 p-1 flex  items-center justify-center flex-row ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -84,10 +86,13 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
                   clip-rule="evenodd"
                 />
               </svg>
-              {address.split(",").slice(0, 2).join(",")  } 
+              {address.split(",").slice(0, 2).join(",")}
             </p>
 
-            <span onClick={(e) => AddFavorite(e, _id)} className=" p-1  rounded-[50%]  bg-white active:scale-90   bg-opacity-70 ">
+            <span
+              onClick={(e) => AddFavorite(e, _id)}
+              className=" p-1  rounded-[50%]  bg-white active:scale-90   bg-opacity-70 "
+            >
               {fav ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -136,17 +141,16 @@ export default function Places({ _id, photos, address, price, title , Beds,Bedro
 
         <div className=" flex flex-row w-full justify-between text-gray-700 px-4 text-sm ">
           <span className=" justify-end items-end h-full  flex flex-row gap-1">
-            <BedOutlinedIcon  className="  scale-95" />
+            <BedOutlinedIcon className="  scale-95" />
             <p> {Beds} beds </p>
           </span>
 
           <span className=" justify-end items-end h-full  flex flex-row gap-1">
-            <BathtubOutlinedIcon  className="  scale-95" />
-            <p>  {Bathrooms} baths</p>
+            <BathtubOutlinedIcon className="  scale-95" />
+            <p> {Bathrooms} baths</p>
           </span>
           <span className=" justify-end items-end h-full  flex flex-row gap-1">
-             
- <MeetingRoomIcon/>
+            <MeetingRoomIcon />
             <p> {Bedrooms} rooms</p>
           </span>
         </div>

@@ -19,9 +19,8 @@ function Wishlist({ Popen }) {
       setLoading(false);
     });
   }, [User]);
-
-
-
+ 
+  
   return (
     <>
       {User && ready ? (
