@@ -37,10 +37,10 @@ useEffect(()=>{
           <div className=" flex flex-col w-full">
             <p className="  text-[10px]">
               
-              {address.split(",").slice(0, 4).join(",")}
+              {address?.split(",").slice(0, 4).join(",")}
             </p>
             <h1 className="  text-sm">
-              {title.length >= 25 ? title.slice(0, 25) + "..." : title}
+              {title?.length >= 25 ? title.slice(0, 25) + "..." : title}
             </h1>
           </div>
           <div className="   w-full flex items-end  text-[11px] h-[50%]   ">

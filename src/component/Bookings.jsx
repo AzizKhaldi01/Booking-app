@@ -95,7 +95,7 @@ function Bookings({  Popen}) {
                 {item?.Place?.address}{" "}
               </p>
 
-              <h1 className=" text-lg"> {item?.Place?.title.length >= 20  ?  item?.Place?.title.slice(0, 22) + '..' : item?.Place?.title     } </h1>
+              <h1 className=" text-lg"> {item?.Place?.title?.length >= 20  ?  item?.Place?.title?.slice(0, 22) + '..' : item?.Place?.title     } </h1>
               <div className=" text-white flex flex-row  gap-1 text-xs w-full  py-3">
                 <span className=" flex flex-row gap-1 p-1 px-1 items-end bg-main rounded-xl">
                   <svg

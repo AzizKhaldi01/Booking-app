@@ -59,14 +59,14 @@ function Accommodation({ title, photos, description, id, address }) {
             </div>
             <div className=" flex  pr-3 w-[95%] px-2 pb-2  md:w-[50%]  pt-4  gap-5  lg:gap-10  flex-col items-start justify-start  ">
               <h1 className=" md:hidden text-xs  font-semibold md:text-sm ">
-                {title.length >= 20 ? title.substring(0, 20) + "..." : title}
+                {title?.length >= 20 ? title.substring(0, 20) + "..." : title}
               </h1>
               <h1 className="  hidden md:flex text-xs  font-semibold md:text-sm ">
                 {title}
               </h1>
               <p className="  text-[12px] lg:text-xs">
-                {description.length >= 200
-                  ? description.substring(0, 200) + "..."
+                {description?.length >= 200
+                  ? description?.substring(0, 200) + "..."
                   : description}
               </p>
             </div>
@@ -133,7 +133,7 @@ function Accommodation({ title, photos, description, id, address }) {
               </div>
               <div className=" flex  pr-3 w-[95%] px-2    md:w-[50%]   pt-2    flex-col items-start justify-start  ">
                 <h1 className=" md:hidden text-xs  font-semibold  ">
-                  {title.length >= 20 ? title.substring(0, 20) + "..." : title}
+                  {title?.length >= 20 ? title.substring(0, 20) + "..." : title}
                 </h1>
                 <h1 className="  hidden md:flex text-xs  font-sem ibold md:text-sm ">
                   {title}
@@ -143,7 +143,7 @@ function Accommodation({ title, photos, description, id, address }) {
                     className=" scale-90"
                     fontSize="small"
                   />{" "}
-                  {address.split(",").slice(0, 2).join(",")}{" "}
+                  {address?.split(",").slice(0, 2).join(",")}{" "}
                 </p>
               </div>
             </div>

@@ -69,11 +69,11 @@ function Filter({
       ) {
         setPriceRange(parsedPriceRange);
         const categoryParamNew = categoryParam
-          ? categoryParam.split(",")
+          ? categoryParam?.split(",")
           : null;
 
         setCategory(categoryParamNew);
-        const perksParamNew = perksParam ? perksParam.split(",") : null;
+        const perksParamNew = perksParam ? perksParam?.split(",") : null;
         setPerks(perksParamNew);
         setRoomsAndBeds(jsonroomsAndBedsParam);
         try {
