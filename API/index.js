@@ -641,23 +641,43 @@ app.get("/UrlFilter/:fillter", async (req, res) => {
   }
 });
 
-app.get("/all-places", async (req, res) => {
-  const filt = req.body.filtercheck;
-  console.log("filt  " + filt);
-
-  const data = await Place.find();
-  res.json(data);
-  console.log("data");
+app.get("/all-places", paginatedResults(Place), async (req, res) => {
+  res.json(res.paginatedResults)
 });
+ 
+function paginatedResults(model) {
+  return async (req, res, next) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
 
-// app.get("/all-places"  , async (req, res) =>{
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
 
-//    console.log('params  ' +  req.body)
-//   // const data = await Place.find()
-//   //  res.json(data);
-//    console.log("data");
-// });
+    const results = {}
+
+    if (endIndex < await model.countDocuments().exec()) {
+      results.next = {
+        page: page + 1,
+        limit: limit
+      }
+    }
+    
+    if (startIndex > 0) {
+      results.previous = {
+        page: page - 1,
+        limit: limit
+      }
+    }
+    try {
+      results.results = await model.find().limit(limit).skip(startIndex).exec()
+      res.paginatedResults = results
+      next()
+    } catch (e) {
+      res.status(500).json({ message: e.message })
+    }
+  }
+}
 
 app.listen(4000, "192.168.1.7", () => {
-  console.log(`Server is running on http://0.0.0.0:${4000}`);
+  console.log(`Server is running on http://192.168.1.7:${4000}`);
 });
