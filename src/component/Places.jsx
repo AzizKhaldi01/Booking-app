@@ -23,14 +23,13 @@ export default function Places({
 }) {
   const { User, LoginOpen, setLoginOpen } = useContext(Usercontext);
   const [Favadded, setFavadded] = useState("");
-  const [fav, setFav] = useState(true);
- 
+  const [fav, setFav] = useState(true); 
+
   const item = {
-    hidden: { opacity: 0 },
+    hidden: {   opacity: 0 },
     visible: {
-      y: 0,
-      opacity: 1,
-    },
+      opacity: 1
+    }
   };
 
   function AddFavorite(e, _id) {
@@ -86,7 +85,7 @@ export default function Places({
                   clip-rule="evenodd"
                 />
               </svg>
-              {address.split(",").slice(0, 2).join(",")}
+              {address?.split(",").slice(0, 2).join(",")}
             </p>
 
             <span
@@ -128,7 +127,7 @@ export default function Places({
           <div className=" flex flex-col gap-1">
             <p className="   font-medium text-ms ">
               {" "}
-              {title.length >= 20 ? title.substring(0, 20) + "..." : title}{" "}
+              {title?.length >= 20 ? title.substring(0, 20) + "..." : title}{" "}
             </p>
 
             <p className=" text-ms  mt-1"> ${price} night </p>
